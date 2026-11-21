@@ -28,9 +28,11 @@
 }
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 body {
   margin: 0;
+  overflow-x: hidden;
   background-color: var(--ink);
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
@@ -3068,3 +3070,114 @@ a#featured.featured-paper:hover { transform: translateY(-2px); border-color: rgb
   .pipeline.pipeline-4 .pipeline-stage::after { display: none; }
 }
 .scenario-rule-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 25px; height: 22px; padding: 0 6px; border: 1px solid rgba(255,157,79,.32); border-radius: 5px; color: #ffb579; background: rgba(255,145,62,.055); font: 9px var(--mono); }
+
+.statusbar.is-hosted {
+  color: #ff9b45;
+  border-color: rgba(255, 155, 69, 0.35);
+}
+
+.backend-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  margin-top: 10px;
+  border: 1px solid rgba(255, 180, 50, 0.35);
+  border-radius: 9px;
+  background: rgba(255, 160, 40, 0.08);
+  color: #ffb766;
+  font: 11px var(--mono);
+  letter-spacing: 0.02em;
+}
+
+.local-connect-panel {
+  margin: 18px 0;
+  padding: 16px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(18, 19, 22, 0.6);
+}
+
+.local-connect-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.local-connect-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #f4f0e7;
+}
+
+.local-connect-hint {
+  font-size: 12px;
+  color: #9da1ab;
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.local-connect-hint code {
+  color: #ff9b45;
+  background: rgba(255, 155, 69, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--mono);
+}
+
+.local-connect-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.local-connect-input {
+  flex: 1 1 240px;
+  max-width: 380px;
+}
+
+.local-connect-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.local-connect-status.status-success {
+  background: rgba(46, 224, 143, 0.08);
+  color: #2fe08f;
+  border: 1px solid rgba(46, 224, 143, 0.25);
+}
+
+.local-connect-status.status-error {
+  background: rgba(255, 95, 87, 0.08);
+  color: #ff7b72;
+  border: 1px solid rgba(255, 95, 87, 0.25);
+}
+
+.local-connect-status.status-info {
+  background: rgba(255, 255, 255, 0.05);
+  color: #c9cdd4;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.partial-explanation {
+  font-size: 12px;
+  margin-top: 6px;
+  line-height: 1.45;
+  color: #8e929b;
+}
+
+.legend-conc {
+  color: #ff9b45;
+}
+
