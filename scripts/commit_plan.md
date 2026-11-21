@@ -37,7 +37,7 @@ To commit the repository in clean logical units, execute each step sequentially:
 # =========================================================================
 
 # 1. Root configuration, guidelines, and CLI entry point
-git add .agent/ .gitignore AGENT_RULES.md DECISIONS.md MORNING_HANDOFF.md NEEDS_HUMAN.md PAYSIFT_ANTIGRAVITY_PROMPTS.md PAYSIFT_BUILD_PLAN_v3.md PROGRESS.md README_DEMO.md requirements.txt cli.py config/
+git add .agent/ .gitignore AGENT_RULES.md DECISIONS.md NEEDS_HUMAN.md PAYSIFT_ANTIGRAVITY_PROMPTS.md PAYSIFT_BUILD_PLAN_v3.md PROGRESS.md README_DEMO.md requirements.txt cli.py config/
 git commit -m "feat(core): project skeleton, agent rules, CLI entry point, and metadata"
 
 # 2. Formal contract, SQLite schema, and specification test cases
@@ -87,8 +87,4 @@ git commit -m "docs: architecture documentation, naming reference, and demo scri
 # 13. Test suite
 git add tests/
 git commit -m "test: comprehensive unit and integration test suite"
-
-# 14. Attachment bundles
-git add manus_attachments/ manus_attachments.zip
-git commit -m "chore: attachments bundle for external review"
 ```

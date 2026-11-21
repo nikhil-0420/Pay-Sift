@@ -10,6 +10,7 @@ import argparse
 import base64
 import importlib.util
 import json
+import os
 from pathlib import Path
 import sys
 from typing import Any, Dict
@@ -54,6 +55,7 @@ def main() -> int:
         return 1
 
     # Read steps from stdin line by line
+    orig_pid = os.getpid()
     for line in sys.stdin:
         line = line.strip()
         if not line:
@@ -66,10 +68,17 @@ def main() -> int:
 
             # Call candidate handler
             result = handle_event_fn(db_path, raw_body, signature, secret)
+            if os.getpid() != orig_pid:
+                # Fork bomb containment: child fork must exit immediately
+                os._exit(0)
             print(json.dumps(result), flush=True)
         except Exception as exc:
+            if os.getpid() != orig_pid:
+                os._exit(0)
             print(json.dumps({"error": f"Exception in handle_event: {exc}"}), flush=True)
 
+    if os.getpid() != orig_pid:
+        os._exit(0)
     return 0
 
 

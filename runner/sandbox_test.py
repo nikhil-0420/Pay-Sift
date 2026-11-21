@@ -184,8 +184,8 @@ def execute_sandbox_gate() -> Tuple[bool, Dict[str, Any]]:
     for cand in candidates_to_test:
         if not cand.is_file():
             continue
-        native_run = run_candidate(cand, mode="normal", seed_range=(0, 19), sandbox=False)
-        sandbox_run = run_candidate(cand, mode="normal", seed_range=(0, 19), sandbox=True)
+        native_run = run_candidate(cand, mode="normal", seed_range=(0, 19), sandbox=False, auto_shrink=False)
+        sandbox_run = run_candidate(cand, mode="normal", seed_range=(0, 19), sandbox=True, auto_shrink=False)
 
         native_digest = compute_run_digest(native_run)
         sandbox_digest = compute_run_digest(sandbox_run)
@@ -197,8 +197,8 @@ def execute_sandbox_gate() -> Tuple[bool, Dict[str, Any]]:
 
     # Reference parity on seeds 0-99
     ref_file = root / "ref" / "handler_ref.py"
-    ref_nat = run_candidate(ref_file, mode="normal", seed_range=(0, 99), sandbox=False)
-    ref_sbx = run_candidate(ref_file, mode="normal", seed_range=(0, 99), sandbox=True)
+    ref_nat = run_candidate(ref_file, mode="normal", seed_range=(0, 99), sandbox=False, auto_shrink=False)
+    ref_sbx = run_candidate(ref_file, mode="normal", seed_range=(0, 99), sandbox=True, auto_shrink=False)
     if compute_run_digest(ref_nat) != compute_run_digest(ref_sbx):
         return False, {"ok": False, "reason": "Reference parity mismatch on seeds 0-99"}
 

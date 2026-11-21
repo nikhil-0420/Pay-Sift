@@ -17,38 +17,53 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import uuid
 
 
-def is_docker_available() -> bool:
+_docker_available_cache: Optional[bool] = None
+_docker_image_cache: Dict[str, bool] = {}
+
+
+def is_docker_available(force_refresh: bool = False) -> bool:
     """Return True if docker executable is in PATH and daemon is reachable."""
+    global _docker_available_cache
+    if _docker_available_cache is not None and not force_refresh:
+        return _docker_available_cache
+
     docker_bin = shutil.which("docker")
     if not docker_bin:
+        _docker_available_cache = False
         return False
     try:
         res = subprocess.run(
             ["docker", "info"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            timeout=5.0,
+            timeout=15.0,
             check=False,
         )
-        return res.returncode == 0
+        _docker_available_cache = (res.returncode == 0)
+        return _docker_available_cache
     except Exception:
+        _docker_available_cache = False
         return False
 
 
-def is_docker_image_available(image_name: str = "paysift-sandbox:1") -> bool:
+def is_docker_image_available(image_name: str = "paysift-sandbox:1", force_refresh: bool = False) -> bool:
     """Return True if target docker image is available locally."""
     if not is_docker_available():
         return False
+    if image_name in _docker_image_cache and not force_refresh:
+        return _docker_image_cache[image_name]
     try:
         res = subprocess.run(
             ["docker", "image", "inspect", image_name],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            timeout=5.0,
+            timeout=15.0,
             check=False,
         )
-        return res.returncode == 0
+        _docker_image_cache[image_name] = (res.returncode == 0)
+        return _docker_image_cache[image_name]
     except Exception:
+        _docker_image_cache[image_name] = False
         return False
 
 
@@ -96,8 +111,8 @@ def build_docker_run_cmd(
 ) -> List[str]:
     """Construct docker run argument list according to plan section 10."""
     staged_path = Path(staged_dir).resolve()
-    # Format Windows path cleanly using PureWindowsPath if on Windows
-    mount_source = str(PureWindowsPath(staged_path)) if sys.platform == "win32" else str(staged_path)
+    # Format Windows path cleanly using forward slashes
+    mount_source = staged_path.as_posix()
     mount_arg = f"type=bind,source={mount_source},target=/cand,readonly"
 
     return [
@@ -137,12 +152,31 @@ def build_docker_run_cmd(
     ]
 
 
+class SandboxResultPayload(dict):
+    """Result dictionary supporting both dict ['sequences'] and list [i] access."""
+
+    def __getitem__(self, key: Any) -> Any:
+        if isinstance(key, int):
+            return self.get("sequences", [])[key]
+        return super().__getitem__(key)
+
+    def __iter__(self):
+        if "sequences" in self:
+            return iter(self["sequences"])
+        return super().__iter__()
+
+    def __len__(self) -> int:
+        if "sequences" in self:
+            return len(self["sequences"])
+        return super().__len__()
+
+
 def run_in_sandbox(
     candidate_file: Union[str, Path],
     job: Dict[str, Any],
     mode: str = "normal",
     cpus: int = 1,
-    timeout: float = 60.0,
+    timeout: Optional[float] = None,
     image_tag: str = "paysift-sandbox:1",
 ) -> Dict[str, Any]:
     """Execute candidate job inside Docker sandbox.
@@ -158,6 +192,12 @@ def run_in_sandbox(
     Returns:
         {"ok": bool, "results": list[dict]} on success, or {"ok": False, "error": str}.
     """
+    if timeout is None or timeout == 60.0:
+        num_seq = len(job.get("sequences", []))
+        if num_seq > 20:
+            timeout = max(timeout or 60.0, num_seq * 3.0 + 30.0)
+        elif timeout is None:
+            timeout = 60.0
     if not is_docker_available():
         return {
             "ok": False,
@@ -180,6 +220,7 @@ def run_in_sandbox(
         container_job = dict(job)
         container_job["candidate_file"] = "/cand/handler.py"
         container_job["mode"] = mode
+        container_job["is_sandbox"] = True
         job_json = json.dumps(container_job)
 
         cmd = build_docker_run_cmd(
@@ -201,6 +242,7 @@ def run_in_sandbox(
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
+                encoding="utf-8",
                 bufsize=1,
             )
 
@@ -242,7 +284,24 @@ def run_in_sandbox(
             }
 
         try:
-            results = json.loads(stdout_data.strip())
+            raw_parsed = json.loads(stdout_data.strip())
+            if isinstance(raw_parsed, dict):
+                seqs = raw_parsed.get("sequences", [])
+                for seq in seqs:
+                    if "results" in seq and "steps" not in seq:
+                        seq["steps"] = seq["results"]
+                    elif "steps" in seq and "results" not in seq:
+                        seq["results"] = seq["steps"]
+                results = SandboxResultPayload(raw_parsed)
+            elif isinstance(raw_parsed, list):
+                for seq in raw_parsed:
+                    if "results" in seq and "steps" not in seq:
+                        seq["steps"] = seq["results"]
+                    elif "steps" in seq and "results" not in seq:
+                        seq["results"] = seq["steps"]
+                results = SandboxResultPayload({"sequences": raw_parsed})
+            else:
+                results = raw_parsed
             return {"ok": True, "results": results}
         except json.JSONDecodeError as exc:
             return {

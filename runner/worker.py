@@ -10,9 +10,11 @@ Enforces:
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import queue
 import shutil
+import signal
 import sqlite3
 import subprocess
 import sys
@@ -20,6 +22,19 @@ import tempfile
 import threading
 import time
 from typing import Any, Dict, List, Optional, Tuple
+
+
+def _kill_proc(p: subprocess.Popen) -> None:
+    try:
+        if hasattr(os, "killpg") and hasattr(os, "getpgid"):
+            os.killpg(os.getpgid(p.pid), signal.SIGKILL)
+        else:
+            p.kill()
+    except Exception:
+        try:
+            p.kill()
+        except Exception:
+            pass
 
 
 def native_allowed(candidate_path: Path, is_sandbox: bool = False) -> bool:
@@ -188,17 +203,33 @@ def run_sequence_normal(
                 line = out_queue.get(timeout=per_call_timeout)
                 resp = json.loads(line.strip())
             except queue.Empty:
-                # Per-call timeout
-                timed_out = True
+                rc = proc.poll()
+                _kill_proc(proc)
+                err_txt = ""
                 try:
-                    proc.kill()
+                    if proc.stderr:
+                        err_txt = proc.stderr.read()
                 except Exception:
                     pass
-                results.append({
-                    "step_index": idx,
-                    "response": "timeout",
-                    "snapshot": query_snapshot(db_path),
-                })
+                if rc is not None and rc != 0:
+                    results.append({
+                        "step_index": idx,
+                        "response": {"error": f"Child terminated with exit code {rc} (e.g. OOM killer): {err_txt.strip()[:500]}"},
+                        "snapshot": query_snapshot(db_path),
+                    })
+                elif err_txt and err_txt.strip():
+                    results.append({
+                        "step_index": idx,
+                        "response": {"error": f"Child exited with error: {err_txt.strip()[:500]}"},
+                        "snapshot": query_snapshot(db_path),
+                    })
+                else:
+                    timed_out = True
+                    results.append({
+                        "step_index": idx,
+                        "response": "timeout",
+                        "snapshot": query_snapshot(db_path),
+                    })
             except Exception as exc:
                 results.append({
                     "step_index": idx,
@@ -219,8 +250,7 @@ def run_sequence_normal(
             pass
 
         try:
-            if proc.poll() is None:
-                proc.kill()
+            _kill_proc(proc)
             proc.wait(timeout=2.0)
         except Exception:
             pass
@@ -369,12 +399,13 @@ def execute_job(job: Dict[str, Any], is_sandbox: bool = False) -> Dict[str, Any]
 def main() -> int:
     """Worker CLI entry point: reads job JSON from stdin, writes results JSON to stdout."""
     try:
-        raw_input = sys.stdin.read()
+        raw_input = sys.stdin.read().lstrip("\ufeff")
         if not raw_input.strip():
             print(json.dumps({"error": "Empty job input"}), file=sys.stderr)
             return 1
         job = json.loads(raw_input)
-        out = execute_job(job)
+        is_sandbox = job.get("is_sandbox", False) or Path("/cand").exists()
+        out = execute_job(job, is_sandbox=is_sandbox)
         print(json.dumps(out))
         return 0
     except Exception as exc:
