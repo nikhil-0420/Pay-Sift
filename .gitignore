@@ -1,0 +1,13 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+report/out/
+.agent/
+manus_attachments/
+manus_attachments.zip
+*.zip
+candidates/_stale/
+node_modules/
+*.log
