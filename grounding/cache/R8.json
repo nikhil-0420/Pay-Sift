@@ -1,0 +1,276 @@
+{
+  "rule_id": "R8",
+  "title": "Rejection Non-Consumption",
+  "description": "A `\"rejected\"` event produces no state change and does NOT consume its `event_id`. If the same `event_id` is redelivered later with valid parameters or prerequisites satisfied, it must be processed and applied normally.",
+  "text_hash": "3fa82759ce2f6bad5573cfeee5f0aa5b96ca00ccc523d11c9c656b0e74000695",
+  "retrieved_at": "2026-11-21T07:34:04.751026+00:00",
+  "sources": [
+    {
+      "id": "R8_s1",
+      "url": "https://docs.stripe.com/webhooks/signature",
+      "title": "Manage webhook endpoints | Stripe Documentation",
+      "snippet": "Any SDK error (such as each language\u2019s SignatureVerificationError) or error from your callbacks comes from the . ... Review these best practices to make sure your webhook endpoints remain secure and function well with your integration. ... read permission, which appears in the Dashboard as Webhook Endpoints, Event Destinations: Read, provides...",
+      "rank": 1,
+      "query": "webhook failed signature event id retry not consumed",
+      "retrieved_at": "2026-11-21T07:33:58.772794+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R8_s2",
+      "url": "https://dev.to/apitraffic/debugging-webhooks-in-node-failed-signatures-retries-and-duplicate-events-505m",
+      "title": "Debugging webhooks in Node: failed signatures, retries and duplicate ...",
+      "snippet": "Webhook bugs have a talent for not reproducing on your laptop. Three of the usual suspects: A... Tagged with webdev, node. Tagging the event ID turns \"did we process this twice?\" into a search: ... Both deliveries come back, with their timestamps, statuses and durations. A slow first attempt followed by a retry a second later is the duplicate,...",
+      "rank": 2,
+      "query": "webhook failed signature event id retry not consumed",
+      "retrieved_at": "2026-11-21T07:33:58.772794+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R8_s3",
+      "url": "https://www.cevrynt.com/blog/stripe-webhook-signature-verification-errors-timeouts-retries",
+      "title": "Stripe Webhook Errors: Signatures, Timeouts, Retries | Cevrynt",
+      "snippet": "Stripe Engineering21 minStripe Webhooks Best Practices: Idempotency, Retries and Out-of-Order Events \u00b7 Stripe Engineering18 minStripe Subscription Webhooks: Which Events to Handle and When to Grant Access \u00b7 Stripe Engineering22 minStripe Integration Guide: How to Integrate Stripe Properly, from Checkout to Webhooks ... Send us a failing delivery...",
+      "rank": 3,
+      "query": "webhook failed signature event id retry not consumed",
+      "retrieved_at": "2026-11-21T07:33:58.772794+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R8_s4",
+      "url": "https://www.alekseialeinikov.com/en/blog/topics/architecture/idempotency-in-practice-api-retries-2026",
+      "title": "Idempotency Keys Explained: Stop Duplicate API Retries",
+      "snippet": "Removed after at least 24 hours; reusing a pruned key produces a genuinely new request. Parameters are compared. If the same key arrives with different parameters, that\u2019s an error \u2014 it means the client made a mistake, not that it retried. But the replay has a boundary. Anything rejected before the endpoint starts running is not covered. Rate...",
+      "rank": 1,
+      "query": "idempotency key rejected request retry with valid parameters",
+      "retrieved_at": "2026-11-21T07:34:00.651326+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R8_s5",
+      "url": "https://docs.stripe.com/error-low-level",
+      "title": "Advanced error handling | Stripe Documentation",
+      "snippet": "For a POST operation using an idempotency key, Stripe caches the result after the API method begins execution, including errors. Retrying a cached 400 response with the same key returns the same error. Errors that occur before execution begins, such as invalid parameters, an invalid API key, or rate limiting, don\u2019t cache a result. Retry these...",
+      "rank": 2,
+      "query": "idempotency key rejected request retry with valid parameters",
+      "retrieved_at": "2026-11-21T07:34:00.651326+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R8_s6",
+      "url": "https://docs.stripe.com/api/idempotent_requests",
+      "title": "Idempotent requests | Stripe API Reference",
+      "snippet": "Don\u2019t send idempotency keys in GET and DELETE requests because it has no effect. These requests are idempotent by definition. ... Some API v2 responses contain null values for certain properties by default, regardless of their actual values. That reduces the size of response payloads while maintaining the basic response structure. To retrieve the...",
+      "rank": 3,
+      "query": "idempotency key rejected request retry with valid parameters",
+      "retrieved_at": "2026-11-21T07:34:00.651326+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R8_s7",
+      "url": "https://developer.fastspring.com/reference/processed-and-unprocessed-webhook-events",
+      "title": "Processed and unprocessed webhook events",
+      "snippet": "For AI agents: the docs index is at https://developer.fastspring.com/llms.txt. Append .md to any documentation page URL to get its markdown version. ... Learn how to manage the lifecycle of webhook events, including marking them as processed, understanding retry logic, and retrieving missed events. You can mark your webhook events as processed in...",
+      "rank": 1,
+      "query": "webhook error response does not mark event id as processed",
+      "retrieved_at": "2026-11-21T07:34:02.615564+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R8_s8",
+      "url": "https://github.com/TortoiseWolfe/RescueDogs/issues/348",
+      "title": "fix(payments): reprocess failed webhook events on retry instead ...",
+      "snippet": "If a payment webhook fails once, the event is lost for good: every provider retry is acknowledged as \"already processed\", even though the first attempt never finished. Found in the 2026-09-29 full-repository code review (tracking epic #3... In both stripe-webhook and paypal-webhook, an event whose webhook_events row has processed = false is...",
+      "rank": 2,
+      "query": "webhook error response does not mark event id as processed",
+      "retrieved_at": "2026-11-21T07:34:02.615564+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R8_s9",
+      "url": "https://docs.stripe.com/webhooks/process-undelivered-events",
+      "title": "Manage webhook endpoints | Stripe Documentation",
+      "snippet": "Any large spike in webhook deliveries (for example, during the beginning of the month when all subscriptions renew) might overwhelm your endpoint hosts. Asynchronous queues allow you to process the concurrent events at a rate your system can support. Your endpoint must quickly return a successful status code (2xx) before any complex logic that...",
+      "rank": 3,
+      "query": "webhook error response does not mark event id as processed",
+      "retrieved_at": "2026-11-21T07:34:02.615564+00:00",
+      "provider": "you.com"
+    }
+  ],
+  "raw_responses": [
+    {
+      "query": "webhook failed signature event id retry not consumed",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.stripe.com/webhooks/signature",
+              "title": "Manage webhook endpoints | Stripe Documentation",
+              "description": "Process undelivered webhook events, resolve signature verification errors, handle event-generation failures, and use event notification handlers to route events to your business logic.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/events.manage-webhook-endpoints.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/events.manage-webhook-endpoints.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "Any SDK error (such as each language\u2019s SignatureVerificationError) or error from your callbacks comes from the . ... Review these best practices to make sure your webhook endpoints remain secure and function well with your integration. ... read permission, which appears in the Dashboard as Webhook Endpoints, Event Destinations: Read, provides access only to list or retrieve destination configurations.",
+                "If your webhook endpoint was temporarily unavailable, Stripe automatically retries undelivered events for up to three days. To speed up recovery, manually process the backlog. Call the List Events API with the following parameters: ... before: An event ID that was successfully delivered immediately before the outage. This anchors the list to the window of events you missed. ... success: Set to false to return events with deliveries that are still pending or have failed all delivery attempts to at least one of your endpoints.",
+                "For complete signature verification instructions, see Check webhook signatures. In addition to signature verification, configure your server to only accept webhook requests from Stripe\u2019s IP addresses. Multiple types of issues can prevent successful event delivery to your webhook endpoint. This section helps you identify and fix them.",
+                "If your integration relies on receiving the failed event type, poll the relevant API to get the current state of the affected resource. For the example above, retrieve the PaymentIntent directly:"
+              ]
+            },
+            {
+              "url": "https://dev.to/apitraffic/debugging-webhooks-in-node-failed-signatures-retries-and-duplicate-events-505m",
+              "title": "Debugging webhooks in Node: failed signatures, retries and duplicate ...",
+              "description": "Webhook bugs have a talent for not reproducing on your laptop. Three of the usual suspects: A...",
+              "thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fw0vwhnzuobckz4embn1r.png",
+              "original_thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fw0vwhnzuobckz4embn1r.png",
+              "page_age": "2026-11-05T14:00:00",
+              "favicon_url": "https://you.com/favicon?domain=dev.to&size=128",
+              "snippets": [
+                "Webhook bugs have a talent for not reproducing on your laptop. Three of the usual suspects: A... Tagged with webdev, node.",
+                "Tagging the event ID turns \"did we process this twice?\" into a search: ... Both deliveries come back, with their timestamps, statuses and durations. A slow first attempt followed by a retry a second later is the duplicate, explained. For the signature problem, url_path like \"/webhooks/*\" AND status_code == 401 lists every rejected delivery.",
+                "Deduplicate on the provider's event ID, not on a hash of the body. A retry can arrive in a differently shaped payload. Let the database enforce it. A unique key and ON CONFLICT DO NOTHING is a race-free claim; a SELECT followed by an INSERT is not. app.post('/webhooks/orders', async (req, res) => { if (!verifySignature(req, process.env.WEBHOOK_SECRET)) { return res.sendStatus(401); } const event = req.body; // webhook_events.id is the provider's event ID, with a unique constraint const { rowCount } = await db.query( `INSERT INTO webhook_events (id, type, payload) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING`, [event.id, event.type, event] ); // rowCount 0 means we've seen it: answer 200 so the provider stops retrying res.sendStatus(200); });",
+                "Webhook bugs have a talent for not reproducing on your laptop. Three of the usual suspects: A signature check that passes nine times and fails the tenth. The same event processed twice, so one order ships twice or one email goes out twice. A slow deploy, a pile of timeouts, and a retry storm right behind it."
+              ]
+            },
+            {
+              "url": "https://www.cevrynt.com/blog/stripe-webhook-signature-verification-errors-timeouts-retries",
+              "title": "Stripe Webhook Errors: Signatures, Timeouts, Retries | Cevrynt",
+              "description": "Stripe Engineering21 minStripe Webhooks Best Practices: Idempotency, Retries and Out-of-Order Events \u00b7 Stripe Engineering18 minStripe Subscription Webhooks: Which Events to Handle and When to Grant Access \u00b7 Stripe Engineering22 minStripe Integration Guide: How to Integrate Stripe Properly, from Checkout to Webhooks ... Send us a failing delivery and the path a request takes to your handler. We trace it from Stripe's signature ...",
+              "thumbnail_url": "https://www.cevrynt.com/blog/stripe-webhook-signature-verification-errors-timeouts-retries/opengraph-image",
+              "original_thumbnail_url": "https://www.cevrynt.com/blog/stripe-webhook-signature-verification-errors-timeouts-retries/opengraph-image",
+              "page_age": "2026-10-30T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=www.cevrynt.com&size=128",
+              "snippets": [
+                "Stripe Engineering21 minStripe Webhooks Best Practices: Idempotency, Retries and Out-of-Order Events \u00b7 Stripe Engineering18 minStripe Subscription Webhooks: Which Events to Handle and When to Grant Access \u00b7 Stripe Engineering22 minStripe Integration Guide: How to Integrate Stripe Properly, from Checkout to Webhooks ... Send us a failing delivery and the path a request takes to your handler. We trace it from Stripe's signature to your code and fix what breaks.",
+                "Stripe webhook signature verification failed? A fix-by-fix playbook for raw-body errors, wrong secrets, 400s, timeouts, retries and events that never arrive.",
+                "Fix: accept POST, which Stripe's documentation lists as a requirement for webhook endpoints. One rule worth adopting: return 400 only for a failed signature or an unparseable payload. For a valid event that your code does not handle, return 200. Stripe keeps retrying anything that is not 2xx, so a 400 for an unknown event type creates days of pointless retries and noise in your delivery log.",
+                "Return a 500 from a staging handler on purpose and watch the retry schedule in Event deliveries. The Stripe integration guide includes a wider failure matrix for the rest of a payment integration. ... Signature failures come from three inputs: the raw body, the endpoint's secret in the right mode, and the `Stripe-Signature` header. Stripe names the wrong secret as the most common cause. Verify the exact bytes. In Express use `express.raw()` on the webhook route before `express.json()`; in Next.js App Router use `request.text()`; in NestJS use `rawBody: true`."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "webhook failed signature event id retry not consumed",
+          "search_uuid": "03a60190-861f-4ce6-8518-a25974e36ab7",
+          "latency": 0.4578920060012024
+        }
+      },
+      "timestamp": "2026-11-21T07:33:58.772794+00:00"
+    },
+    {
+      "query": "idempotency key rejected request retry with valid parameters",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://www.alekseialeinikov.com/en/blog/topics/architecture/idempotency-in-practice-api-retries-2026",
+              "title": "Idempotency Keys Explained: Stop Duplicate API Retries",
+              "description": "An idempotency key makes a retried POST safe: replay the first response for 24h and treat in-flight keys as a third state \u2014 the race most APIs miss.",
+              "thumbnail_url": "https://media.alekseialeinikov.com/architecture/f3a91c7e5d28/cover-1200.b1a3054e2aac2964.webp",
+              "original_thumbnail_url": "https://media.alekseialeinikov.com/architecture/f3a91c7e5d28/cover-1200.b1a3054e2aac2964.webp",
+              "page_age": "2026-08-14T12:00:00",
+              "favicon_url": "https://you.com/favicon?domain=www.alekseialeinikov.com&size=128",
+              "snippets": [
+                "Removed after at least 24 hours; reusing a pruned key produces a genuinely new request. Parameters are compared. If the same key arrives with different parameters, that\u2019s an error \u2014 it means the client made a mistake, not that it retried. But the replay has a boundary. Anything rejected before the endpoint starts running is not covered. Rate limiting is the clearest case: Stripe\u2019s own docs note that a 429 can produce a different result under the same key, because the rate limiter runs ahead of the idempotency layer.",
+                "Reap stale in-flight rows. A process that dies mid-request leaves a key stuck in in_flight forever, and that key will reject every retry until someone notices. Give in-flight records a lease with a timeout. Store a fingerprint of the request. Hash the relevant parameters.",
+                "And the subtle one: results are only saved after execution of the endpoint begins. If the request fails validation, or conflicts with another request executing concurrently, no idempotent result is stored, and the client may retry.",
+                "The spec is blunt about retries: a client SHOULD NOT automatically retry a non-idempotent method, and a proxy MUST NOT. Everyone does it anyway, which is the whole problem. Idempotency-Key is a de-facto standard, not a standard: the IETF draft has expired without becoming an RFC, so behaviour is defined by whoever implemented it. Stripe stores the status code and body of the first request per key \u2014 including 500s \u2014 and replays that exact result, but deliberately does not store results for requests that failed validation or raced another request."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/error-low-level",
+              "title": "Advanced error handling | Stripe Documentation",
+              "description": "Advanced guide for handling HTTP-level errors, idempotency, and retry logic in Stripe API integrations.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/error-low-level.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/error-low-level.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "For a POST operation using an idempotency key, Stripe caches the result after the API method begins execution, including errors. Retrying a cached 400 response with the same key returns the same error. Errors that occur before execution begins, such as invalid parameters, an invalid API key, or rate limiting, don\u2019t cache a result. Retry these requests after resolving the error.",
+                "When retrying the same operation, preserve the idempotency key and parameters within the retry window. If a 409 indicates that another request with the same key is still executing, wait and retry with that key and the same parameters.",
+                "When a connection fails, you might not know whether Stripe received or executed the request. Retry with the same idempotency key and parameters within the first 24 hours after the original request. If you still haven\u2019t received a result when that window ends, stop retrying and reconcile the outcome as described in POST requests.",
+                "Sending the same idempotency key with different parameters produces an error indicating that the request didn\u2019t match the original. Stripe SDKs can generate idempotency keys and retry requests automatically. Retry defaults depend on the SDK, version, and how you construct the client."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/api/idempotent_requests",
+              "title": "Idempotent requests | Stripe API Reference",
+              "description": "If incoming parameters fail validation, or the request conflicts with another request that\u2019s executing concurrently, we don\u2019t save the idempotent result because no API endpoint initiates the execution. You can retry these requests. Learn more about when you can retry idempotent requests. For API v1, all POST requests accept idempotency keys...",
+              "page_age": "2026-08-26T01:46:41",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "Don\u2019t send idempotency keys in GET and DELETE requests because it has no effect. These requests are idempotent by definition. ... Some API v2 responses contain null values for certain properties by default, regardless of their actual values. That reduces the size of response payloads while maintaining the basic response structure. To retrieve the actual values for those properties, specify them in the include array request parameter.",
+                "For API v1, Stripe saves the status code and body of the first request made with a given idempotency key after endpoint execution begins. Retries with the same key return the saved response, including 500 errors. With API v2, retries don\u2019t repeat successful operations.",
+                "Stripe retries failed or partially failed work to completion when possible and returns an updated response. If a retry can\u2019t succeed, Stripe returns an error explaining why. A client generates an idempotency key, which is a unique key that the server uses to recognize subsequent retries of the same request.",
+                "The API supports idempotency for safely retrying requests without accidentally performing the same operation twice. When creating or updating an object, use an idempotency key."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "idempotency key rejected request retry with valid parameters",
+          "search_uuid": "c109ec28-7018-44c5-8525-92ead74165cb",
+          "latency": 0.45602850898285396
+        }
+      },
+      "timestamp": "2026-11-21T07:34:00.651326+00:00"
+    },
+    {
+      "query": "webhook error response does not mark event id as processed",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://developer.fastspring.com/reference/processed-and-unprocessed-webhook-events",
+              "title": "Processed and unprocessed webhook events",
+              "description": "Learn how to manage the lifecycle of webhook events, including marking them as processed, understanding retry logic, and retrieving missed events.",
+              "thumbnail_url": "https://cdn.readme.io/og-image/create?type=reference&amp;title=Processed%20and%20unprocessed%20webhook%20events&amp;projectTitle=FastSpring%20Developer%20Docs&amp;description=Learn%20how%20to%20manage%20the%20lifecycle%20of%20webhook%20events%2C%20including%20marking%20them%20as%20processed%2C%20understanding%20retry%20logic%2C%20and%20retrieving%20missed%20events.&amp;logoUrl=https%3A%2F%2Ffiles.readme.io%2F7980de6-small-logo3x_1.png&amp;color=%23528CA5&amp;variant=light",
+              "original_thumbnail_url": "https://cdn.readme.io/og-image/create?type=reference&amp;title=Processed%20and%20unprocessed%20webhook%20events&amp;projectTitle=FastSpring%20Developer%20Docs&amp;description=Learn%20how%20to%20manage%20the%20lifecycle%20of%20webhook%20events%2C%20including%20marking%20them%20as%20processed%2C%20understanding%20retry%20logic%2C%20and%20retrieving%20missed%20events.&amp;logoUrl=https%3A%2F%2Ffiles.readme.io%2F7980de6-small-logo3x_1.png&amp;color=%23528CA5&amp;variant=light",
+              "page_age": "2026-02-11T14:24:36",
+              "favicon_url": "https://you.com/favicon?domain=developer.fastspring.com&size=128",
+              "snippets": [
+                "For AI agents: the docs index is at https://developer.fastspring.com/llms.txt. Append .md to any documentation page URL to get its markdown version. ... Learn how to manage the lifecycle of webhook events, including marking them as processed, understanding retry logic, and retrieving missed events.",
+                "You can mark your webhook events as processed in bulk or individually. ... Return HTTP 200 Consider all received events in the payload as successfully processed. ... Return HTTP 202 Apply specific requirements to individual orders. In the response body, list the ID number of the event you processed.",
+                "When a webhook event is not marked as processed, FastSpring automatically retries delivery for up to 7 days from the original attempt. This pattern typically results in up to 6 retries within the first 24 hours. After the first 24 hours, the system schedules 1 retry per day, for a maximum of 12 retries within the 7-day window. If the event is not processed within 7 days from the original attempt, FastSpring stops retrying and marks the event as permanently failed.",
+                "Go to Developer Tools > Webhooks > Log. Resend it manually from the order\u2019s details page. Resend it manually from the subscription\u2019s details page. Make a GET call to the /events/unprocessed endpoint. After you process the missed events, mark the events as processed with a POST to the /events endpoint."
+              ]
+            },
+            {
+              "url": "https://github.com/TortoiseWolfe/RescueDogs/issues/348",
+              "title": "fix(payments): reprocess failed webhook events on retry instead ...",
+              "description": "If a payment webhook fails once, the event is lost for good: every provider retry is acknowledged as \"already processed\", even though the first attempt never finished. Found in the 2026-0...",
+              "thumbnail_url": "https://opengraph.githubassets.com/d8625a9bb2b684193db9de88635b2e934c46e957308af0dd93b592f92b3aab3b/TortoiseWolfe/RescueDogs/issues/348",
+              "original_thumbnail_url": "https://opengraph.githubassets.com/d8625a9bb2b684193db9de88635b2e934c46e957308af0dd93b592f92b3aab3b/TortoiseWolfe/RescueDogs/issues/348",
+              "page_age": "2026-09-29T17:17:10",
+              "favicon_url": "https://you.com/favicon?domain=github.com&size=128",
+              "snippets": [
+                "If a payment webhook fails once, the event is lost for good: every provider retry is acknowledged as \"already processed\", even though the first attempt never finished. Found in the 2026-09-29 full-repository code review (tracking epic #3...",
+                "In both stripe-webhook and paypal-webhook, an event whose webhook_events row has processed = false is processed again on redelivery, not acknowledged. An event whose row has processed = true still returns 200 \"Event already processed\" without re-running the handler. On a handler error the row keeps processed = false, gets processing_attempts incremented and a non-empty processing_error, and the response is 500.",
+                "Manually verified with the Stripe CLI against a non-production project: force one handler failure (see the manual check in the prompt), confirm the 500, remove the cause, redeliver the event with stripe events resend , and confirm a payment_results row appears. Context: TortoiseWolfe/RescueDogs issue #348 \u2014 https://github.com/TortoiseWolfe/RescueDogs/issues/348 Goal: a webhook event is only \"already processed\" when processed = true. Failed attempts must be reprocessed on provider retry. Stripe's `incomplete` status must never be written. No schema change (webhook_events already has processing_attempts / processing_error / last_retry_at).",
+                "Then run `ALTER TABLE payment_results DROP CONSTRAINT tmp_force_fail;` and `stripe events resend `, and confirm a 200, processed=true, and exactly one new payment_results row. Repo (MIT): https://github.com/TortoiseWolfe/RescueDogs \u00b7 Companion finding: the PayPal subscription webhook cannot insert a valid subscriptions row (filed from the same review) session-prime: roadmap + orient-fast prompt for new sessions #5: one-live-subscription unique index (its 23505 handling is unchanged) Triage: auth email links show a malformed token= parameter \u2014 confirm whether the mail is broken or only our reading of it #102: create-stripe-subscription metadata for template_user_id ..."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/webhooks/process-undelivered-events",
+              "title": "Manage webhook endpoints | Stripe Documentation",
+              "description": "Process undelivered webhook events, resolve signature verification errors, handle event-generation failures, and use event notification handlers to route events to your business logic.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/events.manage-webhook-endpoints.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/events.manage-webhook-endpoints.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "Any large spike in webhook deliveries (for example, during the beginning of the month when all subscriptions renew) might overwhelm your endpoint hosts. Asynchronous queues allow you to process the concurrent events at a rate your system can support. Your endpoint must quickly return a successful status code (2xx) before any complex logic that could cause a timeout. For example, you must return a 200 response before updating a customer\u2019s invoice as paid in your accounting system.",
+                "If your webhook endpoint was temporarily unavailable, Stripe automatically retries undelivered events for up to three days. To speed up recovery, manually process the backlog. Call the List Events API with the following parameters: ... before: An event ID that was successfully delivered immediately before the outage.",
+                "To identify these duplicates, use the ID of the object in data. ... Configure your webhook endpoints to receive only the types of events required by your integration. Listening for extra events (or all events) puts undue strain on your server and we don\u2019t recommend it. You can change the events that a webhook endpoint receives in the Dashboard or with the API. Configure your handler to process incoming events with an asynchronous queue.",
+                "Webhook endpoints might occasionally receive the same event more than once. Guard against duplicated event receipts by logging the event IDs you\u2019ve processed, and then not processing already-logged events."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "webhook error response does not mark event id as processed",
+          "search_uuid": "27ac02cc-d9f0-4ab7-8651-871b9e57285e",
+          "latency": 0.593995900999289
+        }
+      },
+      "timestamp": "2026-11-21T07:34:02.615564+00:00"
+    }
+  ]
+}

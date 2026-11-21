@@ -1,0 +1,268 @@
+{
+  "rule_id": "R4",
+  "title": "Payment Capture",
+  "description": "For `payment.captured`: if no capture exists for `payment_id`, insert into `payments` (`captured_paise = amount`, `refunded_paise = 0`) and insert exactly one `'capture'` ledger entry (`amount_paise = amount`). If the payment already has a capture: return status `\"rejected\"` and commit no state change.",
+  "text_hash": "d4af7223b2755234b7fe626b534faea3cbe11eb55602f1aa8337235f4f99b00b",
+  "retrieved_at": "2026-11-21T07:33:42.168273+00:00",
+  "sources": [
+    {
+      "id": "R4_s1",
+      "url": "https://docs.stripe.com/payments/payment-intents/asynchronous-capture",
+      "title": "Asynchronous capture | Stripe Documentation",
+      "snippet": "Asynchronous capture reduces the latency of PaymentIntent confirmations by making the capture operation take place in the background. After making the capture request, your integration receives a successful response, and Stripe completes payment capture in the back end. You might need to make additional changes when you opt in to asynchronous...",
+      "rank": 1,
+      "query": "site:docs.stripe.com/payments/payment-intents capture amount ledger",
+      "retrieved_at": "2026-11-21T07:33:36.546073+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R4_s2",
+      "url": "https://docs.stripe.com/payments/payment-intents/verifying-status",
+      "title": "Payment status updates | Stripe Documentation",
+      "snippet": "capture if capturing later).",
+      "rank": 2,
+      "query": "site:docs.stripe.com/payments/payment-intents capture amount ledger",
+      "retrieved_at": "2026-11-21T07:33:36.546073+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R4_s3",
+      "url": "https://docs.stripe.com/payments/payment-intents",
+      "title": "The Payment Intents API | Stripe Documentation",
+      "snippet": "We recommend creating a PaymentIntent as soon as you know the amount, such as when the customer begins the checkout process, to help track your purchase funnel. If the amount changes, you can update its amount. Building an integration with the Payment Intents API involves two actions: creating and confirming a PaymentIntent. Each PaymentIntent...",
+      "rank": 3,
+      "query": "site:docs.stripe.com/payments/payment-intents capture amount ledger",
+      "retrieved_at": "2026-11-21T07:33:36.546073+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R4_s4",
+      "url": "https://razorpay.com/docs/us/api/payments/capture",
+      "title": "Capture a Payment - Razorpay",
+      "snippet": "Attempting to capture a payment whose status is not authorized will produce an error. Description of the error that occurred during payment. For example, Payment processing failed because of incorrect OTP. ... The point of failure. For example, customer. ... The stage where the transaction failure occurred. The stages can vary depending on the...",
+      "rank": 1,
+      "query": "site:razorpay.com/docs payments capture duplicate capture error",
+      "retrieved_at": "2026-11-21T07:33:38.257840+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R4_s5",
+      "url": "https://razorpay.com/docs/us/errors/payments/list",
+      "title": "List of Errors - Razorpay",
+      "snippet": "Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States Below are the top error codes associated with various payment methods, along with their reasons, descriptions and steps for resolution. This usually occurs when the Core Banking System encounters a technical error while processing the payment.`}),_jsx(_components.td,{children:`The...",
+      "rank": 2,
+      "query": "site:razorpay.com/docs payments capture duplicate capture error",
+      "retrieved_at": "2026-11-21T07:33:38.257840+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R4_s6",
+      "url": "https://razorpay.com/docs/errors/payments/list/?preferred-country=US",
+      "title": "List of Errors | Razorpay Docs",
+      "snippet": "Below are the top error codes associated with various payment methods, along with their reasons, descriptions and steps for resolution.",
+      "rank": 3,
+      "query": "site:razorpay.com/docs payments capture duplicate capture error",
+      "retrieved_at": "2026-11-21T07:33:38.257840+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R4_s7",
+      "url": "https://github.com/Ayush1015/payment-webhook-ledger",
+      "title": "GitHub - Ayush1015/payment-webhook-ledger: Signed payment webhook ...",
+      "snippet": "Records payment amounts as integer minor units, never floating-point money. Reconciles the latest event for each payment against independently stored expected state. Flags missing ledger entries, missing webhooks, and differences in amount, currency or status. A small, runnable backend for a common payments problem: providers retry webhooks,...",
+      "rank": 1,
+      "query": "payment capture webhook insert ledger payments captured amount",
+      "retrieved_at": "2026-11-21T07:33:40.051172+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R4_s8",
+      "url": "https://razorpay.com/docs/us/webhooks/payments",
+      "title": "Payments Webhook Events - Razorpay",
+      "snippet": "List of Payments webhook events along with sample payloads. ... Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States You can accept customer payments using Razorpay products. The payload for a Webhook is a snapshot of the entity when the event occurred. For example, when a customer makes a payment, its status changes to authorized. It can...",
+      "rank": 2,
+      "query": "payment capture webhook insert ledger payments captured amount",
+      "retrieved_at": "2026-11-21T07:33:40.051172+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R4_s9",
+      "url": "https://www.checkout.com/docs/payments/manage-payments/capture-a-payment",
+      "title": "Capture a payment - Docs",
+      "snippet": "If a payment is requested with capture as false, you can use this endpoint to capture the payment. These captures can either be the full or partial authorization amount, but cannot be submitted for a combined amount that exceeds the total authorized balance. If you do not capture it within seven days, the payment is voided. Any capture amount less...",
+      "rank": 3,
+      "query": "payment capture webhook insert ledger payments captured amount",
+      "retrieved_at": "2026-11-21T07:33:40.051172+00:00",
+      "provider": "you.com"
+    }
+  ],
+  "raw_responses": [
+    {
+      "query": "site:docs.stripe.com/payments/payment-intents capture amount ledger",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.stripe.com/payments/payment-intents/asynchronous-capture",
+              "title": "Asynchronous capture | Stripe Documentation",
+              "description": "Use Asynchronous Capture to enable faster PaymentIntent confirmations.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/payments.payment-intents.asynchronous-capture.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/payments.payment-intents.asynchronous-capture.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "Asynchronous capture reduces the latency of PaymentIntent confirmations by making the capture operation take place in the background.",
+                "After making the capture request, your integration receives a successful response, and Stripe completes payment capture in the back end.",
+                "You might need to make additional changes when you opt in to asynchronous capture since the API response and some webhooks have different behavior than with other capture methods. For all payments, the balance_transaction is null on the following objects. For Connect payments, the transfer and application_fee are also null on the following objects: ... # Charge Object { \"id\": \"ch_123\", \"object\": \"charge\", \"amount_captured\": 1000, # the capture has happened \"application_fee_amount\": 100, \"captured\": true, \"balance_transaction\": \"txn_123\", # applicable to all charges.",
+                "You can listen to webhooks to check the status of objects that are initially null when using asynchronous capture. To get the balance_transaction, subscribe to the charge.updated webhook event. To get the application_fee, subscribe to the application_fee.created webhook event. To get the transfer, subscribe to the transfer.created webhook events. ... # charge.updated events { \"data\": { \"id\": \"ch_123\", \"object\": \"charge\", \"amount\": 100, \"balance_transaction\": \"txn_123\", # applicable to all charges."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/payments/payment-intents/verifying-status",
+              "title": "Payment status updates | Stripe Documentation",
+              "description": "Monitor the status of your PaymentIntents and respond to states that require intervention.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/payments.payment-intents.verifying-status.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/payments.payment-intents.verifying-status.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "capture if capturing later)."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/payments/payment-intents",
+              "title": "The Payment Intents API | Stripe Documentation",
+              "description": "Understand how to create a PaymentIntent to accept payments through Stripe.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/payments.payment-intents.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/payments.payment-intents.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "We recommend creating a PaymentIntent as soon as you know the amount, such as when the customer begins the checkout process, to help track your purchase funnel. If the amount changes, you can update its amount.",
+                "Building an integration with the Payment Intents API involves two actions: creating and confirming a PaymentIntent. Each PaymentIntent typically correlates with a single shopping cart or customer session in your application. The PaymentIntent encapsulates details about the transaction, such as the supported payment methods, the amount to collect, and the desired currency.",
+                "For example, if your customer backs out of the checkout process and adds new items to their cart, you might need to update the amount when they start the checkout process again.",
+                "You can use the client secret to complete the payment process with the amount specified on the PaymentIntent. Don\u2019t log it, embed it in URLs, or expose it to anyone other than the customer."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:docs.stripe.com/payments/payment-intents capture amount ledger",
+          "search_uuid": "1cd9b19b-1d43-41fc-b9c5-9b2a58a1c5a6",
+          "latency": 0.35961795700131916
+        }
+      },
+      "timestamp": "2026-11-21T07:33:36.546073+00:00"
+    },
+    {
+      "query": "site:razorpay.com/docs payments capture duplicate capture error",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://razorpay.com/docs/us/api/payments/capture",
+              "title": "Capture a Payment - Razorpay",
+              "description": "Indicates if the payment is captured. Possible values: ... Customer email address used for the payment. ... Customer contact number used for the payment. ... Fee (including GST) charged by Razorpay. ... GST charged for the payment. ... Error that occurred during payment.",
+              "thumbnail_url": "https://razorpay-881012b3.mintlify.app/_mintlify/api/og/v2?division=Payments&amp;title=Capture+a+Payment&amp;description=Create+a+Payment+using+Razorpay+Payments+API.&amp;theme=bb58a630b2bbead7dc77be4b&amp;signature=7af3f800eaa77bde4b8632d7520cd06a46d5b7bbb168ec1c1fcbe2de2ee8046b",
+              "original_thumbnail_url": "https://razorpay-881012b3.mintlify.app/_mintlify/api/og/v2?division=Payments&amp;title=Capture+a+Payment&amp;description=Create+a+Payment+using+Razorpay+Payments+API.&amp;theme=bb58a630b2bbead7dc77be4b&amp;signature=7af3f800eaa77bde4b8632d7520cd06a46d5b7bbb168ec1c1fcbe2de2ee8046b",
+              "page_age": "2026-10-08T16:37:49",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "Attempting to capture a payment whose status is not authorized will produce an error.",
+                "Description of the error that occurred during payment. For example, Payment processing failed because of incorrect OTP. ... The point of failure. For example, customer. ... The stage where the transaction failure occurred. The stages can vary depending on the payment method used to complete the transaction.",
+                "For example, payment_authentication. ... The exact error reason.",
+                "{ \"id\": \"pay_G3P9vcIhRs3NV4\", \"entity\": \"payment\", \"amount\": 1000, \"currency\": \"INR\", \"status\": \"captured\", \"order_id\": \"order_GjCr5oKh4AVC51\", \"invoice_id\": null, \"international\": false, \"method\": \"card\", \"amount_refunded\": 0, \"refund_status\": null, \"captured\": true, \"description\": \"Payment for Adidas shoes\", \"card_id\": \"card_KOdY30ajbuyOYN\", \"bank\": null, \"wallet\": null, \"vpa\": null, \"email\": \"gaurav.kumar@example.com\", \"contact\": \"9000090000\", \"customer_id\": \"cust_K6fNE0WJZWGqtN\", \"token_id\": \"token_KOdY$DBYQOv08n\", \"notes\": [], \"fee\": 1, \"tax\": 0, \"error_code\": null, \"error_description\": n"
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/us/errors/payments/list",
+              "title": "List of Errors - Razorpay",
+              "description": "List of payment errors with descriptions and next steps.",
+              "thumbnail_url": "https://razorpay-881012b3.mintlify.site/docs/_mintlify/api/og/v2?division=Payments&amp;title=List+of+Errors&amp;description=List+of+payment+errors+with+descriptions+and+next+steps.&amp;theme=a4f414a96152b37051aa45a2&amp;signature=ccb9dfea57d9536d3e31a9bdba9aadccc1acaaa39ea9a8597712e3725f37936e",
+              "original_thumbnail_url": "https://razorpay-881012b3.mintlify.site/docs/_mintlify/api/og/v2?division=Payments&amp;title=List+of+Errors&amp;description=List+of+payment+errors+with+descriptions+and+next+steps.&amp;theme=a4f414a96152b37051aa45a2&amp;signature=ccb9dfea57d9536d3e31a9bdba9aadccc1acaaa39ea9a8597712e3725f37936e",
+              "page_age": "2026-10-08T16:35:44",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States Below are the top error codes associated with various payment methods, along with their reasons, descriptions and steps for resolution.",
+                "This usually occurs when the Core Banking System encounters a technical error while processing the payment.`}),_jsx(_components.td,{children:`The customer must try using another bank account or another method.`})]}),_jsxs(_components.tr,{children:[_jsx(_components.td,{children:`capture_failed`}),_jsx(_components.td,{children:`Payment capture has failed.`}),_jsx(_components.td,{children:`Please reach out to Razorpay.`})]}),_jsxs(_components.tr,{children:[_jsx(_components.td,{children:`card_expired`}),_jsx(_components.td,{children:`The card has expired.`}),_jsx(_components.td,{children:`The cust",
+                "card_number_invalid`}),_jsx(_components.td,{children:`The card number is invalid.`}),_jsx(_components.td,{children:`Customer needs to enter a valid card number.`})]}),_jsxs(_components.tr,{children:[_jsx(_components.td,{children:`card_type_invalid`}),_jsx(_components.td,{children:`The card type is invalid.`}),_jsx(_components.td,{children:`Customer needs to use a valid card type.`})]}),_jsxs(_components.tr,{children:[_jsx(_components.td,{children:`compliance_violation`}),_jsx(_components.td,{children:`The payment violates compliance requirements.`}),_jsx(_components.td,{children:`Please ensure",
+                "The card could have been blocked by the issuer or by customers themselves.`}),_jsx(_components.td,{children:`The customer must retry with a different card or method.`})]}),_jsxs(_components.tr,{children:[_jsx(_components.td,{children:`debit_instrument_inactive`}),_jsx(_components.td,{children:`The debit instrument is inactive.`}),_jsx(_components.td,{children:`Customer needs to activate the instrument or use another payment method.`})]}),_jsxs(_components.tr,{children:[_jsx(_components.td,{children:`duplicate_rrn_found`}),_jsx(_components.td,{children:`A duplicate RRN (Retrieval Reference Numb"
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/errors/payments/list/?preferred-country=US",
+              "title": "List of Errors | Razorpay Docs",
+              "description": "List of payment errors with descriptions and next steps.",
+              "thumbnail_url": "https://razorpay.com/docs/build/browser/static/og-images/errors/payments/list.png",
+              "original_thumbnail_url": "https://razorpay.com/docs/build/browser/static/og-images/errors/payments/list.png",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "Below are the top error codes associated with various payment methods, along with their reasons, descriptions and steps for resolution."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:razorpay.com/docs payments capture duplicate capture error",
+          "search_uuid": "ce88289c-0595-4958-9a46-5f5a854b2dde",
+          "latency": 0.3669319209875539
+        }
+      },
+      "timestamp": "2026-11-21T07:33:38.257840+00:00"
+    },
+    {
+      "query": "payment capture webhook insert ledger payments captured amount",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://github.com/Ayush1015/payment-webhook-ledger",
+              "title": "GitHub - Ayush1015/payment-webhook-ledger: Signed payment webhook ...",
+              "description": "Signed payment webhook ingestion, durable idempotency and PostgreSQL reconciliation. TypeScript, tests and Docker Compose. - Ayush1015/payment-webhook-ledger",
+              "thumbnail_url": "https://opengraph.githubassets.com/fca3a9e8aa3fa4c2f7ba9381c91cc96bb173c99abd126eb3ba032c027654483d/Ayush1015/payment-webhook-ledger",
+              "original_thumbnail_url": "https://opengraph.githubassets.com/fca3a9e8aa3fa4c2f7ba9381c91cc96bb173c99abd126eb3ba032c027654483d/Ayush1015/payment-webhook-ledger",
+              "favicon_url": "https://you.com/favicon?domain=github.com&size=128",
+              "snippets": [
+                "Records payment amounts as integer minor units, never floating-point money. Reconciles the latest event for each payment against independently stored expected state. Flags missing ledger entries, missing webhooks, and differences in amount, currency or status.",
+                "A small, runnable backend for a common payments problem: providers retry webhooks, deliveries arrive out of order, and merchant records can disagree with provider events. This project stores authenticated payment events once and compares their latest state with an independent merchant-side payments ledger.",
+                "No public endpoint writes expected ledger state. In this demo, the seed script writes directly to payments; in a real system, that table should come from an independent merchant/order source. Provider / signed demo | v Raw body -> HMAC + timestamp -> schema validation | v webhook_events (unique event_id + idempotency_key) | +---------- latest event per payment --------+ | Independent merchant state -> payments ------------+-> reconciliation worker | v runs + persisted findings",
+                "This means an actively changing payment may remain deferred. Snapshot: each report uses a repeatable-read transaction, so comparisons and persisted findings belong to one consistent run. Historical webhook events remain immutable. The current expected ledger is not a versioned historical ledger."
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/us/webhooks/payments",
+              "title": "Payments Webhook Events - Razorpay",
+              "description": "List of Payments webhook events along with sample payloads.",
+              "thumbnail_url": "https://razorpay-881012b3.mintlify.site/docs/_mintlify/api/og/v2?division=List+of+Webhook+Events&amp;title=Payments+Webhook+Events&amp;description=List+of+Payments+webhook+events+along+with+sample+payloads.&amp;theme=a4f414a96152b37051aa45a2&amp;signature=f09ba2dd1d4995cba842ff490fe56a318754ec8bbeb02f8dfdf40a82f5a1f3a6",
+              "original_thumbnail_url": "https://razorpay-881012b3.mintlify.site/docs/_mintlify/api/og/v2?division=List+of+Webhook+Events&amp;title=Payments+Webhook+Events&amp;description=List+of+Payments+webhook+events+along+with+sample+payloads.&amp;theme=a4f414a96152b37051aa45a2&amp;signature=f09ba2dd1d4995cba842ff490fe56a318754ec8bbeb02f8dfdf40a82f5a1f3a6",
+              "page_age": "2026-10-08T16:35:44",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "List of Payments webhook events along with sample payloads. ... Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States You can accept customer payments using Razorpay products.",
+                "The payload for a Webhook is a snapshot of the entity when the event occurred. For example, when a customer makes a payment, its status changes to authorized. It can then immediately move to the captured state.",
+                "The payment can be in the captured state when the payment.authorized Webhook is fired.",
+                "These events are triggered when the payment associated with the order is captured. Given below are the sample payloads for payments webhook events. ... { \"account_id\": \"acc_BFQ7uQEaa7j2z7\", \"contains\": [ \"payment\" ], \"created_at\": 1691735748, \"entity\": \"event\", \"event\": \"payment.authorized\", \"payload\": { \"payment\": { \"entity\": { \"acquirer_data\": { \"auth_code\": \"828553\", \"rrn\": \"322206890934\" }, \"amount\": 100, \"amount_refunded\": 0, \"amount_transferred\": 0, \"bank\": null, \"captured\": true, \"card\": { \"emi\": false, \"entity\": \"card\", \"id\": \"card_DESp9fNnu0RoNc\", \"iin\": \"999999\", \"international\": fal"
+              ]
+            },
+            {
+              "url": "https://www.checkout.com/docs/payments/manage-payments/capture-a-payment",
+              "title": "Capture a payment - Docs",
+              "description": "You must subscribe to the Payment captured webhook to receive the updated balances object, including the captured amount.",
+              "page_age": "2026-05-06T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=www.checkout.com&size=128",
+              "snippets": [
+                "If a payment is requested with capture as false, you can use this endpoint to capture the payment. These captures can either be the full or partial authorization amount, but cannot be submitted for a combined amount that exceeds the total authorized balance.",
+                "If you do not capture it within seven days, the payment is voided. Any capture amount less than the original authorized amount is treated as a partial capture.",
+                "To perform multiple partial captures, set the capture_type field to NonFinal. The default value is Final, which voids any remaining amount on partial captures. Multiple partial captures are available for American Express, Discover, Mastercard, and Visa payments.",
+                "You can perform a maximum of 150 partial actions on a payment. This total limit applies across both partial captures and partial refunds. Use the following details to set up your request. For the full API specification, see the API reference. Your base URL's {prefix} value is unique to your account and environment. To learn how to retrieve your base URLs for the sandbox and production environments, see API endpoints. ... If you receive a 202 response, your capture request has been submitted successfully for clearing."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "payment capture webhook insert ledger payments captured amount",
+          "search_uuid": "cc44a831-23ac-485d-b92e-03c2c6bde831",
+          "latency": 0.6352899019839242
+        }
+      },
+      "timestamp": "2026-11-21T07:33:40.051172+00:00"
+    }
+  ]
+}

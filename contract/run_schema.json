@@ -140,6 +140,10 @@
           "expected": { "type": "object" },
           "observed": { "type": "object" },
           "explanation": { "type": "string" },
+          "evidence_refs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
           "classification": {
             "type": "object",
             "required": ["label", "by"],

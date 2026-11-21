@@ -1,0 +1,124 @@
+{
+  "rule_id": "R1",
+  "title": "Signature Verification",
+  "description": "The signature must equal the lowercase hex HMAC-SHA256 of the exact `raw_body` bytes, keyed with the UTF-8 `secret`. Any discrepancy (missing, empty, incorrect secret, corrupted/flipped byte, uppercase hex, non-ASCII characters, or signature computed over re-serialized JSON): return status `\"rejected\"`, commit no database state change, and raise no exception.",
+  "text_hash": "27f4e945d69ac8bff0b91f0c9d2dd12ea4347937d1c400e29df20c6ee3188126",
+  "retrieved_at": "2026-11-21T07:38:51.048439+00:00",
+  "sources": [
+    {
+      "id": "R1_s1",
+      "url": "https://docs.stripe.com/webhooks/signature",
+      "title": "Stripe Webhook Signatures",
+      "snippet": "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes. Do not verify signature over re-serialized JSON.",
+      "rank": 1,
+      "query": "site:docs.stripe.com/webhooks verify signature raw request body hmac sha256 stripe test",
+      "retrieved_at": "2026-11-21T07:38:51.048378+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R1_s2",
+      "url": "https://razorpay.com/docs/webhooks",
+      "title": "Razorpay Webhooks",
+      "snippet": "Compute the signature using hex digest of the raw request body.",
+      "rank": 2,
+      "query": "site:docs.stripe.com/webhooks verify signature raw request body hmac sha256 stripe test",
+      "retrieved_at": "2026-11-21T07:38:51.048378+00:00",
+      "provider": "you.com"
+    }
+  ],
+  "raw_responses": [
+    {
+      "query": "site:docs.stripe.com/webhooks verify signature raw request body hmac sha256 stripe test",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.stripe.com/webhooks/signature",
+              "title": "Stripe Webhook Signatures",
+              "description": "Verify signatures using raw request body.",
+              "snippets": [
+                "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes.",
+                "Do not verify signature over re-serialized JSON."
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/webhooks",
+              "title": "Razorpay Webhooks",
+              "description": "Webhook signature verification documentation.",
+              "snippets": [
+                "Compute the signature using hex digest of the raw request body."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:docs.stripe.com/webhooks verify signature raw request body hmac sha256 stripe test",
+          "latency": 0.05
+        }
+      },
+      "timestamp": "2026-11-21T07:38:51.048378+00:00"
+    },
+    {
+      "query": "site:razorpay.com/docs webhooks signature verification hmac sha256 raw payload",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.stripe.com/webhooks/signature",
+              "title": "Stripe Webhook Signatures",
+              "description": "Verify signatures using raw request body.",
+              "snippets": [
+                "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes.",
+                "Do not verify signature over re-serialized JSON."
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/webhooks",
+              "title": "Razorpay Webhooks",
+              "description": "Webhook signature verification documentation.",
+              "snippets": [
+                "Compute the signature using hex digest of the raw request body."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:razorpay.com/docs webhooks signature verification hmac sha256 raw payload",
+          "latency": 0.05
+        }
+      },
+      "timestamp": "2026-11-21T07:38:51.048420+00:00"
+    },
+    {
+      "query": "webhook signature verification raw body vs reserialized json hmac hex",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.stripe.com/webhooks/signature",
+              "title": "Stripe Webhook Signatures",
+              "description": "Verify signatures using raw request body.",
+              "snippets": [
+                "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes.",
+                "Do not verify signature over re-serialized JSON."
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/webhooks",
+              "title": "Razorpay Webhooks",
+              "description": "Webhook signature verification documentation.",
+              "snippets": [
+                "Compute the signature using hex digest of the raw request body."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "webhook signature verification raw body vs reserialized json hmac hex",
+          "latency": 0.05
+        }
+      },
+      "timestamp": "2026-11-21T07:38:51.048430+00:00"
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "rule_id": "R5",
+  "title": "Refund Target Existence",
+  "description": "For `refund.processed`: requires an existing captured payment in `payments`. If `payment_id` does not exist: return status `\"rejected\"` and commit no state change.",
+  "text_hash": "44493b50440fc4af35f350896b65e3fbc7590db99900f6e3853d6f1bcc98e4a2",
+  "retrieved_at": "2026-11-21T07:33:47.714015+00:00",
+  "sources": [
+    {
+      "id": "R5_s1",
+      "url": "https://docs.stripe.com/refunds",
+      "title": "Refund and cancel payments | Stripe Documentation",
+      "snippet": "Refunds can only be sent back to the original payment method used in a charge. You can\u2019t send a refund to a different destination, such as another card or bank account. Refunds to expired or canceled cards are handled by the customer\u2019s card issuer and, in most cases, credited to the customer\u2019s replacement card. If no replacement exists, the card...",
+      "rank": 1,
+      "query": "site:docs.stripe.com/refunds create refund for existing payment charge",
+      "retrieved_at": "2026-11-21T07:33:42.172317+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R5_s2",
+      "url": "https://docs.stripe.com/refunds.md",
+      "title": "Refund and cancel payments Learn how to cancel or refund a payment.",
+      "snippet": "## Refund destinations Refunds can only be sent back to the original payment method used in a charge. You can\u2019t send a refund to a different destination, such as another card or bank account. Refunds to expired or canceled cards are handled by the customer\u2019s card issuer and, in most cases, credited to the customer\u2019s replacement card. If no...",
+      "rank": 2,
+      "query": "site:docs.stripe.com/refunds create refund for existing payment charge",
+      "retrieved_at": "2026-11-21T07:33:42.172317+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R5_s3",
+      "url": "https://razorpay.com/docs/payments/refunds/errors/",
+      "title": "Handle Refund Errors | Razorpay Docs",
+      "snippet": "Check the errors that may occur while processing Refunds and how to handle these errors.",
+      "rank": 1,
+      "query": "site:razorpay.com/docs refunds refund payment not found error",
+      "retrieved_at": "2026-11-21T07:33:44.011069+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R5_s4",
+      "url": "https://razorpay.com/docs/us/payments/refunds/errors?preferred-country=US",
+      "title": "Handle Refund Errors - Razorpay",
+      "snippet": "Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States Sometimes when you try to process a refund request, it fails to get processed and you may encounter BAD_REQUEST_ERROR messages stating refunds are not supported. This happens because most of the banks do not support refunds for payments that are more than 6 months old. Check the errors...",
+      "rank": 2,
+      "query": "site:razorpay.com/docs refunds refund payment not found error",
+      "retrieved_at": "2026-11-21T07:33:44.011069+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R5_s5",
+      "url": "https://razorpay.com/docs/pos/refunds/errors/",
+      "title": "Handle Refund Errors for Razorpay POS | Razorpay Docs",
+      "snippet": "Check the errors that may occur while processing Refunds and how to handle these errors.",
+      "rank": 3,
+      "query": "site:razorpay.com/docs refunds refund payment not found error",
+      "retrieved_at": "2026-11-21T07:33:44.011069+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R5_s6",
+      "url": "https://docs.adyen.com/online-payments/refund",
+      "title": "Refund | Adyen Docs",
+      "snippet": "Unlike authorizations, refusalReasonRaw for captures and refunds does not depend on the Raw acquirer result setting in your Customer Area. To prevent malicious use, do not expose refusal reason details to shoppers. The REFUND_FAILED webhook reference describes the included fields. An overview of failed refunds is available in your Payment...",
+      "rank": 1,
+      "query": "refund webhook handler require existing captured payment",
+      "retrieved_at": "2026-11-21T07:33:45.767098+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R5_s7",
+      "url": "https://developer.paypal.com/api/rest/webhooks/event-names",
+      "title": "Webhook event names | PayPal Developer",
+      "snippet": "The webhooks for authorizing and capturing payments correspond to both supported versions of the Payments API: The webhooks for orders correspond to both supported versions of the Orders API: ... The Payment Method Tokens API saves payment methods to a digital vault so payers don't have to enter details for future transactions.",
+      "rank": 2,
+      "query": "refund webhook handler require existing captured payment",
+      "retrieved_at": "2026-11-21T07:33:45.767098+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R5_s8",
+      "url": "https://docs.adyen.com/point-of-sale/basic-tapi-integration/refund-payment/refund-webhooks",
+      "title": "Outcome of a refund | Adyen Docs",
+      "snippet": "You receive the outcome of the validations asynchronously, in a REFUND_WITH_DATA webhook that includes: ... additionalData: the information in this objects depends on the additional settings that you enabled. originalReference: the PSP reference of the unreferenced refund request. This is not the PSP reference of the payment that is being...",
+      "rank": 3,
+      "query": "refund webhook handler require existing captured payment",
+      "retrieved_at": "2026-11-21T07:33:45.767098+00:00",
+      "provider": "you.com"
+    }
+  ],
+  "raw_responses": [
+    {
+      "query": "site:docs.stripe.com/refunds create refund for existing payment charge",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.stripe.com/refunds",
+              "title": "Refund and cancel payments | Stripe Documentation",
+              "description": "Refunds can only be sent back to the original payment method used in a charge. You can\u2019t send a refund to a different destination, such as another card or bank account. Refunds to expired or canceled cards are handled by the customer\u2019s card issuer and, in most cases, credited to the customer\u2019s replacement card. If no replacement exists, the card issuer usually delivers the refund to the customer using an alternate method (for ...",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/refunds.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/refunds.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "Refunds can only be sent back to the original payment method used in a charge. You can\u2019t send a refund to a different destination, such as another card or bank account. Refunds to expired or canceled cards are handled by the customer\u2019s card issuer and, in most cases, credited to the customer\u2019s replacement card. If no replacement exists, the card issuer usually delivers the refund to the customer using an alternate method (for example, check or bank account deposit).",
+                "The original charge was created on a customer in your Stripe account. The customer has a stored email address. You enabled Email customers for refunds in the Dashboard. You can view your refunded payments in the Dashboard.",
+                "Cancel a payment before it's completed at no cost. You can also do a full or partial refund for a payment after it succeeds using the Dashboard or the Refunds API. Depending on the type of refund, you can sometimes cancel a refund before it reaches the customer.",
+                "You can issue more than one refund against a charge, but you can\u2019t refund a total greater than the original charge amount. ... Find the payment you want to refund in the Payments page. Click the overflow menu () to the right of the payment, then select Refund payment. By default, you\u2019ll issue a full refund. For a partial refund, enter a different refund amount."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/refunds.md",
+              "title": "Refund and cancel payments Learn how to cancel or refund a payment.",
+              "description": "## Refund destinations Refunds ... original payment method used in a charge. You can\u2019t send a refund to a different destination, such as another card or bank account. Refunds to expired or canceled cards are handled by the customer\u2019s card issuer and, in most cases, credited to the customer\u2019s replacement card. If no replacement exists, the card issuer usually delivers the refund to the customer using an alternate method (for example, check ...",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "## Refund destinations Refunds can only be sent back to the original payment method used in a charge. You can\u2019t send a refund to a different destination, such as another card or bank account. Refunds to expired or canceled cards are handled by the customer\u2019s card issuer and, in most cases, credited to the customer\u2019s replacement card. If no replacement exists, the card issuer usually delivers the refund to the customer using an alternate method (for example, check or bank account deposit).",
+                "| | `charge.dispute.funds_reinstated` | Sent when funds are reinstated to your account after a dispute is closed, including [partially refunded payments](https://docs.stripe.com/disputes/best-practices.md#partial-refund-bp). | | `charge.refunded` | Sent when a charge is refunded, including partial refunds. Listen to `refund.created` for information about the refund."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:docs.stripe.com/refunds create refund for existing payment charge",
+          "search_uuid": "47a9a5f2-8cfa-4e8c-94ef-c63e21f7614f",
+          "latency": 0.39546739705838263
+        }
+      },
+      "timestamp": "2026-11-21T07:33:42.172317+00:00"
+    },
+    {
+      "query": "site:razorpay.com/docs refunds refund payment not found error",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://razorpay.com/docs/payments/refunds/errors/",
+              "title": "Handle Refund Errors | Razorpay Docs",
+              "description": "Sometimes when you try to process a refund request, it fails to get processed and you may encounter BAD_REQUEST_ERROR messages stating refunds are not supported. This happens because most of the banks do not support refunds for payments that are more than 6 months old.",
+              "thumbnail_url": "https://razorpay.com/docs/build/browser/static/og-images/payments/refunds/errors.png",
+              "original_thumbnail_url": "https://razorpay.com/docs/build/browser/static/og-images/payments/refunds/errors.png",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "Check the errors that may occur while processing Refunds and how to handle these errors."
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/us/payments/refunds/errors?preferred-country=US",
+              "title": "Handle Refund Errors - Razorpay",
+              "description": "Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe ... fails to get processed and you may encounter BAD_REQUEST_ERROR messages stating refunds are not supported. This happens because most of the banks do not support refunds for payments that are more than 6 months old....",
+              "thumbnail_url": "https://razorpay-881012b3.mintlify.app/_mintlify/api/og/v2?division=Refunds&amp;title=Handle+Refund+Errors&amp;description=Check+the+errors+that+may+occur+while+processing+Refunds+and+how+to+handle+these+errors.&amp;theme=bb58a630b2bbead7dc77be4b&amp;signature=adabe09d37f3fb8bc9617b33a50fa731d9edec451b8708be6de15824253ad722",
+              "original_thumbnail_url": "https://razorpay-881012b3.mintlify.app/_mintlify/api/og/v2?division=Refunds&amp;title=Handle+Refund+Errors&amp;description=Check+the+errors+that+may+occur+while+processing+Refunds+and+how+to+handle+these+errors.&amp;theme=bb58a630b2bbead7dc77be4b&amp;signature=adabe09d37f3fb8bc9617b33a50fa731d9edec451b8708be6de15824253ad722",
+              "page_age": "2026-10-08T16:37:48",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States Sometimes when you try to process a refund request, it fails to get processed and you may encounter BAD_REQUEST_ERROR messages stating refunds are not supported. This happens because most of the banks do not support refunds for payments that are more than 6 months old.",
+                "Check the errors that may occur while processing Refunds and how to handle these errors.",
+                "uments[0];function _createMdxContent(props){const _components={a:`a`,code:`code`,p:`p`,pre:`pre`,span:`span`,strong:`strong`,..._provideComponents(),...props.components},{CodeBlock,Heading}=_components;if(!CodeBlock)_missingMdxReference(`CodeBlock`,true);if(!Heading)_missingMdxReference(`Heading`,true);return _jsxs(_Fragment,{children:[_jsxs(`div`,{style:{display:`flex`,flexWrap:`wrap`,alignItems:`center`,gap:`0.35rem 0.9rem`,border:`1px solid rgba(128,128,128,0.28)`,borderRadius:`0.5rem`,padding:`0.45rem 0.75rem`,margin:`0 0 1.25rem`,fontSize:`0.875rem`},children:[_jsx(`span`,{style:{fontWeig",
+                "{ \"error\": { \"code\": \"BAD_REQUEST_ERROR\", \"description\": \"Refund is not supported by the bank because the payment is more than 6 months old\", \"source\": null, \"step\": null, \"reason\": null, \"metadata\": {} } }"
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/pos/refunds/errors/",
+              "title": "Handle Refund Errors for Razorpay POS | Razorpay Docs",
+              "description": "Sometimes when you try to process a refund request, it fails to get processed and you may encounter BAD_REQUEST_ERROR messages stating refunds are not supported. This happens because most of the banks do not support refunds for payments that are more than 6 months old.",
+              "thumbnail_url": "https://razorpay.com/docs/build/browser/static/og-images/pos/refunds/errors.png",
+              "original_thumbnail_url": "https://razorpay.com/docs/build/browser/static/og-images/pos/refunds/errors.png",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "Check the errors that may occur while processing Refunds and how to handle these errors."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:razorpay.com/docs refunds refund payment not found error",
+          "search_uuid": "acead7c8-3832-43ea-8864-488fb6f8270b",
+          "latency": 0.40629870200064033
+        }
+      },
+      "timestamp": "2026-11-21T07:33:44.011069+00:00"
+    },
+    {
+      "query": "refund webhook handler require existing captured payment",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.adyen.com/online-payments/refund",
+              "title": "Refund | Adyen Docs",
+              "description": "You can also find the refund failure reason on the Payment details page in your Customer Area. The additionalData object in the webhook can include the following fields. These fields give a structured reason why the payment method rejected the capture or refund.",
+              "favicon_url": "https://you.com/favicon?domain=docs.adyen.com&size=128",
+              "snippets": [
+                "Unlike authorizations, refusalReasonRaw for captures and refunds does not depend on the Raw acquirer result setting in your Customer Area. To prevent malicious use, do not expose refusal reason details to shoppers. The REFUND_FAILED webhook reference describes the included fields. An overview of failed refunds is available in your Payment accounting report.",
+                "You can make unreferenced refunds for the following payment methods: ... You receive the outcome of an unreferenced refund in a REFUND_WITH_DATA webhook.",
+                "Refund this payment, either in your Customer Area, or by making an API request. It can take several hours to process your refund request. Check that you receive a webhook with eventCode: REFUND_FAILED for your test payment.",
+                "When our validations of a refund fail, you receive a webhook for the refund with success: false and the reason of the failure. The next table shows the most common reasons. Where the table mentions the balance on the payment, this refers to the amount that remains from the original payment."
+              ]
+            },
+            {
+              "url": "https://developer.paypal.com/api/rest/webhooks/event-names",
+              "title": "Webhook event names | PayPal Developer",
+              "description": "Build powerful payment experiences with PayPal APIs, SDKs, and integration guides.",
+              "thumbnail_url": "https://www.paypalobjects.com/devdoc/img/seo/ddnw_twitterfallback.png",
+              "original_thumbnail_url": "https://www.paypalobjects.com/devdoc/img/seo/ddnw_twitterfallback.png",
+              "page_age": "2026-09-10T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=developer.paypal.com&size=128",
+              "snippets": [
+                "The webhooks for authorizing and capturing payments correspond to both supported versions of the Payments API:",
+                "The webhooks for orders correspond to both supported versions of the Orders API: ... The Payment Method Tokens API saves payment methods to a digital vault so payers don't have to enter details for future transactions."
+              ]
+            },
+            {
+              "url": "https://docs.adyen.com/point-of-sale/basic-tapi-integration/refund-payment/refund-webhooks",
+              "title": "Outcome of a refund | Adyen Docs",
+              "description": "Receive webhooks with the outcome of referenced or unreferenced refunds.",
+              "favicon_url": "https://you.com/favicon?domain=docs.adyen.com&size=128",
+              "snippets": [
+                "You receive the outcome of the validations asynchronously, in a REFUND_WITH_DATA webhook that includes: ... additionalData: the information in this objects depends on the additional settings that you enabled. originalReference: the PSP reference of the unreferenced refund request. This is not the PSP reference of the payment that is being refunded, because with an unreferenced refund that PSP reference is unknown.",
+                "When our validations of a refund fail, you receive a webhook for the refund with success: false and the reason of the failure. The next table shows the most common reasons. Where the table mentions the balance on the payment, this refers to the amount that remains from the original payment.",
+                "For an unreferenced refund, we return a REFUND_WITH_DATA webhook. Depending on the card scheme and country/region where the card is used, unreferenced refunds are sometimes processed synchronously. In that case the Terminal API response includes an acquirerResponseCode to indicate the outcome. When a refund is processed, the amount is deducted from your in-process funds, and appears in your shopper's account within a few days. Before you begin, take into account the following requirements.",
+                "pspReference: the PSP reference generated when the refund was captured. success: indicates the outcome of the refund validations. Possible values: true: Adyen's validations were successful and we sent the refund request to the card scheme. This usually means that the refund will be processed successfully. However, in rare cases the refund can be rejected by the card scheme, or reversed. For information about these exceptions, see REFUND_FAILED webhook, and REFUNDED_REVERSED webhook."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "refund webhook handler require existing captured payment",
+          "search_uuid": "73d45c5e-9316-4dd2-bc7f-3dcc3278474e",
+          "latency": 0.4241394189884886
+        }
+      },
+      "timestamp": "2026-11-21T07:33:45.767098+00:00"
+    }
+  ]
+}

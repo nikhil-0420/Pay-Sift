@@ -1,0 +1,267 @@
+{
+  "rule_id": "R10",
+  "title": "Concurrency Safety",
+  "description": "Calls may run concurrently in separate processes against the same database file. Rules R3 (idempotency) and R6 (refund bounds) must strictly hold under concurrent execution.",
+  "text_hash": "4eed81a4e5f645dd4b410364a06dc0fe3bb401b0478914439c4d3e7ec41da767",
+  "retrieved_at": "2026-11-21T07:34:16.047779+00:00",
+  "sources": [
+    {
+      "id": "R10_s1",
+      "url": "https://dev.to/toai/mitigating-db-lock-contention-and-race-conditions-in-asynchronous-webhook-ingestion-2g6e",
+      "title": "Mitigating DB Lock Contention and Race Conditions in Asynchronous ...",
+      "snippet": "To guarantee true idempotency under concurrency, systems must enforce atomic database-level constraints, configure explicit transaction isolation levels (or immediate exclusive locks), and implement jittered exponential backoff retries against lock contention. The implementation pattern outlined below relies on a three-tier defense model:...",
+      "rank": 1,
+      "query": "concurrent webhook delivery race condition database transaction lock",
+      "retrieved_at": "2026-11-21T07:34:10.534050+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R10_s2",
+      "url": "https://dev.to/toai/preventing-double-billing-from-concurrent-payment-webhooks-a-practical-guide-to-redis-distributed-44a6",
+      "title": "Preventing Double-Billing from Concurrent Payment Webhooks: A ...",
+      "snippet": "Without strict serialization and idempotency controls, concurrent webhook deliveries can lead to race conditions, duplicate record insertions, and the worst-case scenario in financial engineering: double-billing the customer. This technical guide details how to engineer an end-to-end, resilient webhook ingestion pipeline using atomic Redis...",
+      "rank": 2,
+      "query": "concurrent webhook delivery race condition database transaction lock",
+      "retrieved_at": "2026-11-21T07:34:10.534050+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R10_s3",
+      "url": "https://dev.to/toai/preventing-webhook-double-execution-in-continuous-retry-storms-a-hands-on-distributed-locking-48mn",
+      "title": "Preventing Webhook Double Execution in Continuous Retry Storms: ...",
+      "snippet": "When integrating with third-party webhooks (e.g., Stripe, GitHub, Shopify, or payment gateways),... Tagged with programming, engineering, ai, architecture. If your webhook ingest pipeline is not strictly idempotent, concurrent duplicate deliveries can trigger race conditions, double charging, repeated database state transitions, and corrupted...",
+      "rank": 3,
+      "query": "concurrent webhook delivery race condition database transaction lock",
+      "retrieved_at": "2026-11-21T07:34:10.534050+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R10_s4",
+      "url": "https://docs.stripe.com/webhooks",
+      "title": "Receive Stripe events in your webhook endpoint | Stripe Documentation",
+      "snippet": "You might encounter scalability issues if you choose to process events synchronously. Any large spike in webhook deliveries (for example, during the beginning of the month when all subscriptions renew) might overwhelm your endpoint hosts. Asynchronous queues allow you to process the concurrent events at a rate your system can support. Webhook...",
+      "rank": 1,
+      "query": "site:docs.stripe.com concurrent webhook events duplicate capture race",
+      "retrieved_at": "2026-11-21T07:34:12.394775+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R10_s5",
+      "url": "https://docs.stripe.com/events/manage-webhook-endpoints",
+      "title": "Manage webhook endpoints | Stripe Documentation",
+      "snippet": "You might encounter scalability issues if you choose to process events synchronously. Any large spike in webhook deliveries (for example, during the beginning of the month when all subscriptions renew) might overwhelm your endpoint hosts. Asynchronous queues allow you to process the concurrent events at a rate your system can support. In some...",
+      "rank": 2,
+      "query": "site:docs.stripe.com concurrent webhook events duplicate capture race",
+      "retrieved_at": "2026-11-21T07:34:12.394775+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R10_s6",
+      "url": "https://docs.stripe.com/events/manage-webhook-endpoints.md",
+      "title": "Manage webhook endpoints",
+      "snippet": "You might encounter scalability issues if you choose to process events synchronously. Any large spike in webhook deliveries (for example, during the beginning of the month when all subscriptions renew) might overwhelm your endpoint hosts. Asynchronous queues allow you to process the concurrent events at a rate your system can support.",
+      "rank": 3,
+      "query": "site:docs.stripe.com concurrent webhook events duplicate capture race",
+      "retrieved_at": "2026-11-21T07:34:12.394775+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R10_s7",
+      "url": "https://docs.sqlitecloud.io/docs/sqlite/lang_transaction",
+      "title": "Transaction | SQLite Cloud Docs",
+      "snippet": "If a writer cannot obtain the lock, it uses SQLite\u2019s busy-handler to pause and retry for a while: ... If there is significant contention for the writer lock, this mechanism can be inefficient. In this case it is better for the application to use a mutex or some other mechanism that supports blocking to ensure that at most one writer is attempting...",
+      "rank": 1,
+      "query": "sqlite concurrent webhook handler begin immediate transaction lock",
+      "retrieved_at": "2026-11-21T07:34:14.088620+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R10_s8",
+      "url": "https://sqlite.org/forum/forumpost/04ed1d235b",
+      "title": "SQLite User Forum: Help understanding the effect of BEGIN IMMEDIATE",
+      "snippet": "Issued \"BEGIN IMMEDIATE;\" from one shell, then issued the same command on the second shell getting \"Runtime error: database is locked (5)\". If my understanding is correct, then I fail to see the point in indiscriminately replacing all use of BEGIN with BEGIN IMMEDIATE, and wrapping every database interaction with BEGIN IMMEDIATE, as it seems to...",
+      "rank": 2,
+      "query": "sqlite concurrent webhook handler begin immediate transaction lock",
+      "retrieved_at": "2026-11-21T07:34:14.088620+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R10_s9",
+      "url": "https://sqlite.org/forum/forumpost/8845210cdb?t=r",
+      "title": "SQLite User Forum: When using sqlite3_step(stmt) inside a transaction ...",
+      "snippet": "For example, in the next scenario: 1. Code begins transaction (\u201cBEGIN TRANSACTION;\u201d), 2. Code working with sqlite-statement (`sqlite3_prepare_v2()`, `sqlite3_bind_xxx()`), 3. Eventually when I call `sqlite3_step()` I receive the \u2018database is locked\u2019 error **without my busy-handler ever being called.** I know that in *sqlite* documentation it says:...",
+      "rank": 3,
+      "query": "sqlite concurrent webhook handler begin immediate transaction lock",
+      "retrieved_at": "2026-11-21T07:34:14.088620+00:00",
+      "provider": "you.com"
+    }
+  ],
+  "raw_responses": [
+    {
+      "query": "concurrent webhook delivery race condition database transaction lock",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://dev.to/toai/mitigating-db-lock-contention-and-race-conditions-in-asynchronous-webhook-ingestion-2g6e",
+              "title": "Mitigating DB Lock Contention and Race Conditions in Asynchronous ...",
+              "description": "Mitigating DB Lock Contention and Race Conditions in Asynchronous Webhook Ingestion ... Tagged with programming, engineering, ai, architecture.",
+              "thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Ffazllwfmc9ek99bluayb.png",
+              "original_thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Ffazllwfmc9ek99bluayb.png",
+              "page_age": "2026-10-16T11:01:37",
+              "favicon_url": "https://you.com/favicon?domain=dev.to&size=128",
+              "snippets": [
+                "To guarantee true idempotency under concurrency, systems must enforce atomic database-level constraints, configure explicit transaction isolation levels (or immediate exclusive locks), and implement jittered exponential backoff retries against lock contention. The implementation pattern outlined below relies on a three-tier defense model: flowchart TD subgraph ClientLayer [\"Client Layer\"] Req[\"Concurrent Inbound Webhooks\"] end subgraph DefensePipeline [\"Deduplication Pipeline\"] Lock[\"1.",
+                "Treat database-level unique constraints as your non-negotiable final line of defense. Pair lock recovery with truncated exponential backoff to absorb burst contention gracefully. By treating concurrency control and transaction isolation as primary architectural concerns, webhook ingestion pipelines remain resilient, deterministic, and fully idempotent under high-scale production load.",
+                "Under sustained concurrency, explicit serialization increases lock contention (OperationalError: database is locked). Rejecting requests immediately degrades availability. Instead, pairing short retry loops with millisecond-scale exponential backoff resolves transient contention while maintaining high system throughput. The following verification harness simulates 20 concurrent inbound webhook deliveries hitting a shared in-memory database within the same millisecond window.",
+                "In event-driven architectures, deduplicating asynchronous webhooks is frequently handled with a naive application-level pattern: check if the incoming event_id exists in the database, and skip processing if a record is found. When implemented as an uncoordinated SELECT followed by an INSERT, this pattern introduces a classic Check-Then-Act race condition (TOCTOU: Time-of-Check to Time-of-Use) that breaks down under concurrent traffic:"
+              ]
+            },
+            {
+              "url": "https://dev.to/toai/preventing-double-billing-from-concurrent-payment-webhooks-a-practical-guide-to-redis-distributed-44a6",
+              "title": "Preventing Double-Billing from Concurrent Payment Webhooks: A ...",
+              "description": "Without strict serialization and idempotency controls, concurrent webhook deliveries can lead to race conditions, duplicate record insertions, and the worst-case scenario in financial engineering: double-billing the customer. This technical guide details how to engineer an end-to-end, resilient webhook ingestion pipeline using atomic Redis distributed locks ...",
+              "thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F4k4xdqpxmbmgchlssnbm.png",
+              "original_thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F4k4xdqpxmbmgchlssnbm.png",
+              "page_age": "2026-10-31T09:14:15",
+              "favicon_url": "https://you.com/favicon?domain=dev.to&size=128",
+              "snippets": [
+                "Without strict serialization and idempotency controls, concurrent webhook deliveries can lead to race conditions, duplicate record insertions, and the worst-case scenario in financial engineering: double-billing the customer. This technical guide details how to engineer an end-to-end, resilient webhook ingestion pipeline using atomic Redis distributed locks (SET ...",
+                "Preventing Double-Billing from Concurrent Payment Webhooks: A Practical Guide to Redis... Tagged with programming, engineering, ai, architecture.",
+                "If a concurrent execution is already in flight for the same transaction ID, incoming duplicate requests are safely short-circuited and acknowledged immediately with HTTP 200 OK (to satisfy PSP retry policies without triggering cascading delivery loops). Safe Lock Release via Ownership-Verifying Lua Scripts: Distributed locks governed by a Time-To-Live (TTL) introduce the risk of premature expiration under unexpected GC pauses or database latency.",
+                "As an ultimate safety net, the underlying relational database enforces a strict UNIQUE constraint on the transaction_id. Any collision that slips past the distributed lock is halted at the database engine level, trapped gracefully, and returned as an idempotent success. sequenceDiagram autonumber participant Client as \"Payment Provider (Webhook)\" participant API as \"Backend API Worker\" participant Redis as \"Redis (Distributed Lock)\" participant DB as \"Relational Database\" Client->>API: POST /webhooks/payment (Tx ID: A) API->>Redis: SET lock:webhook:tx:A [Token] NX EX 5 alt Lock Acquired Succes"
+              ]
+            },
+            {
+              "url": "https://dev.to/toai/preventing-webhook-double-execution-in-continuous-retry-storms-a-hands-on-distributed-locking-48mn",
+              "title": "Preventing Webhook Double Execution in Continuous Retry Storms: ...",
+              "description": "When integrating with third-party webhooks (e.g., Stripe, GitHub, Shopify, or payment gateways),...",
+              "thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fegchllg4pt1i2pz3i1n1.png",
+              "original_thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fegchllg4pt1i2pz3i1n1.png",
+              "page_age": "2026-10-29T12:38:23",
+              "favicon_url": "https://you.com/favicon?domain=dev.to&size=128",
+              "snippets": [
+                "When integrating with third-party webhooks (e.g., Stripe, GitHub, Shopify, or payment gateways),... Tagged with programming, engineering, ai, architecture.",
+                "If your webhook ingest pipeline is not strictly idempotent, concurrent duplicate deliveries can trigger race conditions, double charging, repeated database state transitions, and corrupted inventory balances.",
+                "Atomic Lock Acquisition: Utilizing Redis's atomic SET key value NX EX  command guarantees that checking for key existence and acquiring the lease occurs as a single atomic CPU instruction within Redis, preventing thread and process race conditions without requiring heavy distributed consensus protocols. Breaking the Retry Loop: If an incoming webhook fails to acquire the lock (indicating an identical request is currently in-flight or was previously processed), the application server must immediately return a 200 OK status. Returning 4xx or 5xx causes third-party delivery engines to perceive a delivery failure, amplifying traffic into a distributed denial-of-service (DDoS) retry storm.",
+                "Lack of Multi-Process Shared State: An in-memory dictionary (self._store) is scoped strictly to the memory space of a single OS process. In modern microservices architectures where application containers scale out horizontally behind load balancers, an in-memory dictionary cannot prevent race conditions occurring across two disparate server instances processing concurrent webhooks."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "concurrent webhook delivery race condition database transaction lock",
+          "search_uuid": "7c99d31b-3608-4b9f-a0ae-d2a5ec597a6d",
+          "latency": 0.4423096110112965
+        }
+      },
+      "timestamp": "2026-11-21T07:34:10.534050+00:00"
+    },
+    {
+      "query": "site:docs.stripe.com concurrent webhook events duplicate capture race",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.stripe.com/webhooks",
+              "title": "Receive Stripe events in your webhook endpoint | Stripe Documentation",
+              "description": "Create an event destination to receive events at an HTTPS webhook endpoint. Receiving webhook events allows you to listen to asynchronous events, such as when a customer's bank confirms a payment, a customer disputes a charge, a recurring payment succeeds, or you collect a subscription payment.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/webhooks.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/webhooks.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "You might encounter scalability issues if you choose to process events synchronously. Any large spike in webhook deliveries (for example, during the beginning of the month when all subscriptions renew) might overwhelm your endpoint hosts. Asynchronous queues allow you to process the concurrent events at a rate your system can support.",
+                "Webhook endpoints might occasionally receive the same event more than once. You can guard against duplicated event receipts by logging the event IDs you\u2019ve processed, and then not processing already-logged events.",
+                "In some cases, two separate Event objects are generated and sent. To identify these duplicates, use the ID of the object in data. ... Configure your webhook endpoints to receive only the types of events required by your integration.",
+                "Make sure that your event destination isn\u2019t dependent on receiving events in a specific order. Snapshot events record created in seconds, so distinct events can share a timestamp. Don\u2019t use created to determine event order or whether you\u2019ve already processed an event. Track event IDs to identify duplicate deliveries instead."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/events/manage-webhook-endpoints",
+              "title": "Manage webhook endpoints | Stripe Documentation",
+              "description": "Process undelivered webhook events, resolve signature verification errors, handle event-generation failures, and use event notification handlers to route events to your business logic.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/events.manage-webhook-endpoints.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/events.manage-webhook-endpoints.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "You might encounter scalability issues if you choose to process events synchronously. Any large spike in webhook deliveries (for example, during the beginning of the month when all subscriptions renew) might overwhelm your endpoint hosts. Asynchronous queues allow you to process the concurrent events at a rate your system can support.",
+                "In some cases, two separate Event objects are generated and sent. To identify these duplicates, use the ID of the object in data. ... Configure your webhook endpoints to receive only the types of events required by your integration.",
+                "Webhook endpoints might occasionally receive the same event more than once. Guard against duplicated event receipts by logging the event IDs you\u2019ve processed, and then not processing already-logged events.",
+                "The v0 entry is only present for test events, and the debug metadata entries are optional. If the header doesn\u2019t contain t and at least one v1 entry, check how your code extracts the Stripe-Signature header value. Your integration must accept unknown entries and must not depend on a fixed entry count or order. For complete signature verification instructions, see Check webhook signatures."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/events/manage-webhook-endpoints.md",
+              "title": "Manage webhook endpoints",
+              "description": "You might encounter scalability issues if you choose to process events synchronously. Any large spike in webhook deliveries (for example, during the beginning of the month when all subscriptions renew) might overwhelm your endpoint hosts. Asynchronous queues allow you to process the concurrent ...",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "You might encounter scalability issues if you choose to process events synchronously. Any large spike in webhook deliveries (for example, during the beginning of the month when all subscriptions renew) might overwhelm your endpoint hosts. Asynchronous queues allow you to process the concurrent events at a rate your system can support."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:docs.stripe.com concurrent webhook events duplicate capture race",
+          "search_uuid": "6911be07-f390-4736-9e30-22c534bba413",
+          "latency": 0.37961995194200426
+        }
+      },
+      "timestamp": "2026-11-21T07:34:12.394775+00:00"
+    },
+    {
+      "query": "sqlite concurrent webhook handler begin immediate transaction lock",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.sqlitecloud.io/docs/sqlite/lang_transaction",
+              "title": "Transaction | SQLite Cloud Docs",
+              "description": "Any command that accesses the database will automatically start a transaction if one is not already in effect.",
+              "thumbnail_url": "https://www.sqlite.ai/social/logo-ai.png",
+              "original_thumbnail_url": "https://www.sqlite.ai/social/logo-ai.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.sqlitecloud.io&size=128",
+              "snippets": [
+                "If a writer cannot obtain the lock, it uses SQLite\u2019s busy-handler to pause and retry for a while: ... If there is significant contention for the writer lock, this mechanism can be inefficient. In this case it is better for the application to use a mutex or some other mechanism that supports blocking to ensure that at most one writer is attempting to COMMIT a BEGIN CONCURRENT transaction at a time.",
+                "Usually, SQLite allows at most one writer to proceed concurrently. The BEGIN CONCURRENT enhancement allows multiple writers to process write transactions simultanously if the database is in \u201cwal\u201d or \u201cwal2\u201d mode, although the system still serializes COMMIT commands. When a write-transaction is opened with \u201cBEGIN CONCURRENT\u201d, actually locking the database is deferred until a COMMIT is executed.",
+                "If all database clients (readers and writers) are located in the same OS process, and if that OS is a Unix variant, then it can be more efficient to the built-in VFS \u201cunix-excl\u201d instead of the default \u201cunix\u201d. This is because it uses more efficient locking primitives. The key to maximizing concurrency using BEGIN CONCURRENT is to ensure that there are a large number of non-conflicting transactions. In SQLite, each table and each index is stored as a separate b-tree, each of which is distributed over a discrete set of database pages.",
+                "This means that any number of transactions started with BEGIN CONCURRENT may proceed concurrently. The system uses optimistic page-level-locking to prevent conflicting concurrent transactions from being committed."
+              ]
+            },
+            {
+              "url": "https://sqlite.org/forum/forumpost/04ed1d235b",
+              "title": "SQLite User Forum: Help understanding the effect of BEGIN IMMEDIATE",
+              "description": "Issued \"BEGIN IMMEDIATE;\" from ... is locked (5)\". If my understanding is correct, then I fail to see the point in indiscriminately replacing all use of BEGIN with BEGIN IMMEDIATE, and wrapping every database interaction with BEGIN IMMEDIATE, as it seems to prevent concurrent reads & concurrent reads+write. BEGIN IMMEDIATE is selectively useful if I want to start a transaction that will ...",
+              "favicon_url": "https://you.com/favicon?domain=sqlite.org&size=128",
+              "snippets": [
+                "Issued \"BEGIN IMMEDIATE;\" from one shell, then issued the same command on the second shell getting \"Runtime error: database is locked (5)\". If my understanding is correct, then I fail to see the point in indiscriminately replacing all use of BEGIN with BEGIN IMMEDIATE, and wrapping every database interaction with BEGIN IMMEDIATE, as it seems to prevent concurrent reads & concurrent reads+write. BEGIN IMMEDIATE is selectively useful if I want to start a transaction that will include a write operation after one or more read operations, so to avoid a BUSY_ERROR in the middle of the transaction when upgrading the read lock into a write lock when another transaction might be holding the write lock.",
+                "I'm trying to decide if I should use BEGIN IMMEDIATE transactions in my project. ... By default, SQLite starts transactions in DEFERRED mode: they are considered read only. They are upgraded to a write transaction that requires a database lock in-flight, when query containing a write/update/delete statement is issued.",
+                "The problem is that by upgrading a transaction after it has started, SQLite will immediately return a SQLITE_BUSY error without respecting the busy_timeout previously mentioned, if the database is already locked by another connection.",
+                "I want to see this for myself. I've been trying and failing to write Python code that can trigger a \"database is locked\" / SQLITE_BUSY error which stops being an error when I switch to a BEGIN IMMEDIATELY transaction."
+              ]
+            },
+            {
+              "url": "https://sqlite.org/forum/forumpost/8845210cdb?t=r",
+              "title": "SQLite User Forum: When using sqlite3_step(stmt) inside a transaction ...",
+              "description": "For example, in the next scenario: ... there is lock contention. If SQLite determines that invoking the busy handler could result in a deadlock, it will go ahead and return SQLITE_BUSY...\"* However, my condition is a simple stand-alone application that does not share the database with other applications. For this reason, I cannot see why the above scenario will not call my call-back. I can only assume this is a bug in sqlite (?). **Workaround: \"BEGIN IMMEDIATE TRANSACTION;\"** ...",
+              "page_age": "2020-07-14T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=sqlite.org&size=128",
+              "snippets": [
+                "For example, in the next scenario: 1. Code begins transaction (\u201cBEGIN TRANSACTION;\u201d), 2. Code working with sqlite-statement (`sqlite3_prepare_v2()`, `sqlite3_bind_xxx()`), 3. Eventually when I call `sqlite3_step()` I receive the \u2018database is locked\u2019 error **without my busy-handler ever being called.** I know that in *sqlite* documentation it says: *\"...The presence of a busy handler does not guarantee that it will be invoked when there is lock contention. If SQLite determines that invoking the busy handler could result in a deadlock, it will go ahead and return SQLITE_BUSY...\"* However",
+                "However, if you transaction will be writing to the database at all, it is best to use BEGIN IMMEDIATE to avoid this issue. Why are you using a custom busy handler since it sounds like it is doing pretty much what the built-in busy handler does? > I understand the lock, but why deadlock?",
+                "In this case, however, it is likely an intended deadlock resolution response to the detection of an incipient \"circular wait\" condition -- the evidence of this is that preclusion of the \"hold and wait\" Coffman condition by using BEGIN IMMEDIATE resolves the observed behaviour. > Why are you using a custom busy handler? Initially I did try to use the default handler but I kept on receiving the *'database is locked'* error immediately when multi-threads were trying to access the database simultaneously (using different connections of course).",
+                "And what would your busy handler do? In case of a deadlock, waiting would not help. > I found that when using IMMEDIATE transaction my callback is being called and all seems to work, but I am not sure on how solid this solution is A deadlock happens when two read-only transactions want to upgrade to read/write. BEGIN IMMEDIATE starts the transaction as read/write."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "sqlite concurrent webhook handler begin immediate transaction lock",
+          "search_uuid": "3d793f5e-3072-4ebe-af74-9df1db32536f",
+          "latency": 0.4441335669835098
+        }
+      },
+      "timestamp": "2026-11-21T07:34:14.088620+00:00"
+    }
+  ]
+}

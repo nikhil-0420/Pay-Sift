@@ -1,0 +1,263 @@
+{
+  "rule_id": "R2",
+  "title": "Payload Validation",
+  "description": "The `raw_body` must be valid UTF-8 JSON encoding a JSON object containing: `event_id` (non-empty string, length <= 64), `type` (`\"payment.captured\"` or `\"refund.processed\"`), `payment_id` (non-empty string, length <= 64), `amount_paise` (strict JSON integer from 1 to 10^12 inclusive; not boolean, not float even if 5.0, not string, not null, not <= 0), and for `\"refund.processed\"` additionally `refund_id` (non-empty string). Extra unrecognized JSON fields are permitted and ignored. Any violation of these requirements: return status `\"rejected\"` and commit no database state change.",
+  "text_hash": "3f2c219efe0708a0b5c5222c88b093f5de4dce9e8fa22e2273e4eac0cd689655",
+  "retrieved_at": "2026-11-21T07:33:30.752118+00:00",
+  "sources": [
+    {
+      "id": "R2_s1",
+      "url": "https://docs.stripe.com/api/webhook_endpoints",
+      "title": "Webhook Endpoints | Stripe API Reference",
+      "snippet": "Returns the webhook endpoint object with the secret field populated. ... Updates the webhook endpoint. You may edit the url, the list of enabled_ ... Unique identifier for the object. An optional description of what the webhook is used for. The list of events to enable for this endpoint. You may specify ['*'] to enable all events, except those...",
+      "rank": 1,
+      "query": "site:docs.stripe.com/api webhook payload json parsing required fields amount",
+      "retrieved_at": "2026-11-21T07:33:24.845137+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R2_s2",
+      "url": "https://docs.stripe.com/api/v2/payments/off-session-payments?api-version=2026-10-28.preview",
+      "title": "Off Session Payments | Stripe API Reference",
+      "snippet": "To properly interface with OffSessionPayments, we recommend setting up an event destination to listen to webhook notifications, as the OffSessionPayment will transition through its lifecycle asynchronously. Related guide: Off-Session Payments API. ... Unique identifier for the object. String representing the object\u2019s type. Objects of the same type...",
+      "rank": 2,
+      "query": "site:docs.stripe.com/api webhook payload json parsing required fields amount",
+      "retrieved_at": "2026-11-21T07:33:24.845137+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R2_s3",
+      "url": "https://docs.stripe.com/api/metadata",
+      "title": "Metadata | Stripe API Reference",
+      "snippet": "Webhook events also use your account\u2019s default API version unless you set an API version during endpoint creation. Some API v2 responses contain null values for certain properties by default, regardless of their actual values. That reduces the size of response payloads while maintaining the basic response structure. The Stripe API is organized...",
+      "rank": 3,
+      "query": "site:docs.stripe.com/api webhook payload json parsing required fields amount",
+      "retrieved_at": "2026-11-21T07:33:24.845137+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R2_s4",
+      "url": "https://razorpay.com/docs/us/webhooks/settlements",
+      "title": "Settlements Webhook Events - Razorpay",
+      "snippet": "Settlement amounts are always provided in the smallest currency unit (for example, paise for INR, cents for USD). Watch Out!The processed status confirms the initiation of fund transfer, but does not mean that funds have been credited to your account. The amount will reflect in your bank account after the standard NEFT/RTGS/IMPS timeline, which...",
+      "rank": 1,
+      "query": "site:razorpay.com/docs webhooks payload event entity amount paise integer",
+      "retrieved_at": "2026-11-21T07:33:26.711558+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R2_s5",
+      "url": "https://razorpay.com/docs/payments/subscriptions/plugins/magento/webhook-events/?preferred-country=US",
+      "title": "Subscriptions | Magento - Webhook Events | Razorpay Docs",
+      "snippet": "Currently, webhooks are available for the following events: ... The payload for all these events would contain the Subscription entity. If you are building a standard web integration, use the handler function for immediate client-side confirmation and webhooks for server-side verification. Use callback_url only if you are embedding Checkout in a...",
+      "rank": 2,
+      "query": "site:razorpay.com/docs webhooks payload event entity amount paise integer",
+      "retrieved_at": "2026-11-21T07:33:26.711558+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R2_s6",
+      "url": "https://razorpay.com/docs/us/webhooks/payments",
+      "title": "Payments Webhook Events - Razorpay",
+      "snippet": "List of Payments webhook events along with sample payloads. ... Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States You can accept customer payments using Razorpay products. By subscribing to payments webhook events you can get notified about payment state changes. The payload for a Webhook is a snapshot of the entity when the event...",
+      "rank": 3,
+      "query": "site:razorpay.com/docs webhooks payload event entity amount paise integer",
+      "retrieved_at": "2026-11-21T07:33:26.711558+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R2_s7",
+      "url": "https://jsonprism.com/learn/validate-webhook-payloads/",
+      "title": "Validate Webhook JSON Payloads (The Right Way) | JSON Prism",
+      "snippet": "Once you know the shape you depend on, encode it as a JSON Schema and validate every incoming payload against it. A minimal schema for a payment event might require an id, an amount that's an integer, and a currency string: Quick answer: A webhook delivers JSON your system didn't generate, so validate it before trusting it: first confirm it's...",
+      "rank": 1,
+      "query": "webhook payload schema validation event_id payment_id amount integer",
+      "retrieved_at": "2026-11-21T07:33:28.735485+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R2_s8",
+      "url": "https://docs.epay.eu/api/schemas/eventwebhook",
+      "title": "EventWebhook | ePay documentation",
+      "snippet": "Envelope posted to your webhook URL when an event occurs. Use event to identify the event type. The event-specific payload is in data, and its shape depends on the event type. You can parse every webhook type with one request structure that includes the optional fields used by each event type, then use event to handle the fields relevant to that...",
+      "rank": 2,
+      "query": "webhook payload schema validation event_id payment_id amount integer",
+      "retrieved_at": "2026-11-21T07:33:28.735485+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R2_s9",
+      "url": "https://hookdeck.com/docs/outpost/guides/webhook-payload-best-practices",
+      "title": "Anatomy of a Good Webhook Payload",
+      "snippet": "Get it wrong and you'll spend months fielding tickets from frustrated engineers who can't figure out why their integrations keep breaking. This post walks through the decisions that matter when designing webhook payloads: what data to include, which headers and metadata to send alongside it, how to structure the schema for long-term sanity, and...",
+      "rank": 3,
+      "query": "webhook payload schema validation event_id payment_id amount integer",
+      "retrieved_at": "2026-11-21T07:33:28.735485+00:00",
+      "provider": "you.com"
+    }
+  ],
+  "raw_responses": [
+    {
+      "query": "site:docs.stripe.com/api webhook payload json parsing required fields amount",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.stripe.com/api/webhook_endpoints",
+              "title": "Webhook Endpoints | Stripe API Reference",
+              "description": "Returns the webhook endpoint object with the secret field populated. ... Updates the webhook endpoint. You may edit the url, the list of enabled_ ... Unique identifier for the object. An optional description of what the webhook is used for. The list of events to enable for this endpoint. You may specify ['*'] to enable all events, except those that require ...",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "Returns the webhook endpoint object with the secret field populated. ... Updates the webhook endpoint. You may edit the url, the list of enabled_ ... Unique identifier for the object. An optional description of what the webhook is used for. The list of events to enable for this endpoint. You may specify ['*'] to enable all events, except those that require explicit selection.",
+                "An optional description of what the webhook is used for. The list of events to enable for this endpoint. ['*'] indicates that all events are enabled, except those that require explicit selection.",
+                "If set to true, then a Connect webhook endpoint that notifies the specified url about events from all connected accounts is created; otherwise an account webhook endpoint that notifies the specified url only about events from your account is created. You can also create webhook endpoints in the webhooks settings section of the Dashboard. The list of events to enable for this endpoint. You may specify ['*'] to enable all events, except those that require explicit selection.",
+                "You can configure webhook endpoints via the API to be notified about events that happen in your Stripe account or connected accounts."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/api/v2/payments/off-session-payments?api-version=2026-10-28.preview",
+              "title": "Off Session Payments | Stripe API Reference",
+              "description": "To properly interface with ... to webhook notifications, as the OffSessionPayment will transition through its lifecycle asynchronously. Related guide: Off-Session Payments API. ... Unique identifier for the object. String representing the object\u2019s type. Objects of the same type share the same value of the object field...",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "To properly interface with OffSessionPayments, we recommend setting up an event destination to listen to webhook notifications, as the OffSessionPayment will transition through its lifecycle asynchronously. Related guide: Off-Session Payments API. ... Unique identifier for the object. String representing the object\u2019s type. Objects of the same type share the same value of the object field.",
+                "The payload of thin events is unversioned. During processing, you must fetch the versioned event from the API or fetch the resource\u2019s current state. ... Sent after a failed attempt if there are still retries available on the Off Session Payment. Unique identifier for the event. String representing the object\u2019s type. Objects of the same type share the same value of the object field."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/api/metadata",
+              "title": "Metadata | Stripe API Reference",
+              "description": "The Stripe API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs \u00b7 You can use the Stripe API in sandboxes without affecting your live ...",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "Webhook events also use your account\u2019s default API version unless you set an API version during endpoint creation.",
+                "Some API v2 responses contain null values for certain properties by default, regardless of their actual values. That reduces the size of response payloads while maintaining the basic response structure.",
+                "The Stripe API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.",
+                "This parameter is available on all API requests, and applies to the response of that request only. You can expand responses in two ways: by expanding the ID of a related object that appears in the response, or by requesting a field that isn\u2019t included by default."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:docs.stripe.com/api webhook payload json parsing required fields amount",
+          "search_uuid": "a048c77b-4e3f-4ac2-83c5-11c107c644e6",
+          "latency": 0.4180670880014077
+        }
+      },
+      "timestamp": "2026-11-21T07:33:24.845137+00:00"
+    },
+    {
+      "query": "site:razorpay.com/docs webhooks payload event entity amount paise integer",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://razorpay.com/docs/us/webhooks/settlements",
+              "title": "Settlements Webhook Events - Razorpay",
+              "description": "List of Settlements webhook events along with sample payloads.",
+              "thumbnail_url": "https://razorpay-881012b3.mintlify.app/_mintlify/api/og/v2?division=List+of+Webhook+Events&amp;title=Settlements+Webhook+Events&amp;description=List+of+Settlements+webhook+events+along+with+sample+payloads.&amp;theme=ff1f07d2e990440c381be7a5&amp;signature=979a867e3d657984ea85fb4a351d871dbdf3f7d0ccc0cea94f2a201516b510ad",
+              "original_thumbnail_url": "https://razorpay-881012b3.mintlify.app/_mintlify/api/og/v2?division=List+of+Webhook+Events&amp;title=Settlements+Webhook+Events&amp;description=List+of+Settlements+webhook+events+along+with+sample+payloads.&amp;theme=ff1f07d2e990440c381be7a5&amp;signature=979a867e3d657984ea85fb4a351d871dbdf3f7d0ccc0cea94f2a201516b510ad",
+              "page_age": "2026-10-08T16:37:48",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "Settlement amounts are always provided in the smallest currency unit (for example, paise for INR, cents for USD). Watch Out!The processed status confirms the initiation of fund transfer, but does not mean that funds have been credited to your account. The amount will reflect in your bank account after the standard NEFT/RTGS/IMPS timeline, which can take up to 3 hours. Given below is the sample payload for Settlement webhook events. ... { \"entity\": \"event\", \"account_id\": \"acc_PR7UDve9UNcOxW\", \"event\": \"settlement.processed\", \"contains\": [ \"settlement\" ], \"payload\": { \"settlement\": { \"entity\": { \"id\": \"setl_Rf8uva1MU98B4l\", \"entity\": \"settlement\", \"amount\": 1524, \"status\": \"processed\", \"fees\": 0, \"tax\": 0, \"utr\": \"AXISCN1153863727\", \"created_at\": 1763019089 } } }, \"created_at\": 1763021990 }"
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/payments/subscriptions/plugins/magento/webhook-events/?preferred-country=US",
+              "title": "Subscriptions | Magento - Webhook Events | Razorpay Docs",
+              "description": "Check the webhook payloads for events relevant to Magento Plugin for Razorpay Subscriptions.",
+              "thumbnail_url": "https://razorpay.com/docs/build/browser/static/og-images/payments/subscriptions/plugins/magento/webhook-events.png",
+              "original_thumbnail_url": "https://razorpay.com/docs/build/browser/static/og-images/payments/subscriptions/plugins/magento/webhook-events.png",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "Currently, webhooks are available for the following events: ... The payload for all these events would contain the Subscription entity.",
+                "If you are building a standard web integration, use the handler function for immediate client-side confirmation and webhooks for server-side verification. Use callback_url only if you are embedding Checkout in a WebView. Do not use callback_url as a substitute for webhooks to track payment status on your server. When you subscribe to webhook events, Razorpay sends an HTTP POST request with JSON payload to your configured endpoint URL whenever those events are triggered.",
+                "Webhooks are server-to-server notifications sent asynchronously by Razorpay when events occur (for example, payment.authorized, order.paid). You configure a webhook URL on your Razorpay Dashboard.",
+                "You can use webhooks to get notified about payments that get authorised and analyse this data to decide whether to capture the payment or not."
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/us/webhooks/payments",
+              "title": "Payments Webhook Events - Razorpay",
+              "description": "List of Payments webhook events along with sample payloads.",
+              "thumbnail_url": "https://razorpay-881012b3.mintlify.site/docs/_mintlify/api/og/v2?division=List+of+Webhook+Events&amp;title=Payments+Webhook+Events&amp;description=List+of+Payments+webhook+events+along+with+sample+payloads.&amp;theme=a4f414a96152b37051aa45a2&amp;signature=f09ba2dd1d4995cba842ff490fe56a318754ec8bbeb02f8dfdf40a82f5a1f3a6",
+              "original_thumbnail_url": "https://razorpay-881012b3.mintlify.site/docs/_mintlify/api/og/v2?division=List+of+Webhook+Events&amp;title=Payments+Webhook+Events&amp;description=List+of+Payments+webhook+events+along+with+sample+payloads.&amp;theme=a4f414a96152b37051aa45a2&amp;signature=f09ba2dd1d4995cba842ff490fe56a318754ec8bbeb02f8dfdf40a82f5a1f3a6",
+              "page_age": "2026-10-08T16:35:44",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "List of Payments webhook events along with sample payloads. ... Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States You can accept customer payments using Razorpay products. By subscribing to payments webhook events you can get notified about payment state changes.",
+                "The payload for a Webhook is a snapshot of the entity when the event occurred. For example, when a customer makes a payment, its status changes to authorized.",
+                "However, the payload for the payment.authorized event contains details of the events when the payment was authorised, not when it was captured. Orders and payments go hand-in-hand. Once a payment is captured, the order is marked paid. This is reflected in the order.paid and payment.captured webhook events as well.",
+                "Given below are the sample payloads for payments webhook events. ... { \"account_id\": \"acc_BFQ7uQEaa7j2z7\", \"contains\": [ \"payment\" ], \"created_at\": 1691735748, \"entity\": \"event\", \"event\": \"payment.authorized\", \"payload\": { \"payment\": { \"entity\": { \"acquirer_data\": { \"auth_code\": \"828553\", \"rrn\": \"322206890934\" }, \"amount\": 100, \"amount_refunded\": 0, \"amount_transferred\": 0, \"bank\": null, \"captured\": true, \"card\": { \"emi\": false, \"entity\": \"card\", \"id\": \"card_DESp9fNnu0RoNc\", \"iin\": \"999999\", \"international\": false, \"issuer\": null, \"last4\": \"0153\", \"name\": \"\", \"network\": \"Visa\", \"sub_type"
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:razorpay.com/docs webhooks payload event entity amount paise integer",
+          "search_uuid": "64d1705a-6b2a-49e1-b0c7-04c63bc37f08",
+          "latency": 0.4771439879841637
+        }
+      },
+      "timestamp": "2026-11-21T07:33:26.711558+00:00"
+    },
+    {
+      "query": "webhook payload schema validation event_id payment_id amount integer",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://jsonprism.com/learn/validate-webhook-payloads/",
+              "title": "Validate Webhook JSON Payloads (The Right Way) | JSON Prism",
+              "description": "Webhooks from Stripe, GitHub, and Shopify send JSON you don't control. Learn how to inspect, validate, and schema-check webhook payloads safely.",
+              "thumbnail_url": "https://jsonprism.com/og-image.png",
+              "original_thumbnail_url": "https://jsonprism.com/og-image.png",
+              "page_age": "2026-06-16T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=jsonprism.com&size=128",
+              "snippets": [
+                "Once you know the shape you depend on, encode it as a JSON Schema and validate every incoming payload against it. A minimal schema for a payment event might require an id, an amount that's an integer, and a currency string:",
+                "Quick answer: A webhook delivers JSON your system didn't generate, so validate it before trusting it: first confirm it's syntactically valid JSON, then check it against a JSON Schema that asserts the fields and types you depend on. To inspect a captured payload by hand, paste it into the JSON Validator and explore it in the Tree View. Never assume the shape - verify it. With a webhook, an external service (Stripe, GitHub, Shopify, Slack) POSTs JSON to your endpoint when an event happens.",
+                "Schema validation catches these explicitly instead of failing deep in your code. Can I test a webhook payload without sending a request? Yes. Copy the raw body from your provider's event log and paste it into the JSON Validator to inspect and validate it locally - nothing is uploaded.",
+                "A field present in the docs' example isn't always present in every event. Types differ from expectations. An amount arrives as a string \"1000\" rather than a number, or a timestamp format changes. Malformed or partial bodies from retries, proxies, or truncation. If your handler reaches straight into payload.data.object.amount without checking, any of these breaks it - often silently, in production. Capture a real delivery (most providers let you view recent webhook events and copy the raw body) and paste it into JSON Prism:"
+              ]
+            },
+            {
+              "url": "https://docs.epay.eu/api/schemas/eventwebhook",
+              "title": "EventWebhook | ePay documentation",
+              "description": "Envelope posted to your webhook URL when an event occurs. Use event to identify the event type. The event-specific payload is in data, and its shape depends on the event type. You can parse every webhook type with one request structure that includes the optional fields used by each event type, ...",
+              "favicon_url": "https://you.com/favicon?domain=docs.epay.eu&size=128",
+              "snippets": [
+                "Envelope posted to your webhook URL when an event occurs. Use event to identify the event type. The event-specific payload is in data, and its shape depends on the event type. You can parse every webhook type with one request structure that includes the optional fields used by each event type, then use event to handle the fields relevant to that event.",
+                "Payload delivered for subscription.disabled.v1 webhooks.",
+                "You can parse every webhook type with one request structure that includes the optional fields used by each event type, then use event to handle the fields relevant to that event. Event data shapes are deliberately non-conflicting: when two event types contain a field with the same name, it always has the same data type. Fields not used by an event type are omitted. ... Identifier of the event that triggered the webhook.",
+                "Event-specific payload."
+              ]
+            },
+            {
+              "url": "https://hookdeck.com/docs/outpost/guides/webhook-payload-best-practices",
+              "title": "Anatomy of a Good Webhook Payload",
+              "description": "Learn how to design webhook payloads that developers trust: what data to include, which headers to send, how to version your schema, and the common mistakes to avoid.",
+              "thumbnail_url": "https://hookdeck.com/og.png?title=Anatomy%20of%20a%20Good%20Webhook%20Payload&v=2",
+              "original_thumbnail_url": "https://hookdeck.com/og.png?title=Anatomy%20of%20a%20Good%20Webhook%20Payload&v=2",
+              "page_age": "2026-02-26T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=hookdeck.com&size=128",
+              "snippets": [
+                "Get it wrong and you'll spend months fielding tickets from frustrated engineers who can't figure out why their integrations keep breaking. This post walks through the decisions that matter when designing webhook payloads: what data to include, which headers and metadata to send alongside it, how to structure the schema for long-term sanity, and the mistakes that trip up even experienced teams. Before thinking about the event-specific data, establish a consistent wrapper that every webhook from your system will use.",
+                "A consumer that only cares about payment.succeeded shouldn't have to receive and discard hundreds of inventory.adjusted events per hour. Let consumers subscribe to specific event types. Fewer irrelevant deliveries means less wasted compute, less noise, and better security posture (you're not streaming data to endpoints that don't need it). Renaming a field from user_id to customer_id, changing an integer to a string, or restructuring nested objects \u2014 any of these will silently break consumer integrations.",
+                "A delivery ID or idempotency key (e.g., X-Webhook-Delivery-Id) gives each delivery attempt a unique identifier. This is distinct from the event ID in the body, because the same event might be delivered multiple times due to retries. Consumers use this to detect and discard duplicate deliveries. A schema version indicator \u2014 either as a header like X-Webhook-Version or embedded in the payload \u2014 tells consumers which version of the payload format they're receiving.",
+                "If you don't have a versioning strategy from day one, you'll break consumer integrations the first time you ship a schema change \u2014 and those consumers won't be gentle about it. There are a few workable approaches. Global API versioning is the simplest. Consumers subscribe at a specific version (e.g., 2026-02-01), and all webhooks they receive use that version's schema until they explicitly upgrade."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "webhook payload schema validation event_id payment_id amount integer",
+          "search_uuid": "24b6e7af-949b-40a7-a689-71dc3437de30",
+          "latency": 0.4599069179967046
+        }
+      },
+      "timestamp": "2026-11-21T07:33:28.735485+00:00"
+    }
+  ]
+}

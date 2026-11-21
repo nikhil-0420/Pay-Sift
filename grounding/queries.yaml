@@ -1,0 +1,122 @@
+version: 1
+rules:
+  R0:
+    title: Totality & Interface
+    description: For every input the handler returns a dict containing `"status"`
+      in `{"applied", "duplicate", "rejected"}` and a string `"reason"`. It never
+      raises an uncaught exception and never hangs (timeout 5.0 s per call).
+    text_hash: 0a1475c51efbbb71b40de4f1bf78b8418e9c03cd7e9bdf799e68d12e90e89347
+    queries:
+    - site:docs.stripe.com/webhooks webhook handler return status code 200 error response
+    - webhook handler error handling uncaught exception timeout return response
+    - payment webhook handler totality dictionary return status reason
+  R1:
+    title: Signature Verification
+    description: 'The signature must equal the lowercase hex HMAC-SHA256 of the exact
+      `raw_body` bytes, keyed with the UTF-8 `secret`. Any discrepancy (missing, empty,
+      incorrect secret, corrupted/flipped byte, uppercase hex, non-ASCII characters,
+      or signature computed over re-serialized JSON): return status `"rejected"`,
+      commit no database state change, and raise no exception.'
+    text_hash: 27f4e945d69ac8bff0b91f0c9d2dd12ea4347937d1c400e29df20c6ee3188126
+    queries:
+    - site:docs.stripe.com/webhooks verify signature raw request body hmac sha256
+    - site:razorpay.com/docs webhooks signature verification hmac sha256 raw payload
+    - webhook signature verification raw body vs reserialized json hmac hex
+  R2:
+    title: Payload Validation
+    description: 'The `raw_body` must be valid UTF-8 JSON encoding a JSON object containing:
+      `event_id` (non-empty string, length <= 64), `type` (`"payment.captured"` or
+      `"refund.processed"`), `payment_id` (non-empty string, length <= 64), `amount_paise`
+      (strict JSON integer from 1 to 10^12 inclusive; not boolean, not float even
+      if 5.0, not string, not null, not <= 0), and for `"refund.processed"` additionally
+      `refund_id` (non-empty string). Extra unrecognized JSON fields are permitted
+      and ignored. Any violation of these requirements: return status `"rejected"`
+      and commit no database state change.'
+    text_hash: 3f2c219efe0708a0b5c5222c88b093f5de4dce9e8fa22e2273e4eac0cd689655
+    queries:
+    - site:docs.stripe.com/api webhook payload json parsing required fields amount
+    - site:razorpay.com/docs webhooks payload event entity amount paise integer
+    - webhook payload schema validation event_id payment_id amount integer
+  R3:
+    title: Event Idempotency
+    description: 'An `event_id` takes effect at most once. Redelivery of an already-applied
+      event (with valid signature and payload): return status `"duplicate"` and commit
+      no database state change.'
+    text_hash: 3016de893831da2aafda8a4e8dc0a276d781d3269012bbc445d63aee4f62da7d
+    queries:
+    - site:docs.stripe.com/webhooks duplicate events idempotency event id
+    - site:razorpay.com/docs webhooks handle duplicate events idempotent
+    - payment webhook event idempotency at most once delivery duplicate
+  R4:
+    title: Payment Capture
+    description: 'For `payment.captured`: if no capture exists for `payment_id`, insert
+      into `payments` (`captured_paise = amount`, `refunded_paise = 0`) and insert
+      exactly one `''capture''` ledger entry (`amount_paise = amount`). If the payment
+      already has a capture: return status `"rejected"` and commit no state change.'
+    text_hash: d4af7223b2755234b7fe626b534faea3cbe11eb55602f1aa8337235f4f99b00b
+    queries:
+    - site:docs.stripe.com/payments/payment-intents capture amount ledger
+    - site:razorpay.com/docs payments capture duplicate capture error
+    - payment capture webhook insert ledger payments captured amount
+  R5:
+    title: Refund Target Existence
+    description: 'For `refund.processed`: requires an existing captured payment in
+      `payments`. If `payment_id` does not exist: return status `"rejected"` and commit
+      no state change.'
+    text_hash: 44493b50440fc4af35f350896b65e3fbc7590db99900f6e3853d6f1bcc98e4a2
+    queries:
+    - site:docs.stripe.com/refunds create refund for existing payment charge
+    - site:razorpay.com/docs refunds refund payment not found error
+    - refund webhook handler require existing captured payment
+  R6:
+    title: Refund Balance Bound
+    description: 'For `refund.processed`: total refunds cannot exceed capture amount
+      (`refunded_paise + amount_paise <= captured_paise`). If amount exceeds remaining
+      balance: return status `"rejected"` and commit no state change. If valid: update
+      `payments` (`refunded_paise += amount_paise`) and insert exactly one `''refund''`
+      ledger entry.'
+    text_hash: 7b8cac0f71eea4cc07667743ec0548347eeae03a0f5b525385ddc8d3f88881b7
+    queries:
+    - site:docs.stripe.com/refunds partial refunds cannot exceed captured charge amount
+    - site:razorpay.com/docs refunds total refund amount exceeds payment amount
+    - payment refund limit total refunded cannot exceed captured amount
+  R7:
+    title: Financial Atomicity
+    description: '`payments` and `ledger` must always agree: `captured_paise` equals
+      the sum of capture entries in `ledger`; `refunded_paise` equals the sum of refund
+      entries in `ledger`. An event applies in full or not at all.'
+    text_hash: 5975ff5dd9bf7c36d7073c81ae75f151716f4b9d4369a2646dc988096f4d5fe4
+    queries:
+    - payment webhook database transaction atomicity ledger balance update
+    - double entry ledger atomicity payment capture refund database
+    - site:docs.stripe.com ledger database transaction all or nothing
+  R8:
+    title: Rejection Non-Consumption
+    description: A `"rejected"` event produces no state change and does NOT consume
+      its `event_id`. If the same `event_id` is redelivered later with valid parameters
+      or prerequisites satisfied, it must be processed and applied normally.
+    text_hash: 3fa82759ce2f6bad5573cfeee5f0aa5b96ca00ccc523d11c9c656b0e74000695
+    queries:
+    - webhook failed signature event id retry not consumed
+    - idempotency key rejected request retry with valid parameters
+    - webhook error response does not mark event id as processed
+  R9:
+    title: Durability Across Restarts
+    description: All state lives in the SQLite database. The handler process may be
+      terminated and restarted between any two calls without losing idempotency or
+      accounting integrity.
+    text_hash: fb3f3460115d32b4f89a709603e92f0a7098a57e1629c5e45eff615273c73733
+    queries:
+    - webhook idempotency database persistence survive process restart
+    - sqlite database transaction durability webhook state
+    - in-memory deduplication webhook crash loss persistent table
+  R10:
+    title: Concurrency Safety
+    description: Calls may run concurrently in separate processes against the same
+      database file. Rules R3 (idempotency) and R6 (refund bounds) must strictly hold
+      under concurrent execution.
+    text_hash: 4eed81a4e5f645dd4b410364a06dc0fe3bb401b0478914439c4d3e7ec41da767
+    queries:
+    - concurrent webhook delivery race condition database transaction lock
+    - site:docs.stripe.com concurrent webhook events duplicate capture race
+    - sqlite concurrent webhook handler begin immediate transaction lock

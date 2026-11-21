@@ -1,0 +1,275 @@
+{
+  "rule_id": "R7",
+  "title": "Financial Atomicity",
+  "description": "`payments` and `ledger` must always agree: `captured_paise` equals the sum of capture entries in `ledger`; `refunded_paise` equals the sum of refund entries in `ledger`. An event applies in full or not at all.",
+  "text_hash": "5975ff5dd9bf7c36d7073c81ae75f151716f4b9d4369a2646dc988096f4d5fe4",
+  "retrieved_at": "2026-11-21T07:33:58.769681+00:00",
+  "sources": [
+    {
+      "id": "R7_s1",
+      "url": "https://dev.to/amc_animarcelinus_b4a718/atomic-money-making-a-phpmysql-wallet-safe-under-concurrency-1b0m",
+      "title": "Atomic Money: Making a PHP/MySQL Wallet Safe Under Concurrency ...",
+      "snippet": "The lost-update bug that quietly corrupts homegrown wallet balances \u2014 and the five disciplines we... Tagged with php, mysql, fintech, database. A separate \"check balance, then debit\" would reopen exactly the race we just closed. Fix #4: credit at confirm time, keyed to a specific payment Atomicity stops corruption. It does not stop duplication. In...",
+      "rank": 1,
+      "query": "payment webhook database transaction atomicity ledger balance update",
+      "retrieved_at": "2026-11-21T07:33:53.074506+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R7_s2",
+      "url": "https://dev.to/programmingcentral/architectural-masterclass-building-an-enterprise-grade-core-ledger-and-payment-gateway-saas-29an",
+      "title": "Architectural Masterclass: Building an Enterprise-Grade Core Ledger ...",
+      "snippet": "In the high-stakes landscape of modern financial technology engineering, the chasm separating a... Tagged with javascript, typescript, ai, fintech. In the context of transaction processing, this translates to the inviolable invariant of Double-Entry Bookkeeping: Every financial transaction consists of at least two paired entries\u2014a Debit and a...",
+      "rank": 2,
+      "query": "payment webhook database transaction atomicity ledger balance update",
+      "retrieved_at": "2026-11-21T07:33:53.074506+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R7_s3",
+      "url": "https://github.com/Muhammed-Sahad-P/fedibleFintech/pull/5",
+      "title": "feat(core): payment webhook atomicity, security hardening, signed ...",
+      "snippet": "Summary of Changes This PR implements core reliability fixes, security hardening, cloud-standard signed document downloads, and test coverage improvements across the assessment codebase. \ud83d\udcb3 1. Payme... Single Atomic Transaction: Enclosed inbox event recording, pessimistic row locking (SELECT FOR UPDATE), amount/currency verification, state...",
+      "rank": 3,
+      "query": "payment webhook database transaction atomicity ledger balance update",
+      "retrieved_at": "2026-11-21T07:33:53.074506+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R7_s4",
+      "url": "https://www.systemdesignsandbox.com/learn/double-entry",
+      "title": "Double-Entry Bookkeeping | System Design Sandbox",
+      "snippet": "The ledger is append-only. Corrections are new reversal entries \u00b7 Refunds are reverse entries, not deletions. Debit the merchant, credit the user. The full history is preserved \u00b7 Reconciliation is built-in error detection: sum all debits, sum all credits, and they must be equal \u00b7 Wrap both entries in a database transaction to guarantee atomicity....",
+      "rank": 1,
+      "query": "double entry ledger atomicity payment capture refund database",
+      "retrieved_at": "2026-11-21T07:33:54.913577+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R7_s5",
+      "url": "https://www.matthewswong.com/en/blog/design-payment-system-ledger-reconciliation/",
+      "title": "Design a Payment System: Ledger, Idempotency, Reconciliation",
+      "snippet": "CREATE TABLE accounts ( id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY, code text NOT NULL UNIQUE, -- 'psp_clearing', 'revenue', 'psp_fees', 'bank' currency char(3) NOT NULL ); CREATE TABLE ledger_transactions ( id uuid PRIMARY KEY DEFAULT gen_random_uuid(), payment_id uuid NOT NULL, kind text NOT NULL CHECK (kind IN ('capture', 'fee',...",
+      "rank": 2,
+      "query": "double entry ledger atomicity payment capture refund database",
+      "retrieved_at": "2026-11-21T07:33:54.913577+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R7_s6",
+      "url": "https://developer.squareup.com/blog/books-an-immutable-double-entry-accounting-database-service/",
+      "title": "Books, an immutable double-entry accounting database service",
+      "snippet": "Before we do that, we need to talk about what a book is. In the above diagram, we have four different books, called \u201cPayments\u201d, \u201cRefunds\u201d, \u201cPending Balance\u201d and \u201cPayouts\u201d. Think of these as states in a state machine and we\u2019re moving pennies between these states in bulk. To offset these and ensure our accounting equation balances, we credit (the...",
+      "rank": 3,
+      "query": "double entry ledger atomicity payment capture refund database",
+      "retrieved_at": "2026-11-21T07:33:54.913577+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R7_s7",
+      "url": "https://docs.stripe.com/data/query-transactions",
+      "title": "Query transactional data | Stripe Documentation",
+      "snippet": "transactions table as a starting point for accounting purposes. Unlike using separate tables (such as charges or refunds), it provides a ledger-style record of every type of transaction that comes into or flows out of your Stripe account balance. Use balance transactions to generate frequently used reports and to simplify how you report on...",
+      "rank": 1,
+      "query": "site:docs.stripe.com ledger database transaction all or nothing",
+      "retrieved_at": "2026-11-21T07:33:56.904712+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R7_s8",
+      "url": "https://docs.stripe.com/plan-integration/get-started/reporting-reconciliation",
+      "title": "Reporting and reconciliation | Stripe Documentation",
+      "snippet": "Balance transactions are the building blocks of all activity on Stripe. These objects: Represent everything that affected your Stripe balance (credits and debits). Are automatically created by Stripe (for example, each successful PaymentIntent generates a separate BalanceTransaction object, as does each payout). Are immutable (a refund is...",
+      "rank": 2,
+      "query": "site:docs.stripe.com ledger database transaction all or nothing",
+      "retrieved_at": "2026-11-21T07:33:56.904712+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R7_s9",
+      "url": "https://docs.stripe.com/data/query-transactions.md",
+      "title": "Query transactional data",
+      "snippet": "The balance_transaction_fee_details table provides fee information about each individual balance transaction. Joining this table to balance_transactions in the manner below allows you to return fee information for each balance transaction. Each balance transaction row represents an individual balance_transaction object that doesn\u2019t change after...",
+      "rank": 3,
+      "query": "site:docs.stripe.com ledger database transaction all or nothing",
+      "retrieved_at": "2026-11-21T07:33:56.904712+00:00",
+      "provider": "you.com"
+    }
+  ],
+  "raw_responses": [
+    {
+      "query": "payment webhook database transaction atomicity ledger balance update",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://dev.to/amc_animarcelinus_b4a718/atomic-money-making-a-phpmysql-wallet-safe-under-concurrency-1b0m",
+              "title": "Atomic Money: Making a PHP/MySQL Wallet Safe Under Concurrency ...",
+              "description": "The lost-update bug that quietly corrupts homegrown wallet balances \u2014 and the five disciplines we...",
+              "thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F0z6juqqbrwkm0frtieah.png",
+              "original_thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F0z6juqqbrwkm0frtieah.png",
+              "page_age": "2026-08-03T03:09:47",
+              "favicon_url": "https://you.com/favicon?domain=dev.to&size=128",
+              "snippets": [
+                "The lost-update bug that quietly corrupts homegrown wallet balances \u2014 and the five disciplines we... Tagged with php, mysql, fintech, database.",
+                "A separate \"check balance, then debit\" would reopen exactly the race we just closed. Fix #4: credit at confirm time, keyed to a specific payment Atomicity stops corruption. It does not stop duplication. In a real payments system the same credit can be triggered from several places \u2014 a bank webhook, a scheduled reconciliation job, a user pressing \"confirm.\"",
+                "if ($claimed->rowCount() === 1) { // We are the first \u2014 safe to credit exactly once creditWallet($userId, $amount); } // rowCount() === 0 \u2192 already settled \u2192 do nothing A UNIQUE constraint on bank_ref plus INSERT IGNORE turns \"have we already handled this payment?\" into a single race-free question. Webhook, cron and manual reconciliation can now all run \u2014 even simultaneously \u2014 and the wallet is credited exactly once. We applied the same \"execute-once claim\" to dispute resolutions, so a refund can never be paid twice. Fix #5: make the whole movement transactional When money moves between two places \u2014 debit one wallet, credit another, write a ledger row \u2014 those writes must all commit or all roll back.",
+                "They fail as a slow leak of trust \u2014 a balance that's a little off, a reconciliation that won't tie out, a customer who swears they were charged twice. In payments, \"usually correct\" is another way of saying \"wrong.\" Money-grade software earns its name by being correct every time two things happen at once \u2014 and that is a property you design in deliberately, one atomic statement at a time."
+              ]
+            },
+            {
+              "url": "https://dev.to/programmingcentral/architectural-masterclass-building-an-enterprise-grade-core-ledger-and-payment-gateway-saas-29an",
+              "title": "Architectural Masterclass: Building an Enterprise-Grade Core Ledger ...",
+              "description": "In the high-stakes landscape of modern financial technology engineering, the chasm separating a...",
+              "thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fm7johjkv93qrspv33or3.png",
+              "original_thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fm7johjkv93qrspv33or3.png",
+              "page_age": "2026-10-26T20:00:00",
+              "favicon_url": "https://you.com/favicon?domain=dev.to&size=128",
+              "snippets": [
+                "In the high-stakes landscape of modern financial technology engineering, the chasm separating a... Tagged with javascript, typescript, ai, fintech.",
+                "In the context of transaction processing, this translates to the inviolable invariant of Double-Entry Bookkeeping: Every financial transaction consists of at least two paired entries\u2014a Debit and a Credit\u2014such that the sum of all Debits equals the sum of all Credits across the entire system. ... In a naive ledger, developers often create a table with an amount column and a type column, updating a running balance column on the user's account row. This approach is fatally flawed. It violates atomicity, creates high-contention database locks on hot account rows, and makes historical auditing nearly impossible because past states are overwritten.",
+                "Instead, it constructs a balanced journal entry: ... If a transaction attempts to commit where debits do not equal credits, the database transaction aborts entirely, raising an unrecoverable exception. The concepts and code demonstrated here are drawn directly from the comprehensive roadmap laid out in the ebook FinTech Architecture in TypeScript. Precision Math, Double-Entry Ledgers, and High-Reliability Payment Pipelines here.",
+                "Building a high-reliability core ledger and payment gateway SaaS requires unyielding adherence to architectural discipline: Never use floating-point math for money. Enforce integer minor units or battle-tested arbitrary-precision decimal libraries. Treat double-entry bookkeeping as a mathematical law. Every transaction must be validated for balance before persistence."
+              ]
+            },
+            {
+              "url": "https://github.com/Muhammed-Sahad-P/fedibleFintech/pull/5",
+              "title": "feat(core): payment webhook atomicity, security hardening, signed ...",
+              "description": "Contribute to Muhammed-Sahad-P/fedibleFintech development by creating an account on GitHub.",
+              "thumbnail_url": "https://opengraph.githubassets.com/a052d839b44458a387f7fd29def9f7977c901f41e4f011136926bc14f954530e/Muhammed-Sahad-P/fedibleFintech/pull/5",
+              "original_thumbnail_url": "https://opengraph.githubassets.com/a052d839b44458a387f7fd29def9f7977c901f41e4f011136926bc14f954530e/Muhammed-Sahad-P/fedibleFintech/pull/5",
+              "favicon_url": "https://you.com/favicon?domain=github.com&size=128",
+              "snippets": [
+                "Summary of Changes This PR implements core reliability fixes, security hardening, cloud-standard signed document downloads, and test coverage improvements across the assessment codebase. \ud83d\udcb3 1. Payme...",
+                "Single Atomic Transaction: Enclosed inbox event recording, pessimistic row locking (SELECT FOR UPDATE), amount/currency verification, state transitions, and audit logs into a single database transaction. Tamper Protection: Validates payload amountMinor and currency against the locked transaction. Mismatches commit the inbox event as REJECTED with a WEBHOOK_MISMATCH_REJECTED audit log and throw 400 Bad Request.",
+                "Atomic Rate Limiter: Converted Redis rate limiter to an atomic Lua script (eval). Check Constraints Migration: Added 002_transaction_check_constraints.sql enforcing amount_minor > 0 and status IN ('PENDING', 'SUCCESS', 'FAILED').",
+                "Production Secrets: Missing or default JWT_SECRET or WEBHOOK_SECRET in production triggers an immediate fatal startup exit."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "payment webhook database transaction atomicity ledger balance update",
+          "search_uuid": "c730301d-a32e-415b-800f-d3bbf79e4e43",
+          "latency": 0.4765603189589456
+        }
+      },
+      "timestamp": "2026-11-21T07:33:53.074506+00:00"
+    },
+    {
+      "query": "double entry ledger atomicity payment capture refund database",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://www.systemdesignsandbox.com/learn/double-entry",
+              "title": "Double-Entry Bookkeeping | System Design Sandbox",
+              "description": "Learn how double-entry bookkeeping ensures every payment is auditable and self-balancing. Covers debit/credit pairs, ledger immutability, the fundamental accounting equation, reconciliation, and when to use double-entry in system design interviews.",
+              "thumbnail_url": "https://www.systemdesignsandbox.com/desktop-url-shortener-practice.gif",
+              "original_thumbnail_url": "https://www.systemdesignsandbox.com/desktop-url-shortener-practice.gif",
+              "page_age": "2026-04-21T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=www.systemdesignsandbox.com&size=128",
+              "snippets": [
+                "The ledger is append-only. Corrections are new reversal entries \u00b7 Refunds are reverse entries, not deletions. Debit the merchant, credit the user. The full history is preserved \u00b7 Reconciliation is built-in error detection: sum all debits, sum all credits, and they must be equal \u00b7 Wrap both entries in a database transaction to guarantee atomicity.",
+                "This keeps queries fast even with millions of ledger entries. For more on database performance optimization, see Databases & Caching. Payment systems. Any system that moves real money between accounts. Stripe, PayPal, and every bank in the world use double-entry internally. Marketplace payouts. Platforms like Uber, Airbnb, or Etsy that hold money in escrow and distribute it to sellers. E-commerce platforms. Order payments, refunds, partial refunds, credits, gift cards -- all of these are financial movements that need traceability.",
+                "The core operation of a double-entry system is writing both entries atomically. If one entry is written without the other, the ledger is out of balance. This is where database transactions are essential.",
+                "Compliance-heavy industries. Healthcare payments, insurance claims, lending -- anywhere regulators will audit your records. Simple apps with no financial component. A blog platform or a chat app doesn't need a ledger. One-way charges with no refunds or splits."
+              ]
+            },
+            {
+              "url": "https://www.matthewswong.com/en/blog/design-payment-system-ledger-reconciliation/",
+              "title": "Design a Payment System: Ledger, Idempotency, Reconciliation",
+              "description": "How do you design a payment system that never loses or double-charges money? State machine, double-entry ledger, idempotency and daily reconciliation.",
+              "thumbnail_url": "https://www.matthewswong.com/images/blog/design-payment-system-ledger-reconciliation.jpg",
+              "original_thumbnail_url": "https://www.matthewswong.com/images/blog/design-payment-system-ledger-reconciliation.jpg",
+              "page_age": "2026-10-10T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=www.matthewswong.com&size=128",
+              "snippets": [
+                "CREATE TABLE accounts ( id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY, code text NOT NULL UNIQUE, -- 'psp_clearing', 'revenue', 'psp_fees', 'bank' currency char(3) NOT NULL ); CREATE TABLE ledger_transactions ( id uuid PRIMARY KEY DEFAULT gen_random_uuid(), payment_id uuid NOT NULL, kind text NOT NULL CHECK (kind IN ('capture', 'fee', 'payout', 'refund', 'reversal')), reverses_id uuid REFERENCES ledger_transactions(id), -- corrections point at what they undo external_ref text, -- the PSP's id for this movement created_at timestamptz NOT NULL DEFAULT now(), UNIQUE (kind, external_ref) -- t",
+                "Reconciliation never edits the ledger to make numbers match. Each row becomes a ticket with a fix that is itself a new entry or a state transition, for example resolving an unknown payment to captured and posting its entries. The job is also your monitoring: the count of unmatched rows per day is the one number that tells you the system is healthy. A refund is a new transaction that moves money back, not an edit of the original capture.",
+                "A payment system that never loses or double-charges money combines four things: a payment state machine with an explicit unknown state, an append-only double-entry ledger in integer minor units, idempotency keys at the API boundary, and a reconciliation job comparing your ledger with the processor's settlement reports. Refunds are new entries, never edits.",
+                "05How do you handle refunds in a double-entry ledger? Post a new balanced transaction that moves the money back, for example debit revenue and credit the processor clearing account, instead of editing the original capture. Check that refunds already posted plus the new amount do not exceed the captured amount."
+              ]
+            },
+            {
+              "url": "https://developer.squareup.com/blog/books-an-immutable-double-entry-accounting-database-service/",
+              "title": "Books, an immutable double-entry accounting database service",
+              "description": "Square in 2019 looks very different from when we launched almost 10 years ago. We now have at least half a dozen totally independent products, from Caviar, Capital, to the Cash App. As we have scaled our financial infrastructure and moved beyond simple payment processing, we have come to recognize ...",
+              "thumbnail_url": "https://images.ctfassets.net/1wryd5vd9xez/1YA6bljwWVnWFa3QwZJ15H/9e65cb03459ff4bc02e8127539853fa8/thecorner_heroimage_books_v1_20191014.jpg?w=2916&amp;h=801&amp;fl=progressive&amp;q=100&amp;fm=jpg",
+              "original_thumbnail_url": "https://images.ctfassets.net/1wryd5vd9xez/1YA6bljwWVnWFa3QwZJ15H/9e65cb03459ff4bc02e8127539853fa8/thecorner_heroimage_books_v1_20191014.jpg?w=2916&amp;h=801&amp;fl=progressive&amp;q=100&amp;fm=jpg",
+              "page_age": "2019-10-16T07:00:00",
+              "favicon_url": "https://you.com/favicon?domain=developer.squareup.com&size=128",
+              "snippets": [
+                "Before we do that, we need to talk about what a book is. In the above diagram, we have four different books, called \u201cPayments\u201d, \u201cRefunds\u201d, \u201cPending Balance\u201d and \u201cPayouts\u201d. Think of these as states in a state machine and we\u2019re moving pennies between these states in bulk.",
+                "To offset these and ensure our accounting equation balances, we credit (the minus sign) our Pending Balance book. After these two payments, the balance on the Payments book is $180. The balance on our Pending Balance book is -$180. The next thing we want to record is the refund.",
+                "Our Refunds book is going to be credited (again, the minus sign) the amount of the refund and we will debit the Pending book. At this point we now have both payments and one refund booked. We would now like to resolve the day\u2019s transactions and pay the merchant anything we owe.",
+                "Add on to this all the normal issues that come with a growing business. We spent considerable effort adding a sharding scheme to the SQL database. We built a risk model on top of the ledger to mark certain entries as \u201cunsettleable\u201d, creating a weird wart on the system."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "double entry ledger atomicity payment capture refund database",
+          "search_uuid": "dae3bd11-ef70-4b0a-93cb-9e552dd5abb8",
+          "latency": 0.5055405719904229
+        }
+      },
+      "timestamp": "2026-11-21T07:33:54.913577+00:00"
+    },
+    {
+      "query": "site:docs.stripe.com ledger database transaction all or nothing",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.stripe.com/data/query-transactions",
+              "title": "Query transactional data | Stripe Documentation",
+              "description": "Use balance transactions as a ledger-style record of charges, refunds, transfers, payouts, fees, and customer data with SQL queries.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/data.query-transactions.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/data.query-transactions.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "transactions table as a starting point for accounting purposes. Unlike using separate tables (such as charges or refunds), it provides a ledger-style record of every type of transaction that comes into or flows out of your Stripe account balance. Use balance transactions to generate frequently used reports and to simplify how you report on financial activity.",
+                "Each balance transaction row represents an individual balance_transaction object that doesn\u2019t change after it\u2019s created. For example, creating a charge also creates a corresponding balance transaction of type charge. Refunding this charge creates a separate balance transaction of type refund\u2014but it doesn\u2019t modify the original balance transaction.",
+                "transactions in the manner below allows you to return fee information for each balance transaction.",
+                "select date_format(date_trunc('day', charges.created), '%m-%d-%Y') as day, customers.id, customers.email, charges.id from charges inner join customers on customers.id=charges.customer_id where charges.status = 'failed' order by day desc limit 5 \u00b7 Charges and refunds are separate objects within the API. Refunding a charge creates a Refund. This data is available in the refunds table and provides in-depth information about completed refunds. Similar to reporting on charges, a best practice is to start with information about balance transactions."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/plan-integration/get-started/reporting-reconciliation",
+              "title": "Reporting and reconciliation | Stripe Documentation",
+              "description": "Learn how to use Stripe reporting tools and reconciliation features for financial management and compliance.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/plan-integration.get-started.reporting-reconciliation.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/plan-integration.get-started.reporting-reconciliation.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "Balance transactions are the building blocks of all activity on Stripe. These objects: Represent everything that affected your Stripe balance (credits and debits). Are automatically created by Stripe (for example, each successful PaymentIntent generates a separate BalanceTransaction object, as does each payout). Are immutable (a refund is associated with a new BalanceTransaction negating the original). Can act as your ledger (to understand your balance at any point in time, you can replay all BalanceTransactions up to that point).",
+                "If you\u2019re building custom reporting using the APIs, use the balance transaction endpoint and the payout parameter to list all transactions included in an automatic payout. A best practice is to retrieve payouts automatically and asynchronously when the payout.paid or payout.reconciliation_completed event is received by your webhook handler.",
+                "Balance: You can view and download summarized and itemized balance transaction data, helping you to close books on a daily, weekly, or monthly basis. These reports help you understand changes to your Stripe balance. Reconciliation: You can see which transactions have already been paid out and which ones are yet to be paid out using this report. The Reconciliation tab displays the same type of data you see in the Balance tab but grouped in different ways to help you reconcile payouts. All reports are available in the Stripe Dashboard, and with the API.",
+                "Sigma makes all of your business data available in an interactive SQL environment in the Dashboard. You can write queries that use its extensive schema and create fully customized reports using information about your transactions. Sigma allows you to export data directly to CSV, and schedule queries to deliver results by email or webhook."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/data/query-transactions.md",
+              "title": "Query transactional data",
+              "description": "Use the balance_transactions table as a starting point for accounting purposes. Unlike using separate tables (such as charges or refunds), it provides a ledger-style record of every type of transaction that comes into or flows out of your Stripe account balance.",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "The balance_transaction_fee_details table provides fee information about each individual balance transaction. Joining this table to balance_transactions in the manner below allows you to return fee information for each balance transaction.",
+                "Each balance transaction row represents an individual balance_transaction object that doesn\u2019t change after it\u2019s created. For example, creating a charge also creates a corresponding balance transaction of type charge. Refunding this charge creates a separate balance transaction of type refund\u2014but it doesn\u2019t modify the original balance transaction.",
+                "| day | id | amount | currency | sourceid | type | | --- | --- | --- | --- | --- | --- | | 11/5/2026 | txnorWziM4j7CiRL8J | -1,000 | usd | reorWziM4j7CiRL8J | refund | | 11/5/2026 | txnorWziM4j7CiRL8J | 1,000 | usd | chorWziM4j7CiRL8J | charge | | 11/5/2026 | txnorWziM4j7CiRL8J | 1,000 | usd | chorWziM4j7CiRL8J | charge | | 11/5/2026 | txnorWziM4j7CiRL8J | 1,000 | eur | chorWziM4j7CiRL8J | charge | | 11/5/2026 | txnorWziM4j7CiRL8J | -1,000 | usd | re_orWziM4j7CiRL8J | refund | You can calculate the most common financial summaries by joining the balance_transactions table with other tables containing the appropriate information.",
+                "sql select date_format(date_trunc('day', charges.created), '%m-%d-%Y') as day, customers.id, customers.email, charges.id from charges inner join customers on customers.id=charges.customer_id where charges.status = 'failed' order by day desc limit 5 \u00b7 Charges and refunds are separate objects within the API. Refunding a charge creates a Refund. This data is available in the refunds table and provides in-depth information about completed refunds. Similar to reporting on charges, a best practice is to start with information about balance transactions."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:docs.stripe.com ledger database transaction all or nothing",
+          "search_uuid": "70b66c0c-9d6e-4815-b7d0-9dbc624b74db",
+          "latency": 0.4136107790109236
+        }
+      },
+      "timestamp": "2026-11-21T07:33:56.904712+00:00"
+    }
+  ]
+}

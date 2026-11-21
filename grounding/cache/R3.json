@@ -1,0 +1,278 @@
+{
+  "rule_id": "R3",
+  "title": "Event Idempotency",
+  "description": "An `event_id` takes effect at most once. Redelivery of an already-applied event (with valid signature and payload): return status `\"duplicate\"` and commit no database state change.",
+  "text_hash": "3016de893831da2aafda8a4e8dc0a276d781d3269012bbc445d63aee4f62da7d",
+  "retrieved_at": "2026-11-21T07:33:36.543410+00:00",
+  "sources": [
+    {
+      "id": "R3_s1",
+      "url": "https://docs.stripe.com/webhooks/migrate-snapshot-to-thin-events",
+      "title": "Migrate from snapshot events to thin events | Stripe Documentation",
+      "snippet": "event field contains the original snapshot event ID. Log both the thin event. ... When shadow mode runs cleanly, enable real writes in your thin handler. Keep both destinations active during a brief overlap window to make sure you don\u2019t miss any events. During the overlap, you might receive the same logical event twice: once as a snapshot event...",
+      "rank": 1,
+      "query": "site:docs.stripe.com/webhooks duplicate events idempotency event id",
+      "retrieved_at": "2026-11-21T07:33:30.755305+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R3_s2",
+      "url": "https://docs.stripe.com/webhooks/process-undelivered-events",
+      "title": "Manage webhook endpoints | Stripe Documentation",
+      "snippet": "Webhook endpoints might occasionally receive the same event more than once. Guard against duplicated event receipts by logging the event IDs you\u2019ve processed, and then not processing already-logged events. In some cases, two separate Event objects are generated and sent. To identify these duplicates, use the ID of the object in data. before: An...",
+      "rank": 2,
+      "query": "site:docs.stripe.com/webhooks duplicate events idempotency event id",
+      "retrieved_at": "2026-11-21T07:33:30.755305+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R3_s3",
+      "url": "https://docs.stripe.com/webhooks?locale=en-GB",
+      "title": "Receive Stripe events in your webhook endpoint | Stripe Documentation",
+      "snippet": "Webhook endpoints might occasionally receive the same event more than once. You can guard against duplicated event receipts by logging the event IDs you\u2019ve processed, and then not processing already-logged events. Make sure that your event destination isn\u2019t dependent on receiving events in a specific order. Snapshot events record created in...",
+      "rank": 3,
+      "query": "site:docs.stripe.com/webhooks duplicate events idempotency event id",
+      "retrieved_at": "2026-11-21T07:33:30.755305+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R3_s4",
+      "url": "https://razorpay.com/docs/us/webhooks/best-practices/",
+      "title": "Webhooks | Best Practices",
+      "snippet": "Best practices to adhere to when using Razorpay notification webhooks. Ensure you configure your server to handle or receive the same event details multiple times. Check the value of the x-razorpay-event-id in the webhook request header. The value for this header is unique per event and can help you determine the duplicity of a webhook event....",
+      "rank": 1,
+      "query": "site:razorpay.com/docs webhooks handle duplicate events idempotent",
+      "retrieved_at": "2026-11-21T07:33:32.690140+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R3_s5",
+      "url": "https://razorpay.com/docs/us/webhooks/validate-test",
+      "title": "Validate and Test Webhooks - Razorpay",
+      "snippet": "There could be scenarios where your endpoint might receive the same webhook event multiple times. This is an expected behaviour based on the webhook design. To handle duplicate webhook events: Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States You need to validate and test the webhook before starting using them. It is also important to...",
+      "rank": 2,
+      "query": "site:razorpay.com/docs webhooks handle duplicate events idempotent",
+      "retrieved_at": "2026-11-21T07:33:32.690140+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R3_s6",
+      "url": "https://razorpay.com/docs/us/webhooks/best-practices/?preferred-country=US",
+      "title": "Best Practices - Razorpay",
+      "snippet": "Best practices to adhere to when using Razorpay notification webhooks. Ensure you configure your server to handle or receive the same event details multiple times. Check the value of the x-razorpay-event-id in the webhook request header. The value for this header is unique per event and can help you determine the duplicity of a webhook event....",
+      "rank": 3,
+      "query": "site:razorpay.com/docs webhooks handle duplicate events idempotent",
+      "retrieved_at": "2026-11-21T07:33:32.690140+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R3_s7",
+      "url": "https://hookdeck.com/webhooks/guides/implement-webhook-idempotency",
+      "title": "How to Implement Webhook Idempotency",
+      "snippet": "Automatic retries are the primary source of duplicate webhook deliveries. When a delivery attempt fails \u2014 due to a timeout, server error, or network issue \u2014 the provider (or your webhook infrastructure) retries the same event. Without idempotent handlers, every retry triggers your business logic again. This is why at-least-once delivery and...",
+      "rank": 1,
+      "query": "payment webhook event idempotency at most once delivery duplicate",
+      "retrieved_at": "2026-11-21T07:33:34.684824+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R3_s8",
+      "url": "https://www.hooklistener.com/learn/webhook-idempotency-and-deduplication",
+      "title": "Webhook Idempotency 2026: Dedupe in Postgres, Redis & Node | ...",
+      "snippet": "If the webhook triggers a payment or an email through another API, forward your event ID as that API's idempotency key so the whole chain dedupes consistently. Deliver one real event to your handler several times and check that it was processed once. Dedup logic is easy to write and easy to get subtly wrong, and the failure only shows up when a...",
+      "rank": 2,
+      "query": "payment webhook event idempotency at most once delivery duplicate",
+      "retrieved_at": "2026-11-21T07:33:34.684824+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R3_s9",
+      "url": "https://dev.to/jctechlabs/webhooks-arrive-twice-late-and-out-of-order-designing-idempotent-handlers-gen",
+      "title": "Webhooks Arrive Twice, Late and Out of Order: Designing Idempotent ...",
+      "snippet": "Every webhook provider promises at-least-once delivery, which means your handler will see the same... Tagged with webhooks, architecture, backend, postgres. Every webhook provider promises at-least-once delivery, which means your handler will see the same event more than once. Design for that on day one, or a payment gets marked paid twice, a...",
+      "rank": 3,
+      "query": "payment webhook event idempotency at most once delivery duplicate",
+      "retrieved_at": "2026-11-21T07:33:34.684824+00:00",
+      "provider": "you.com"
+    }
+  ],
+  "raw_responses": [
+    {
+      "query": "site:docs.stripe.com/webhooks duplicate events idempotency event id",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.stripe.com/webhooks/migrate-snapshot-to-thin-events",
+              "title": "Migrate from snapshot events to thin events | Stripe Documentation",
+              "description": "event field contains the original snapshot event ID. Log both the thin event. ... When shadow mode runs cleanly, enable real writes in your thin handler. Keep both destinations active during a brief overlap window to make sure you don\u2019t miss any events. During the overlap, you might receive the same logical event twice: once as a snapshot event and once as a thin event. Use idempotency keys to prevent duplicate ...",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/webhooks.migrate-snapshot-to-thin-events.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/webhooks.migrate-snapshot-to-thin-events.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "event field contains the original snapshot event ID. Log both the thin event. ... When shadow mode runs cleanly, enable real writes in your thin handler. Keep both destinations active during a brief overlap window to make sure you don\u2019t miss any events. During the overlap, you might receive the same logical event twice: once as a snapshot event and once as a thin event. Use idempotency keys to prevent duplicate processing.",
+                "event field in thin events contains the original snapshot event ID. By using this field as your idempotency key, both handlers can deduplicate against the same key. Here\u2019s how this implementation prevents duplicates:",
+                "CREATE TABLE event_idempotency ( idempotency_key TEXT PRIMARY KEY, event_type TEXT NOT NULL, processed_at INTEGER NOT NULL ); ... // Try to insert idempotency key. Returns true if successfully inserted, false if duplicate.",
+                "event field containing the original snapshot event ID. Use this as your idempotency key to prevent duplicate processing when running both handlers simultaneously."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/webhooks/process-undelivered-events",
+              "title": "Manage webhook endpoints | Stripe Documentation",
+              "description": "Process undelivered webhook events, resolve signature verification errors, handle event-generation failures, and use event notification handlers to route events to your business logic.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/events.manage-webhook-endpoints.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/events.manage-webhook-endpoints.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "Webhook endpoints might occasionally receive the same event more than once. Guard against duplicated event receipts by logging the event IDs you\u2019ve processed, and then not processing already-logged events.",
+                "In some cases, two separate Event objects are generated and sent. To identify these duplicates, use the ID of the object in data.",
+                "before: An event ID that was successfully delivered immediately before the outage.",
+                "# example for testing; use something more durable for production processed_event_ids = set() @handler.pre_handle def log_and_dedup(notif: EventNotification, client: StripeClient) -> bool: # log every incoming event print(f'Starting {notif.id}') # ignore duplicates..."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/webhooks?locale=en-GB",
+              "title": "Receive Stripe events in your webhook endpoint | Stripe Documentation",
+              "description": "Create an event destination to receive events at an HTTPS webhook endpoint. Receiving webhook events allows you to listen to asynchronous events, such as when a customer's bank confirms a payment, a customer disputes a charge, a recurring payment succeeds or you collect a subscription payment.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/webhooks.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/webhooks.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "Webhook endpoints might occasionally receive the same event more than once. You can guard against duplicated event receipts by logging the event IDs you\u2019ve processed, and then not processing already-logged events.",
+                "Make sure that your event destination isn\u2019t dependent on receiving events in a specific order. Snapshot events record created in seconds, so distinct events can share a timestamp. Don\u2019t use created to determine event order or whether you\u2019ve already processed an event. Track event IDs to identify duplicate deliveries instead.",
+                "In some cases, two separate Event objects are generated and sent. To identify these duplicates, use the ID of the object in data.",
+                "Use EventDestinations or the Webhooks tab in Workbench to create and register your webhook endpoint with an accessible URL so Stripe knows where to deliver events. You can register up to 16 event destinations with Stripe."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:docs.stripe.com/webhooks duplicate events idempotency event id",
+          "search_uuid": "2d1feb92-cf7b-4f29-9822-be3dbe87190a",
+          "latency": 0.42076921300031245
+        }
+      },
+      "timestamp": "2026-11-21T07:33:30.755305+00:00"
+    },
+    {
+      "query": "site:razorpay.com/docs webhooks handle duplicate events idempotent",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://razorpay.com/docs/us/webhooks/best-practices/",
+              "title": "Webhooks | Best Practices",
+              "description": "Correct handling of webhook events is crucial to ensuring your integration\u2019s business logic works as expected. There could be scenarios where your endpoint might receive the same webhook event multiple times. This is an expected behaviour based on the webhook design. In such a scenario, we recommend you to follow idempotency...",
+              "thumbnail_url": "https://razorpay-881012b3.mintlify.app/mintlify-assets/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DWebhooks%26title%3DBest%2BPractices%26description%3DBest%2Bpractices%2Bto%2Badhere%2Bto%2Bwhen%2Busing%2BRazorpay%2Bnotification%2Bwebhooks.%26theme%3Deba4def1c481f3d9eb7e8909&amp;w=1200&amp;q=100",
+              "original_thumbnail_url": "https://razorpay-881012b3.mintlify.app/mintlify-assets/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DWebhooks%26title%3DBest%2BPractices%26description%3DBest%2Bpractices%2Bto%2Badhere%2Bto%2Bwhen%2Busing%2BRazorpay%2Bnotification%2Bwebhooks.%26theme%3Deba4def1c481f3d9eb7e8909&amp;w=1200&amp;q=100",
+              "page_age": "2026-08-31T07:20:56",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "Best practices to adhere to when using Razorpay notification webhooks.",
+                "Ensure you configure your server to handle or receive the same event details multiple times. Check the value of the x-razorpay-event-id in the webhook request header. The value for this header is unique per event and can help you determine the duplicity of a webhook event.",
+                "Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States Webhooks provide an effective method to track the state of transactions and to take appropriate actions within your Razorpay account. Take a look at these best practices to ensure your webhooks remain secure and function seamlessly with your integration. Every event that receives a non-2xx response is considered an event delivery failure by Razorpay\u2019s system.",
+                "If there is a delivery failure, we retry the delivery in exponential backoff policy for 24 hours after event creation timestamp. Watch Out!Webhooks are delivered in near real-time and are asynchronous."
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/us/webhooks/validate-test",
+              "title": "Validate and Test Webhooks - Razorpay",
+              "description": "Validate and test Payments and Payout Webhooks before you start using them. Read about idempotency and the importance of the order of Webhook Events.",
+              "thumbnail_url": "https://razorpay-881012b3.mintlify.site/docs/_mintlify/api/og/v2?division=Webhooks&amp;title=Validate+and+Test+Webhooks&amp;description=Validate+and+test+Payments+and+Payout+Webhooks+before+you+start+using+them.+Read+about+idempotency+and+the+importance+of+the+order+of+Webhook+Events.&amp;theme=a4f414a96152b37051aa45a2&amp;signature=d580b4aac08c3fb39cd53fe7374bd494bffd4f3806f7db3c00a3bb24e18e393f",
+              "original_thumbnail_url": "https://razorpay-881012b3.mintlify.site/docs/_mintlify/api/og/v2?division=Webhooks&amp;title=Validate+and+Test+Webhooks&amp;description=Validate+and+test+Payments+and+Payout+Webhooks+before+you+start+using+them.+Read+about+idempotency+and+the+importance+of+the+order+of+Webhook+Events.&amp;theme=a4f414a96152b37051aa45a2&amp;signature=d580b4aac08c3fb39cd53fe7374bd494bffd4f3806f7db3c00a3bb24e18e393f",
+              "page_age": "2026-11-10T09:31:02",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "There could be scenarios where your endpoint might receive the same webhook event multiple times. This is an expected behaviour based on the webhook design. To handle duplicate webhook events:",
+                "Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States You need to validate and test the webhook before starting using them. It is also important to understand idempotency and the importance of the order of Webhook Events.",
+                "You can handle this by creating a tunnel to your localhost using zrok. Know more about zrok. You can test your webhook integration in the staging environment before taking it live. You should set up webhooks in the Test mode. You can configure your staging host endpoint in test mode and receive test events on it.",
+                "components.span,{className:`line`,children:_jsx(_components.span,{style:{color:`#1F2328`,\\\"--shiki-dark\\\":`#D4D4D4`},children:`if expected_signature != received_signature`})}),`\\n`,_jsx(_components.span,{className:`line`,children:_jsx(_components.span,{style:{color:`#1F2328`,\\\"--shiki-dark\\\":`#D4D4D4`},children:` throw SecurityError`})}),`\\n`,_jsx(_components.span,{className:`line`,children:_jsx(_components.span,{style:{color:`#1F2328`,\\\"--shiki-dark\\\":`#D4D4D4`},children:`end`})}),`\\n`]})})})}),`\\n`,_jsxs(Warning,{children:[_jsx(_components.p,{children:_jsx(_components.strong,{children:`Do No"
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/us/webhooks/best-practices/?preferred-country=US",
+              "title": "Best Practices - Razorpay",
+              "description": "Correct handling of webhook events is crucial to ensuring your integration\u2019s business logic works as expected. There could be scenarios where your endpoint might receive the same webhook event multiple times. This is an expected behaviour based on the webhook design. In such a scenario, we recommend you to follow idempotency...",
+              "thumbnail_url": "https://razorpay-881012b3.mintlify.app/mintlify-assets/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DWebhooks%26title%3DBest%2BPractices%26description%3DBest%2Bpractices%2Bto%2Badhere%2Bto%2Bwhen%2Busing%2BRazorpay%2Bnotification%2Bwebhooks.%26theme%3Deba4def1c481f3d9eb7e8909&amp;w=1200&amp;q=100",
+              "original_thumbnail_url": "https://razorpay-881012b3.mintlify.app/mintlify-assets/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DWebhooks%26title%3DBest%2BPractices%26description%3DBest%2Bpractices%2Bto%2Badhere%2Bto%2Bwhen%2Busing%2BRazorpay%2Bnotification%2Bwebhooks.%26theme%3Deba4def1c481f3d9eb7e8909&amp;w=1200&amp;q=100",
+              "page_age": "2026-08-31T07:20:56",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "Best practices to adhere to when using Razorpay notification webhooks.",
+                "Ensure you configure your server to handle or receive the same event details multiple times. Check the value of the x-razorpay-event-id in the webhook request header. The value for this header is unique per event and can help you determine the duplicity of a webhook event.",
+                "Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States Webhooks provide an effective method to track the state of transactions and to take appropriate actions within your Razorpay account. Take a look at these best practices to ensure your webhooks remain secure and function seamlessly with your integration. Every event that receives a non-2xx response is considered an event delivery failure by Razorpay\u2019s system.",
+                "If there is a delivery failure, we retry the delivery in exponential backoff policy for 24 hours after event creation timestamp. Watch Out!Webhooks are delivered in near real-time and are asynchronous."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:razorpay.com/docs webhooks handle duplicate events idempotent",
+          "search_uuid": "5a7daab2-d8d8-45d4-9338-c1b840183658",
+          "latency": 0.5188058289932087
+        }
+      },
+      "timestamp": "2026-11-21T07:33:32.690140+00:00"
+    },
+    {
+      "query": "payment webhook event idempotency at most once delivery duplicate",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://hookdeck.com/webhooks/guides/implement-webhook-idempotency",
+              "title": "How to Implement Webhook Idempotency",
+              "description": "Guide on implementing idempotency to prevent taking action on the same webhook multiple times, ensuring data integrity.",
+              "thumbnail_url": "https://hookdeck.com/og.png?title=How%20to%20Implement%20Webhook%20Idempotency&v=2",
+              "original_thumbnail_url": "https://hookdeck.com/og.png?title=How%20to%20Implement%20Webhook%20Idempotency&v=2",
+              "page_age": "2026-04-13T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=hookdeck.com&size=128",
+              "snippets": [
+                "Automatic retries are the primary source of duplicate webhook deliveries. When a delivery attempt fails \u2014 due to a timeout, server error, or network issue \u2014 the provider (or your webhook infrastructure) retries the same event. Without idempotent handlers, every retry triggers your business logic again. This is why at-least-once delivery and idempotency are inseparable concepts.",
+                "Webhook idempotency means that processing the same webhook event multiple times produces the same result as processing it once. This is essential because webhook providers use at-least-once delivery, meaning duplicate events are expected.",
+                "Without idempotency, duplicate webhook deliveries \u2014 caused by retries, network issues, or provider behavior \u2014 can lead to double-charging customers, sending duplicate emails, or corrupting data. Idempotency ensures that no matter how many times an event is delivered, your application processes it safely. ... Use a unique identifier from the event (such as a payment ID, order ID, or webhook event ID) to check whether the event has already been processed.",
+                "At-least-once delivery guarantees that every event reaches you, but the cost is potential duplicates. Idempotency makes those duplicates safe. ... Timeouts are the most dangerous failure mode. If your handler processes an event successfully but takes too long to respond, the provider sees a timeout and retries. You've now processed the event, and a retry is incoming."
+              ]
+            },
+            {
+              "url": "https://www.hooklistener.com/learn/webhook-idempotency-and-deduplication",
+              "title": "Webhook Idempotency 2026: Dedupe in Postgres, Redis & Node | ...",
+              "description": "If the webhook triggers a payment or an email through another API, forward your event ID as that API's idempotency key so the whole chain dedupes consistently. Deliver one real event to your handler several times and check that it was processed once. Dedup logic is easy to write and easy to get subtly wrong, and the failure only shows up when a duplicate ...",
+              "thumbnail_url": "https://www.hooklistener.com/preview.png",
+              "original_thumbnail_url": "https://www.hooklistener.com/preview.png",
+              "page_age": "2026-09-26T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=www.hooklistener.com&size=128",
+              "snippets": [
+                "If the webhook triggers a payment or an email through another API, forward your event ID as that API's idempotency key so the whole chain dedupes consistently. Deliver one real event to your handler several times and check that it was processed once. Dedup logic is easy to write and easy to get subtly wrong, and the failure only shows up when a duplicate actually arrives.",
+                "Stop processing webhooks twice: pick the right idempotency key, dedupe atomically in Postgres or Redis (Node and Python code), and test with replays.",
+                "Your webhook handler will receive the same event twice. Not might \u2014 will. Every major provider delivers webhooks at-least-once, which means duplicates are part of the contract, not an edge case. If your handler charges a card, sends an email, or decrements inventory on every delivery, you have a bug waiting for production traffic. This article covers where duplicates actually come from, how to pick an idempotency key, the concrete dedup patterns in Postgres and Redis (and their failure modes), and how to test duplicate handling by capturing a real event and replaying it against your handler until you trust it.",
+                "Webhook providers face a choice when a delivery is ambiguous: deliver at-most-once (and silently drop events when things go wrong) or at-least-once (and occasionally send the same event twice). Every serious provider picks at-least-once, because a dropped payment.succeeded is worse than a duplicated one."
+              ]
+            },
+            {
+              "url": "https://dev.to/jctechlabs/webhooks-arrive-twice-late-and-out-of-order-designing-idempotent-handlers-gen",
+              "title": "Webhooks Arrive Twice, Late and Out of Order: Designing Idempotent ...",
+              "description": "Every webhook provider promises at-least-once delivery, which means your handler will see the same...",
+              "thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F0k2t5gd5spd2eg7416yo.png",
+              "original_thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F0k2t5gd5spd2eg7416yo.png",
+              "page_age": "2026-11-13T04:22:29",
+              "favicon_url": "https://you.com/favicon?domain=dev.to&size=128",
+              "snippets": [
+                "Every webhook provider promises at-least-once delivery, which means your handler will see the same... Tagged with webhooks, architecture, backend, postgres.",
+                "Every webhook provider promises at-least-once delivery, which means your handler will see the same event more than once. Design for that on day one, or a payment gets marked paid twice, a confirmation email goes out three times, or an order ships before the refund lands.",
+                "The dispatcher can still deliver twice after a crash, so pass the dedupe_key downstream as an idempotency key wherever the receiving API supports one. The guarantee you get is at-least-once delivery with deduplication at each hop, which in practice is what \"exactly once\" means. The real test of this design is a replay. Build one into your test suite and your runbook: Send the same signed event twice concurrently; assert one inbox row and one business change.",
+                "Accepting a list of keys lets you rotate the signing secret without dropping deliveries during the switch. Signature verification proves who sent the request. It does not prove the event is new. That is the next step's job. The single most effective idempotency control is a unique constraint. Application-level checks like \"look up the event, insert if missing\" race under concurrent retries. A constraint does not. CREATE TABLE webhook_inbox ( id bigserial PRIMARY KEY, provider text NOT NULL, event_id text NOT NULL, event_type text NOT NULL, payload jsonb NOT NULL, status text NOT NULL DEFAULT 'pending', attempts int NOT NULL DEFAULT 0, received_at timestamptz NOT NULL DEFAULT now(), UNIQUE (provider, event_id) );"
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "payment webhook event idempotency at most once delivery duplicate",
+          "search_uuid": "da0adb2c-4c5f-4878-8fdd-8dc9e0d90062",
+          "latency": 0.4244380329037085
+        }
+      },
+      "timestamp": "2026-11-21T07:33:34.684824+00:00"
+    }
+  ]
+}

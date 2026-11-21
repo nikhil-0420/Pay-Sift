@@ -1,0 +1,243 @@
+{
+  "rule_id": "R6",
+  "title": "Refund Balance Bound",
+  "description": "For `refund.processed`: total refunds cannot exceed capture amount (`refunded_paise + amount_paise <= captured_paise`). If amount exceeds remaining balance: return status `\"rejected\"` and commit no state change. If valid: update `payments` (`refunded_paise += amount_paise`) and insert exactly one `'refund'` ledger entry.",
+  "text_hash": "7b8cac0f71eea4cc07667743ec0548347eeae03a0f5b525385ddc8d3f88881b7",
+  "retrieved_at": "2026-11-21T07:33:53.070703+00:00",
+  "sources": [
+    {
+      "id": "R6_s1",
+      "url": "https://docs.stripe.com/refunds",
+      "title": "Refund and cancel payments | Stripe Documentation",
+      "snippet": "You can issue more than one refund against a charge, but you can\u2019t refund a total greater than the original charge amount. ... Find the payment you want to refund in the Payments page. Click the overflow menu () to the right of the payment, then select Refund payment. By default, you\u2019ll issue a full refund. For a partial refund, enter a different...",
+      "rank": 1,
+      "query": "site:docs.stripe.com/refunds partial refunds cannot exceed captured charge amount",
+      "retrieved_at": "2026-11-21T07:33:47.716776+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R6_s2",
+      "url": "https://docs.stripe.com/refunds.md",
+      "title": "Refund and cancel payments Learn how to cancel or refund a payment.",
+      "snippet": "The following code example shows a request to cancel a PaymentIntent: ```curl curl -X POST https://api.stripe.com/v1/payment_intents/{{PAYMENTINTENT_ID}}/cancel \\ -u \">:\" ``` You can only cancel a PaymentIntent when it has one of the following statuses: - `requires_payment_method` - `requires_capture` - `requires_confirmation` - `requires_action`...",
+      "rank": 2,
+      "query": "site:docs.stripe.com/refunds partial refunds cannot exceed captured charge amount",
+      "retrieved_at": "2026-11-21T07:33:47.716776+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R6_s3",
+      "url": "https://razorpay.com/docs/api/payments/route/refund-payments-and-reverse-transfer/",
+      "title": "Refund Payments And Reverse Transfer - Razorpay Docs",
+      "snippet": "This reference number can be used by the customer to track the status of the refund with the bank. ... This error occurs when there is a mismatch between the API credentials passed in the API call and the API credentials generated on the Dashboard. ... This error occurs when the total transferred amount exceeds the payment amount. Razorpay...",
+      "rank": 1,
+      "query": "site:razorpay.com/docs refunds total refund amount exceeds payment amount",
+      "retrieved_at": "2026-11-21T07:33:49.476573+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R6_s4",
+      "url": "https://razorpay.com/docs/api/payments/transfers/refund-payments-and-reverse-transfer/",
+      "title": "Razorpay Docs",
+      "snippet": "This reference number can be used by the customer to track the status of the refund with the bank. ... This error occurs when there is a mismatch between the API credentials passed in the API call and the API credentials generated on the Dashboard. ... This error occurs when the total transferred amount exceeds the payment amount. Razorpay...",
+      "rank": 2,
+      "query": "site:razorpay.com/docs refunds total refund amount exceeds payment amount",
+      "retrieved_at": "2026-11-21T07:33:49.476573+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R6_s5",
+      "url": "https://razorpay.com/docs/us/api/payments/route/refund-payments-and-reverse-transfer/?preferred-country=IN",
+      "title": "Refund Payments and Reverse Transfer from a Linked Account - Razorpay",
+      "snippet": "Refund Payments and reverse Transfer from a Linked Account using the Razorpay API. Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States Use this endpoint to create refunds on a particular payment_id. The amount is deducted from your main account balance when refunding a payment. You can set the reverse_all parameter to true in the refund...",
+      "rank": 3,
+      "query": "site:razorpay.com/docs refunds total refund amount exceeds payment amount",
+      "retrieved_at": "2026-11-21T07:33:49.476573+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R6_s6",
+      "url": "https://support.authorize.net/knowledgebase/Knowledgearticle/?code=000001221",
+      "title": "How to issue a refund transaction? - Classic Experience (1.0)",
+      "snippet": "After 180 days, payment data is archived for security purposes, and the system no longer has access to the information required to process a linked refund to the original payment method. Transactions settled past 180 days require an alternative refund method or approval for your account using Expanded Credit Capabilities (ECC). The total of all...",
+      "rank": 1,
+      "query": "payment refund limit total refunded cannot exceed captured amount",
+      "retrieved_at": "2026-11-21T07:33:51.164003+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R6_s7",
+      "url": "https://www.checkout.com/docs/payments/manage-payments/refund-a-payment/refund-a-payment-with-a-reference",
+      "title": "Refund a payment with a reference - Docs",
+      "snippet": "Partial refund \u2013 A partial refund returns a sum less than the captured amount. A payment can be refunded multiple times, but cannot exceed the original payment amount. You can perform a maximum of 150 partial actions on a payment. This total limit applies across both partial captures and partial refunds. Issue a refund using a payment ID...",
+      "rank": 2,
+      "query": "payment refund limit total refunded cannot exceed captured amount",
+      "retrieved_at": "2026-11-21T07:33:51.164003+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R6_s8",
+      "url": "https://www.checkout.com/docs/payments/manage-payments/refund-a-payment/refund-a-payment-with-a-reference.md",
+      "title": "Refund a payment with a reference",
+      "snippet": "Partial refund \u2013 A partial refund returns a sum less than the captured amount. A payment can be refunded multiple times, but cannot exceed the original payment amount. ... You can perform a maximum of 150 partial actions on a payment. This total limit applies across both partial captures and partial refunds. Refunds are always processed in the...",
+      "rank": 3,
+      "query": "payment refund limit total refunded cannot exceed captured amount",
+      "retrieved_at": "2026-11-21T07:33:51.164003+00:00",
+      "provider": "you.com"
+    }
+  ],
+  "raw_responses": [
+    {
+      "query": "site:docs.stripe.com/refunds partial refunds cannot exceed captured charge amount",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://docs.stripe.com/refunds",
+              "title": "Refund and cancel payments | Stripe Documentation",
+              "description": "Cancel a payment before it's completed at no cost. You can also do a full or partial refund for a payment after it succeeds using the Dashboard or the Refunds API. Depending on the type of refund, you can sometimes cancel a refund before it reaches the customer.",
+              "thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/refunds.ogimage.png",
+              "original_thumbnail_url": "https://d37ugbyn3rpeym.cloudfront.net/docs/og-image/refunds.ogimage.png",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "You can issue more than one refund against a charge, but you can\u2019t refund a total greater than the original charge amount. ... Find the payment you want to refund in the Payments page. Click the overflow menu () to the right of the payment, then select Refund payment. By default, you\u2019ll issue a full refund. For a partial refund, enter a different refund amount.",
+                "Select what payments you want to refund by checking the box to the left of each payment\u2014even over multiple pages of results. Then, click Refund and select a reason. You can only issue full refunds in this way; partial refunds must be issued individually. Refund behavior depends on the Connect charge type used in your integration.",
+                "If your platform uses Connect with destination charges, funds from a canceled refund deposit to your platform account\u2019s Stripe balance. ... Find the payment associated with the refund in the Payments page. Click the overflow menu () to the right of the payment, then select Cancel refund. If there are multiple partial refunds, select the correct refund in the dropdown.",
+                "If your business processes a large volume of refunds close to the time of transaction, Stripe recommends using manual authorization and capture to reduce your refund costs."
+              ]
+            },
+            {
+              "url": "https://docs.stripe.com/refunds.md",
+              "title": "Refund and cancel payments Learn how to cancel or refund a payment.",
+              "description": "The following code example shows ... `requires_capture` - `requires_confirmation` - `requires_action` - `processing` (only when the associated payment method is US Bank Account) A PaymentIntent can\u2019t be canceled after it has succeeded. When a PaymentIntent is canceled, you can no longer use it to perform additional charges. Any operations that your application attempts to perform on a canceled PaymentIntent fails with an error. ## Refund events Stripe ...",
+              "favicon_url": "https://you.com/favicon?domain=docs.stripe.com&size=128",
+              "snippets": [
+                "The following code example shows a request to cancel a PaymentIntent: ```curl curl -X POST https://api.stripe.com/v1/payment_intents/{{PAYMENTINTENT_ID}}/cancel \\ -u \">:\" ``` You can only cancel a PaymentIntent when it has one of the following statuses: - `requires_payment_method` - `requires_capture` - `requires_confirmation` - `requires_action` - `processing` (only when the associated payment method is US Bank Account) A PaymentIntent can\u2019t be canceled after it has succeeded. When a PaymentIntent is canceled, you can no longer use it to perform additional charges. Any operations that your application attempts to perform on a canceled PaymentIntent fails with an error. ## Refund events Stripe triggers [events](https://docs.stripe.com/api/events.md#events) every time a refund is created or changed.",
+                "Manual authorization and capture lets you better control costs by canceling payments before they\u2019re captured, or by reducing your captured amount rather than processing a refund.",
+                "To do so, provide an `amount` parameter as an integer in cents (or the charge currency\u2019s smallest currency unit). ```curl curl https://api.stripe.com/v1/refunds \\ -u \">:\" \\ -d payment_intent=pi_Aabcxyz01aDfoo \\ -d amount=1000 ``` If you want to separate the [authorization and capture](https://docs.stripe.com/payments/place-a-hold-on-a-payment-method.md) of a charge, and refund a PaymentIntent that has a status of `requires_capture`, the refund process is different.",
+                "| | `charge.refund.updated` (Deprecated) | Sent when the refund is updated, only for refunds with a corresponding charge. Listen to `refund.updated` for updates on all refunds instead. | ## Cost optimization If your business processes a large volume of refunds close to the time of transaction, we recommend using [manual authorization and capture](https://docs.stripe.com/payments/place-a-hold-on-a-payment-method.md) to reduce your refund costs."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:docs.stripe.com/refunds partial refunds cannot exceed captured charge amount",
+          "search_uuid": "5dbc8d6c-3458-48ef-98e0-3e3ab80850dd",
+          "latency": 0.4236574500100687
+        }
+      },
+      "timestamp": "2026-11-21T07:33:47.716776+00:00"
+    },
+    {
+      "query": "site:razorpay.com/docs refunds total refund amount exceeds payment amount",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://razorpay.com/docs/api/payments/route/refund-payments-and-reverse-transfer/",
+              "title": "Refund Payments And Reverse Transfer - Razorpay Docs",
+              "description": "This reference number can be used ... of the refund with the bank. ... This error occurs when there is a mismatch between the API credentials passed in the API call and the API credentials generated on the Dashboard. ... This error occurs when the total transferred amount exceeds the payment ...",
+              "thumbnail_url": "https://razorpay.com/docs/build/browser/static/og-images/api/payments/route/refund-payments-and-reverse-transfer.png",
+              "original_thumbnail_url": "https://razorpay.com/docs/build/browser/static/og-images/api/payments/route/refund-payments-and-reverse-transfer.png",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "This reference number can be used by the customer to track the status of the refund with the bank. ... This error occurs when there is a mismatch between the API credentials passed in the API call and the API credentials generated on the Dashboard. ... This error occurs when the total transferred amount exceeds the payment amount.",
+                "Razorpay documentation on Payment Gateway, Payment Links and more. APIs & integrations for Developers.",
+                "Use this endpoint to create refunds on a particular payment_id. The amount is deducted from your main account balance when refunding a payment. You can set the reverse_all parameter to true in the refund POST request to recover the amount from the Linked Account.",
+                "A unique identifier of the payment that should be refunded. ... The amount of refund in the smallest unit of currency."
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/api/payments/transfers/refund-payments-and-reverse-transfer/",
+              "title": "Razorpay Docs",
+              "description": "This reference number can be used ... of the refund with the bank. ... This error occurs when there is a mismatch between the API credentials passed in the API call and the API credentials generated on the Dashboard. ... This error occurs when the total transferred amount exceeds the payment ...",
+              "thumbnail_url": "https://razorpay.com/docs/build/browser/static/og.18624133.png",
+              "original_thumbnail_url": "https://razorpay.com/docs/build/browser/static/og.18624133.png",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "This reference number can be used by the customer to track the status of the refund with the bank. ... This error occurs when there is a mismatch between the API credentials passed in the API call and the API credentials generated on the Dashboard. ... This error occurs when the total transferred amount exceeds the payment amount.",
+                "Razorpay documentation on Payment Gateway, Payment Links, Payment Pages, Payment Button, Subscription, RazorpayX and more. APIs & integrations for Developers.",
+                "Use this endpoint to create refunds on a particular payment_id. The amount is deducted from your main account balance when refunding a payment. You can set the reverse_all parameter to 1 in the refund POST request to recover the amount from the Linked Account.",
+                "A unique identifier of the payment that should be refunded. ... The amount of refund in the smallest unit of currency."
+              ]
+            },
+            {
+              "url": "https://razorpay.com/docs/us/api/payments/route/refund-payments-and-reverse-transfer/?preferred-country=IN",
+              "title": "Refund Payments and Reverse Transfer from a Linked Account - Razorpay",
+              "description": "The sum of amount requested for refund is greater than the available amount \u00b7 Code: 400This error occurs when the total transferred amount exceeds the payment amount.Solution: Make sure to check the amount passed with the payment made.",
+              "thumbnail_url": "https://razorpay-881012b3.mintlify.app/_mintlify/api/og/v2?division=Route&amp;title=Refund+Payments+and+Reverse+Transfer+from+a+Linked+Account&amp;description=Refund+Payments+and+reverse+Transfer+from+a+Linked+Account+using+the+Razorpay+API.&amp;theme=02a000ed6c4df1988ec49b46&amp;signature=252e33b77d09ccc0c5ef45504a9ac4fa47976083c8503141dc808223d61ec921",
+              "original_thumbnail_url": "https://razorpay-881012b3.mintlify.app/_mintlify/api/og/v2?division=Route&amp;title=Refund+Payments+and+Reverse+Transfer+from+a+Linked+Account&amp;description=Refund+Payments+and+reverse+Transfer+from+a+Linked+Account+using+the+Razorpay+API.&amp;theme=02a000ed6c4df1988ec49b46&amp;signature=252e33b77d09ccc0c5ef45504a9ac4fa47976083c8503141dc808223d61ec921",
+              "page_age": "2026-10-08T16:37:49",
+              "favicon_url": "https://you.com/favicon?domain=razorpay.com&size=128",
+              "snippets": [
+                "Refund Payments and reverse Transfer from a Linked Account using the Razorpay API.",
+                "Available in\ud83c\uddee\ud83c\uddf3 India\ud83c\uddf2\ud83c\uddfe Malaysia\ud83c\uddf8\ud83c\uddec Singapore\ud83c\uddfa\ud83c\uddf8 United States Use this endpoint to create refunds on a particular payment_id. The amount is deducted from your main account balance when refunding a payment. You can set the reverse_all parameter to true in the refund POST request to recover the amount from the Linked Account.",
+                "RazorpayClient razorpay = new RazorpayClient(\"[YOUR_KEY_ID]\", \"[YOUR_KEY_SECRET]\"); String paymentId = \"pay_JJCqynf4fQS0N1\"; JSONObject params = new JSONObject(); params.put(\"amount\",100); params.put(\"reverse_all\",true); Refund payment = razorpay.payments.refund(paymentId,params);",
+                "import ( razorpay \"github.com/razorpay/razorpay-go\" ) client := razorpay.NewClient(\"YOUR_KEY_ID\", \"YOUR_SECRET\") data:= map[string]interface{}{ \"reverse_all\": true, } body, err := client.Payment.Refund(\"\", , data, nil)"
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "site:razorpay.com/docs refunds total refund amount exceeds payment amount",
+          "search_uuid": "b4e98f24-c1b4-453d-b97c-ed67a66e4223",
+          "latency": 0.4052143309963867
+        }
+      },
+      "timestamp": "2026-11-21T07:33:49.476573+00:00"
+    },
+    {
+      "query": "payment refund limit total refunded cannot exceed captured amount",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://support.authorize.net/knowledgebase/Knowledgearticle/?code=000001221",
+              "title": "How to issue a refund transaction? - Classic Experience (1.0)",
+              "description": "After 180 days, payment data is ... original payment method. Transactions settled past 180 days require an alternative refund method or approval for your account using Expanded Credit Capabilities (ECC). The total of all refunds issued against a credit card or ACH/eCheck account cannot exceed the amount ...",
+              "page_age": "2026-09-29T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=support.authorize.net&size=128",
+              "snippets": [
+                "After 180 days, payment data is archived for security purposes, and the system no longer has access to the information required to process a linked refund to the original payment method. Transactions settled past 180 days require an alternative refund method or approval for your account using Expanded Credit Capabilities (ECC). The total of all refunds issued against a credit card or ACH/eCheck account cannot exceed the amount of the original transaction.",
+                "Adjust the refund amount so that the cumulative total does not exceed the original transaction amount before resubmitting. Visa, Mastercard, and Discover now require real-time authorization for refund transactions through Purchase Returns Authorization (PRA). This process validates payment data in real time and provides immediate feedback on the success or failure of the refund attempt.",
+                "Yes. Partial refunds can be issued by adjusting the Amount field during the refund process. However, the total of all refunds issued against a single transaction cannot exceed the original transaction amount.",
+                "Yes, eCheck/ACH refunds are supported. However, funds must be available on your eCheck settlement statement, and the refund must be issued to the same ACH account used in the original transaction. The total refunded amount cannot exceed the original transaction amount."
+              ]
+            },
+            {
+              "url": "https://www.checkout.com/docs/payments/manage-payments/refund-a-payment/refund-a-payment-with-a-reference",
+              "title": "Refund a payment with a reference - Docs",
+              "description": "Partial refund \u2013 A partial refund returns a sum less than the captured amount. A payment can be refunded multiple times, but cannot exceed the original payment amount. You can perform a maximum of 150 partial actions on a payment. This total limit applies across both partial captures and ...",
+              "page_age": "2025-05-07T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=www.checkout.com&size=128",
+              "snippets": [
+                "Partial refund \u2013 A partial refund returns a sum less than the captured amount. A payment can be refunded multiple times, but cannot exceed the original payment amount. You can perform a maximum of 150 partial actions on a payment. This total limit applies across both partial captures and partial refunds.",
+                "Issue a refund using a payment ID authorized by Checkout.com",
+                "Refunds are always processed in the same currency as the captured payment. Once a refund is processed, you cannot cancel it. Refunds are processed using funds from your sub-account's Pending, Available, or Operational balance. If your account does not have sufficient funds across these balances to process the refund, you can add funds to your sub-account balance. ... To process a refund successfully, you must provide the payment ID of the captured payment.",
+                "The requests are the same for partial and full refunds. Any refunds for less than the original captured amount will be considered partial refunds."
+              ]
+            },
+            {
+              "url": "https://www.checkout.com/docs/payments/manage-payments/refund-a-payment/refund-a-payment-with-a-reference.md",
+              "title": "Refund a payment with a reference",
+              "description": "Partial refund \u2013 A partial refund returns a sum less than the captured amount. A payment can be refunded multiple times, but cannot exceed the original payment amount. ... You can perform a maximum of 150 partial actions on a payment. This total limit applies across both partial captures ...",
+              "favicon_url": "https://you.com/favicon?domain=www.checkout.com&size=128",
+              "snippets": [
+                "Partial refund \u2013 A partial refund returns a sum less than the captured amount. A payment can be refunded multiple times, but cannot exceed the original payment amount. ... You can perform a maximum of 150 partial actions on a payment. This total limit applies across both partial captures and partial refunds.",
+                "Refunds are always processed in the same currency as the captured payment. ... Once a refund is processed, you cannot cancel it. Refunds are debited immediately from your sub-account's Available balance. If Available has insufficient funds, the refund can still be processed using funds from your Pending or Operational balance. If your sub-account does not have sufficient funds across these balances to process the refund, you can:",
+                "To process a refund successfully, you must provide the payment ID of the captured payment. You can find the ID: ... The requests are the same for partial and full refunds.",
+                "Any refunds for less than the original captured amount will be considered partial refunds."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "payment refund limit total refunded cannot exceed captured amount",
+          "search_uuid": "a0bc36bc-0d96-4a87-b672-ac1926f3e0fa",
+          "latency": 0.45098195600439794
+        }
+      },
+      "timestamp": "2026-11-21T07:33:51.164003+00:00"
+    }
+  ]
+}

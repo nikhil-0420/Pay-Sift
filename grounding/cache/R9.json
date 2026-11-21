@@ -1,0 +1,268 @@
+{
+  "rule_id": "R9",
+  "title": "Durability Across Restarts",
+  "description": "All state lives in the SQLite database. The handler process may be terminated and restarted between any two calls without losing idempotency or accounting integrity.",
+  "text_hash": "fb3f3460115d32b4f89a709603e92f0a7098a57e1629c5e45eff615273c73733",
+  "retrieved_at": "2026-11-21T07:34:10.531148+00:00",
+  "sources": [
+    {
+      "id": "R9_s1",
+      "url": "https://hookdeck.com/webhooks/guides/implement-webhook-idempotency",
+      "title": "How to Implement Webhook Idempotency",
+      "snippet": "Redis/cache storage is the most common choice for webhook idempotency. It's fast enough for high-throughput scenarios, supports native TTL for automatic cleanup, and provides durability through persistence configuration (AOF or RDB snapshots). Use Redis when your idempotency check doesn't need to be in the same transaction as your business logic....",
+      "rank": 1,
+      "query": "webhook idempotency database persistence survive process restart",
+      "retrieved_at": "2026-11-21T07:34:04.755491+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R9_s2",
+      "url": "https://dev.to/libme/webhook-reliability-101-retries-idempotency-and-the-bugs-that-bite-at-2-am-3e5e",
+      "title": "Webhook Reliability 101: Retries, Idempotency, and the Bugs That ...",
+      "snippet": "There, make the external call idempotent too \u2014 many APIs accept an Idempotency-Key header; pass your event ID as that key so the downstream service dedupes on its end. Takeaway: a database uniqueness constraint is the only dedup that survives restarts, deploys, and horizontal scaling. Queue them. The single highest-leverage change you can make is...",
+      "rank": 2,
+      "query": "webhook idempotency database persistence survive process restart",
+      "retrieved_at": "2026-11-21T07:34:04.755491+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R9_s3",
+      "url": "https://www.webhook-architecture.com/webhook-architecture-fundamentals-design-patterns/idempotency-in-webhooks/",
+      "title": "Idempotency Patterns for Webhooks | Webhook Architecture",
+      "snippet": "Idempotency is the consumer-side discipline that makes Webhook Architecture Fundamentals & Design Patterns survivable in production: it ensures that processing identical payloads multiple times yields a consistent, deterministic system state. Because distributed networks inherently rely on at-least-once delivery semantics, duplicate events are an...",
+      "rank": 3,
+      "query": "webhook idempotency database persistence survive process restart",
+      "retrieved_at": "2026-11-21T07:34:04.755491+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R9_s4",
+      "url": "https://dev.to/dappweb_ai_104e917842dfee/a-webhooks-2xx-is-a-durability-promise-not-just-an-acknowledgement-40mk",
+      "title": "A webhook\u2019s 2xx is a durability promise, not just an acknowl...",
+      "snippet": "AI disclosure: This article was drafted by an AI agent and checked against the linked Worker... Tagged with javascript. If the next step sends an email, provisions access, or calls another service, that step is outside the database transaction. A common extension is to write an outbox row in the same transaction, then let a separate worker deliver...",
+      "rank": 1,
+      "query": "sqlite database transaction durability webhook state",
+      "retrieved_at": "2026-11-21T07:34:06.651825+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R9_s5",
+      "url": "https://www.sqlitetutorial.net/sqlite-transaction/",
+      "title": "SQLite Transaction Explained By Practical Examples",
+      "snippet": "SQLite guarantees all transactions are ACID-compliant even if the transaction is interrupted by a program crash, operating system dump, or power failure to the computer. Atomic: a transaction should be atomic. It means that a change cannot be broken down into smaller ones. When you commit a transaction, either the entire transaction is applied or...",
+      "rank": 2,
+      "query": "sqlite database transaction durability webhook state",
+      "retrieved_at": "2026-11-21T07:34:06.651825+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R9_s6",
+      "url": "https://www.sqlite.org/lang_transaction.html",
+      "title": "Transaction",
+      "snippet": "Automatically started transactions are committed when the last SQL statement finishes. Transactions can be started manually using the BEGIN command. Such transactions usually persist until the next COMMIT or ROLLBACK command. But a transaction will also ROLLBACK if the database is closed or if an error occurs and the ROLLBACK conflict resolution...",
+      "rank": 3,
+      "query": "sqlite database transaction durability webhook state",
+      "retrieved_at": "2026-11-21T07:34:06.651825+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R9_s7",
+      "url": "https://www.hooklistener.com/learn/webhook-idempotency-and-deduplication",
+      "title": "Webhook Idempotency 2026: Dedupe in Postgres, Redis & Node | ...",
+      "snippet": "\u2022 You must prune manually or the table grows forever \u00b7 \u2022 Adds a write to your primary database on every webhook \u2014 fine for most volumes, worth measuring at thousands per second ... \u2022 Weaker durability: an eviction under memory pressure or a failover can lose dedup state, letting a duplicate through \u00b7 \u2022 The claim and your side effects can't share a...",
+      "rank": 2,
+      "query": "in-memory deduplication webhook crash loss persistent table",
+      "retrieved_at": "2026-11-21T07:34:08.648919+00:00",
+      "provider": "you.com"
+    },
+    {
+      "id": "R9_s8",
+      "url": "https://github.com/frienzy514-png/stellar-TrueStub/issues/518",
+      "title": "Add a persistent dedup store for webhook deliveries, replacing ...",
+      "snippet": "Summary Implementation issue for the critical finding on webhooks.ts's in-memory dedup map. Scope Add a processed_webhook_events table (dedup key, processed-at timestamp) with a unique constraint on the dedup key, and a scheduled cleanup... Implementation issue for the critical finding on webhooks.ts's in-memory dedup map. Add a...",
+      "rank": 3,
+      "query": "in-memory deduplication webhook crash loss persistent table",
+      "retrieved_at": "2026-11-21T07:34:08.648919+00:00",
+      "provider": "you.com"
+    }
+  ],
+  "raw_responses": [
+    {
+      "query": "webhook idempotency database persistence survive process restart",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://hookdeck.com/webhooks/guides/implement-webhook-idempotency",
+              "title": "How to Implement Webhook Idempotency",
+              "description": "Guide on implementing idempotency to prevent taking action on the same webhook multiple times, ensuring data integrity.",
+              "thumbnail_url": "https://hookdeck.com/og.png?title=How%20to%20Implement%20Webhook%20Idempotency&v=2",
+              "original_thumbnail_url": "https://hookdeck.com/og.png?title=How%20to%20Implement%20Webhook%20Idempotency&v=2",
+              "page_age": "2026-04-13T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=hookdeck.com&size=128",
+              "snippets": [
+                "Redis/cache storage is the most common choice for webhook idempotency. It's fast enough for high-throughput scenarios, supports native TTL for automatic cleanup, and provides durability through persistence configuration (AOF or RDB snapshots). Use Redis when your idempotency check doesn't need to be in the same transaction as your business logic. In-memory storage should only be used for non-critical operations where occasional duplicate processing is acceptable. A server restart clears the cache, so any events retried after a restart will be processed again.",
+                "Idempotency ensures that no matter how many times an event is delivered, your application processes it safely. ... Use a unique identifier from the event (such as a payment ID, order ID, or webhook event ID) to check whether the event has already been processed. Store processed event IDs in a database with a unique constraint or in a cache like Redis, and skip processing if the ID already exists.",
+                "Retries are the primary source of duplicate webhook deliveries. When a delivery fails and is retried, your handler receives the same event again. Without idempotency, the retry causes duplicate processing. With idempotency, the retry is safely detected and skipped. What is the best storage strategy for idempotency keys? The best strategy depends on your requirements. Database storage (PostgreSQL, MySQL) provides durability and transactional safety.",
+                "Set your idempotency TTL to exceed the retry window. If your provider retries for 48 hours, your deduplication cache must persist at least that long. Otherwise, late retries will slip through. Event replay \u2014 deliberately re-delivering events for debugging or recovery \u2014 is one of the most powerful tools in webhook infrastructure."
+              ]
+            },
+            {
+              "url": "https://dev.to/libme/webhook-reliability-101-retries-idempotency-and-the-bugs-that-bite-at-2-am-3e5e",
+              "title": "Webhook Reliability 101: Retries, Idempotency, and the Bugs That ...",
+              "description": "There, make the external call ... an Idempotency-Key header; pass your event ID as that key so the downstream service dedupes on its end. Takeaway: a database uniqueness constraint is the only dedup that survives restarts, deploys, and horizontal scaling. Queue them. The single highest-leverage change you can make is to acknowledge fast and process asynchronously. Verify the signature, persist the raw payload, ...",
+              "thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fr5d5spmm6qcqoi8vre04.png",
+              "original_thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fr5d5spmm6qcqoi8vre04.png",
+              "page_age": "2026-08-09T11:44:18",
+              "favicon_url": "https://you.com/favicon?domain=dev.to&size=128",
+              "snippets": [
+                "There, make the external call idempotent too \u2014 many APIs accept an Idempotency-Key header; pass your event ID as that key so the downstream service dedupes on its end. Takeaway: a database uniqueness constraint is the only dedup that survives restarts, deploys, and horizontal scaling. Queue them. The single highest-leverage change you can make is to acknowledge fast and process asynchronously. Verify the signature, persist the raw payload, return 200, and let a background worker do the real work.",
+                "A practical guide to building webhook receivers that survive retries, duplicates, and out-of-order delivery without paging you at 2 A.M. Tagged with api, backend, node, architecture.",
+                "Takeaway: assume every webhook will be delivered at least twice, and design so the second delivery is a no-op. Idempotency means processing the same event twice produces the same result as processing it once. The reliable way to get there is a dedup key plus a uniqueness constraint in your database \u2014 not an in-memory Set, which evaporates on restart and doesn't work across multiple instances.",
+                "Never skip verification \"temporarily.\" An unverified webhook endpoint is an unauthenticated write to your database that anyone who learns the URL can call. If you build only one thing, build the idempotent claim: a processed_webhooks table with the event ID as primary key and ON CONFLICT DO NOTHING."
+              ]
+            },
+            {
+              "url": "https://www.webhook-architecture.com/webhook-architecture-fundamentals-design-patterns/idempotency-in-webhooks/",
+              "title": "Idempotency Patterns for Webhooks | Webhook Architecture",
+              "description": "Production idempotency patterns for webhook consumers: deterministic key derivation, atomic deduplication stores, concurrency control, and TTL sizing.",
+              "thumbnail_url": "https://webhook-architecture.com/assets/icons/og-image.png",
+              "original_thumbnail_url": "https://webhook-architecture.com/assets/icons/og-image.png",
+              "page_age": "2026-07-25T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=www.webhook-architecture.com&size=128",
+              "snippets": [
+                "Idempotency is the consumer-side discipline that makes Webhook Architecture Fundamentals & Design Patterns survivable in production: it ensures that processing identical payloads multiple times yields a consistent, deterministic system state. Because distributed networks inherently rely on at-least-once delivery semantics, duplicate events are an operational certainty rather than an edge case.",
+                "Without strict idempotency controls, downstream aggregates diverge, financial reconciliation breaks, double-charging occurs, and system reliability degrades under normal operational load. This guide assumes familiarity with HTTP webhook delivery and a working datastore (Redis or PostgreSQL) for persisting deduplication state.",
+                "Events arriving outside this window should be treated as new deliveries, triggering soft-delete reconciliation jobs rather than hard rejections. The trade-off between persistent, per-event keys and bounded time-based dedup caches is examined in depth in Idempotency keys vs deduplication windows, which covers when a sliding window is sufficient versus when you need durable key storage.",
+                "Only fields that survive a retry belong in the key: the provider event id and the canonicalised payload, bound with a tenant secret so the key cannot be forged. Implementation Pattern: Deterministic Key Generation \u00b7 import hashlib import hmac import json def generate_idempotency_key( provider_event_id: str, payload: dict, secret: str ) -> str: \"\"\" Generates a deterministic, collision-resistant idempotency key."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "webhook idempotency database persistence survive process restart",
+          "search_uuid": "6fc03623-a53c-4bd1-a6ce-d8cd58ebfe8b",
+          "latency": 0.4445092090172693
+        }
+      },
+      "timestamp": "2026-11-21T07:34:04.755491+00:00"
+    },
+    {
+      "query": "sqlite database transaction durability webhook state",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://dev.to/dappweb_ai_104e917842dfee/a-webhooks-2xx-is-a-durability-promise-not-just-an-acknowledgement-40mk",
+              "title": "A webhook\u2019s 2xx is a durability promise, not just an acknowl...",
+              "description": "AI disclosure: This article was drafted by an AI agent and checked against the linked Worker...",
+              "thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F3frllblrht9ab60qxyet.png",
+              "original_thumbnail_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F3frllblrht9ab60qxyet.png",
+              "page_age": "2026-10-23T10:07:38",
+              "favicon_url": "https://you.com/favicon?domain=dev.to&size=128",
+              "snippets": [
+                "AI disclosure: This article was drafted by an AI agent and checked against the linked Worker... Tagged with javascript.",
+                "If the next step sends an email, provisions access, or calls another service, that step is outside the database transaction. A common extension is to write an outbox row in the same transaction, then let a separate worker deliver the side effect with its own idempotency key and retry policy. A useful test suite should prove more than \u201cone webhook returned 200.\u201d The local workerd/SQLite tests for this Worker exercise concurrent duplicate events, a failure on the event insert that rolls the first receipt write back, a retry after that failure, persistence across a full Worker restart, and immutable-evidence conflicts.",
+                "With the SQLite Durable Object binding, record runs its checks and both inserts inside transactionSync. Cloudflare documents that this transaction rolls back if the callback throws. Without that binding, the D1 path sends both prepared statements through db.batch; Cloudflare documents D1 batches as sequential SQL transactions that roll back the batch if a statement fails.",
+                "Worker source: webhook, recordPayment, and SQLite receipt ledger. Cloudflare D1 batch(). Cloudflare SQLite-backed Durable Object storage and transactionSync."
+              ]
+            },
+            {
+              "url": "https://www.sqlitetutorial.net/sqlite-transaction/",
+              "title": "SQLite Transaction Explained By Practical Examples",
+              "description": "Learn how to deal with SQLite transactions by using the BEGIN TRANSACTION, COMMIT, and ROLLBACK statements to control transactions.",
+              "thumbnail_url": "https://www.sqlitetutorial.net/wp-content/uploads/2019/08/sqlite-transaction-accounts-table.png",
+              "original_thumbnail_url": "https://www.sqlitetutorial.net/wp-content/uploads/2019/08/sqlite-transaction-accounts-table.png",
+              "page_age": "2016-05-31T12:49:16",
+              "favicon_url": "https://you.com/favicon?domain=www.sqlitetutorial.net&size=128",
+              "snippets": [
+                "SQLite guarantees all transactions are ACID-compliant even if the transaction is interrupted by a program crash, operating system dump, or power failure to the computer. Atomic: a transaction should be atomic. It means that a change cannot be broken down into smaller ones. When you commit a transaction, either the entire transaction is applied or not. Consistent: a transaction must ensure that it changes the database from one valid state to another.",
+                "This means that for each command, SQLite starts, processes, and commits the transaction automatically. To start a transaction explicitly, you use the following steps: First, open a transaction by issuing the BEGIN TRANSACTION command. ... After executing the statement BEGIN TRANSACTION, the transaction is open until it is explicitly committed or rolled back. Second, issue SQL statements to select or update data in the database.",
+                "Durable: if a transaction is successfully committed, the changes must be permanent in the database regardless of conditions such as power failure or program crash. On the contrary, if the program crashes before the transaction is committed, the change should not persist. By default, SQLite operates in auto-commit mode.",
+                "In this tutorial, you have learned how to deal with SQLite transactions by using the BEGIN TRANSACTION, COMMIT, and ROLLBACK statements to control transactions in the SQLite database."
+              ]
+            },
+            {
+              "url": "https://www.sqlite.org/lang_transaction.html",
+              "title": "Transaction",
+              "description": "No reads or writes occur except within a transaction. Any command that accesses the database (basically, any SQL command, except a few PRAGMA statements) will automatically start a transaction if one is not already in effect.",
+              "favicon_url": "https://you.com/favicon?domain=www.sqlite.org&size=128",
+              "snippets": [
+                "Automatically started transactions are committed when the last SQL statement finishes. Transactions can be started manually using the BEGIN command. Such transactions usually persist until the next COMMIT or ROLLBACK command. But a transaction will also ROLLBACK if the database is closed or if an error occurs and the ROLLBACK conflict resolution algorithm is specified.",
+                "SQLite supports multiple simultaneous read transactions coming from separate database connections, possibly in separate threads or processes, but only one simultaneous write transaction. A read transaction is used for reading only. A write transaction allows both reading and writing. A read transaction is started by a SELECT statement, and a write transaction is started by statements like CREATE, DELETE, DROP, INSERT, or UPDATE (collectively \"write statements\").",
+                "If a write statement occurs while a read transaction is active, then the read transaction is upgraded to a write transaction if possible. If some other database connection has already modified the database or is already in the process of modifying the database, then upgrading to a write transaction is not possible and the write statement will fail with SQLITE_BUSY.",
+                "DEFERRED means that the transaction does not actually start until the database is first accessed. Internally, the BEGIN DEFERRED statement merely sets a flag on the database connection that turns off the automatic commit that would normally occur when the last statement finishes."
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "sqlite database transaction durability webhook state",
+          "search_uuid": "97cee73f-a5db-46a6-a7e6-949d675d8d73",
+          "latency": 0.4818389799911529
+        }
+      },
+      "timestamp": "2026-11-21T07:34:06.651825+00:00"
+    },
+    {
+      "query": "in-memory deduplication webhook crash loss persistent table",
+      "response": {
+        "results": {
+          "web": [
+            {
+              "url": "https://www.webhook-architecture.com/webhook-architecture-fundamentals-design-patterns/idempotency-in-webhooks/",
+              "title": "Idempotency Patterns for Webhooks | Webhook Architecture",
+              "description": "Production idempotency patterns for webhook consumers: deterministic key derivation, atomic deduplication stores, concurrency control, and TTL sizing.",
+              "thumbnail_url": "https://webhook-architecture.com/assets/icons/og-image.png",
+              "original_thumbnail_url": "https://webhook-architecture.com/assets/icons/og-image.png",
+              "page_age": "2026-07-25T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=www.webhook-architecture.com&size=128",
+              "snippets": [
+                "The relational option has its own long-run failure mode, which is bloat rather than loss. A deduplication table accumulating 129.6 million rows over a 72-hour window and cleaned with a nightly DELETE ... WHERE processed_at < now() - interval '72 hours' generates dead tuples faster than autovacuum reclaims them on a busy table.",
+                "On successful commit the worker rewrites the key with the value completed and the full deduplication TTL of 72 hours. A retry arriving while the key still reads processing is genuinely concurrent with an in-flight attempt and should be answered with 409 or 503 so the provider retries later, not with 200, because a 200 here would acknowledge work that may still fail. A retry arriving after the short lease expired finds no key at all and re-claims cleanly, which is precisely the recovery you want after a crash.",
+                "The observable symptom of getting this wrong is unmistakable once you know it: the deduplication hit rate sits pinned near zero while duplicate side effects appear in the ledger at intervals that exactly match the provider\u2019s published retry offsets \u2014 1 minute, 5 minutes, 30 minutes. If duplicates land on the retry schedule, the key is derived from something the retry changed. Persisting processed keys requires low-latency, highly available storage layers capable of handling high-throughput bursts without introducing serialization bottlenecks.",
+                "Audit logging of deduplication bypasses and cache misses: Enables forensic analysis of edge-case delivery failures and potential security probes. Replay Window Constraints: Align TTL expiration with the maximum documented provider retry window (typically 72 hours). Events arriving outside this window should be treated as new deliveries, triggering soft-delete reconciliation jobs rather than hard rejections. The trade-off between persistent, per-event keys and bounded time-based dedup caches is examined in depth in Idempotency keys vs deduplication windows, which covers when a sliding window is sufficient versus when you need durable key storage."
+              ]
+            },
+            {
+              "url": "https://www.hooklistener.com/learn/webhook-idempotency-and-deduplication",
+              "title": "Webhook Idempotency 2026: Dedupe in Postgres, Redis & Node | ...",
+              "description": "Stop processing webhooks twice: pick the right idempotency key, dedupe atomically in Postgres or Redis (Node and Python code), and test with replays.",
+              "thumbnail_url": "https://www.hooklistener.com/preview.png",
+              "original_thumbnail_url": "https://www.hooklistener.com/preview.png",
+              "page_age": "2026-09-26T00:00:00",
+              "favicon_url": "https://you.com/favicon?domain=www.hooklistener.com&size=128",
+              "snippets": [
+                "\u2022 You must prune manually or the table grows forever \u00b7 \u2022 Adds a write to your primary database on every webhook \u2014 fine for most volumes, worth measuring at thousands per second ... \u2022 Weaker durability: an eviction under memory pressure or a failover can lose dedup state, letting a duplicate through \u00b7 \u2022 The claim and your side effects can't share a transaction \u2014 if processing crashes after the claim, the event is marked done but never processed",
+                "Webhook providers face a choice when a delivery is ambiguous: deliver at-most-once (and silently drop events when things go wrong) or at-least-once (and occasionally send the same event twice). Every serious provider picks at-least-once, because a dropped payment.succeeded is worse than a duplicated one. That decision pushes the deduplication problem onto you, the receiver.",
+                "Create a table with the idempotency key as PRIMARY KEY. In one transaction, run INSERT INTO webhook_events (event_id) VALUES ($1) ON CONFLICT (event_id) DO NOTHING, check the affected row count (rowCount in node-postgres, cursor.rowcount in psycopg), apply the side effects only when it is 1, then commit.",
+                "CREATE TABLE webhook_events ( event_id TEXT PRIMARY KEY, -- \"stripe:evt_...\" scoped key source TEXT NOT NULL, received_at TIMESTAMPTZ NOT NULL DEFAULT now() );"
+              ]
+            },
+            {
+              "url": "https://github.com/frienzy514-png/stellar-TrueStub/issues/518",
+              "title": "Add a persistent dedup store for webhook deliveries, replacing ...",
+              "description": "Summary Implementation issue for the critical finding on webhooks.ts's in-memory dedup map. Scope Add a processed_webhook_events table (dedup key, processed-at timestamp) with a unique constrai...",
+              "thumbnail_url": "https://opengraph.githubassets.com/696cb4abfeb5375cb114713b99cb063502bd0783a4792b64ef763b99f636dd11/frienzy514-png/stellar-TrueStub/issues/518",
+              "original_thumbnail_url": "https://opengraph.githubassets.com/696cb4abfeb5375cb114713b99cb063502bd0783a4792b64ef763b99f636dd11/frienzy514-png/stellar-TrueStub/issues/518",
+              "page_age": "2026-11-19T10:44:28",
+              "favicon_url": "https://you.com/favicon?domain=github.com&size=128",
+              "snippets": [
+                "Summary Implementation issue for the critical finding on webhooks.ts's in-memory dedup map. Scope Add a processed_webhook_events table (dedup key, processed-at timestamp) with a unique constraint on the dedup key, and a scheduled cleanup...",
+                "Implementation issue for the critical finding on webhooks.ts's in-memory dedup map. Add a processed_webhook_events table (dedup key, processed-at timestamp) with a unique constraint on the dedup key, and a scheduled cleanup job for old entries (replacing the manual in-memory eviction loop).",
+                "Update webhooks.ts to check/insert against this table instead of the Map. Dedup state is stored in Postgres, not process memory.",
+                "Add a persistent dedup store for webhook deliveries, replacing the in-memory processedEvents map#518"
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "query": "in-memory deduplication webhook crash loss persistent table",
+          "search_uuid": "a5d1a941-fe47-41fa-84e6-64d541c2ebbe",
+          "latency": 0.45696976501494646
+        }
+      },
+      "timestamp": "2026-11-21T07:34:08.648919+00:00"
+    }
+  ]
+}

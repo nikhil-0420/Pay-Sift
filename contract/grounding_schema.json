@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PaySift Grounding Schema",
+  "description": "Validation schema for runs/grounding.json recording You.com retrieved evidence and model judgments.",
+  "type": "object",
+  "required": [
+    "generated_at",
+    "spec_sha",
+    "provider",
+    "rules"
+  ],
+  "properties": {
+    "generated_at": {
+      "type": "string"
+    },
+    "spec_sha": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string",
+      "enum": [
+        "you.com"
+      ]
+    },
+    "rules": {
+      "type": "object",
+      "patternProperties": {
+        "^R(10|[0-9])$": {
+          "type": "object",
+          "required": [
+            "label",
+            "convention",
+            "human_reviewed",
+            "sources",
+            "quote",
+            "reason",
+            "judge"
+          ],
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string",
+              "enum": [
+                "SUPPORTED",
+                "PARTIAL",
+                "NOT_FOUND",
+                "CONFLICT",
+                "NOT_JUDGED"
+              ]
+            },
+            "convention": {
+              "type": "boolean"
+            },
+            "human_reviewed": {
+              "type": "boolean"
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "url",
+                  "title",
+                  "snippet",
+                  "rank",
+                  "query",
+                  "retrieved_at",
+                  "provider"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "snippet": {
+                    "type": "string"
+                  },
+                  "rank": {
+                    "type": "integer"
+                  },
+                  "query": {
+                    "type": "string"
+                  },
+                  "retrieved_at": {
+                    "type": "string"
+                  },
+                  "provider": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "sources_used": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "quote": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            },
+            "judge": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "temperature": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
