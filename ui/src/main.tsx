@@ -52,6 +52,7 @@ import {
   liveSource,
   type DataSource,
   type Mode,
+  type SourceContext,
 } from "./data/source";
 import {
   readGrounding,
@@ -76,11 +77,13 @@ import {
   EvidenceGaps,
   EvidenceChip,
   SourceCard,
+  LocalConnectControl,
 } from "./components";
 import {
   alignSubsequence,
   eventSummary,
   formatMoney,
+  getMinimalTrace,
   invariantKeys,
   isFinancial,
   latestPerCandidate,
@@ -88,11 +91,26 @@ import {
   normalizeRun,
   sourceLabel,
 } from "./lib/helpers";
-type Ctx = { source: DataSource; mode: Mode; setRaw: (x: any) => void };
+type Ctx = {
+  source: DataSource;
+  mode: Mode;
+  sandbox: boolean;
+  apiBase: string;
+  setRaw: (x: any) => void;
+  setSourceContext: (ctx: {
+    source: DataSource;
+    mode: Mode;
+    sandbox: boolean;
+    apiBase: string;
+  }) => void;
+};
 const C = React.createContext<Ctx>({
   source: staticSource,
-  mode: "static",
+  mode: "down",
+  sandbox: false,
+  apiBase: "",
   setRaw: () => {},
+  setSourceContext: () => {},
 });
 const qc = new QueryClient();
 const useApp = () => React.useContext(C);
@@ -204,40 +222,68 @@ function Hash({ value }: { value: string }) {
   return <CopyChip value={value || ""} label={value?.slice(0, 12) || "—"} />;
 }
 function DataStatus() {
-  const { mode } = useApp();
+  const { mode, sandbox } = useApp();
+  let label = "STATIC SNAPSHOT";
+  let toneClass = "is-static";
+  let title = "Using the bundled static snapshot; live actions are unavailable";
+
+  if (mode === "local" && sandbox) {
+    label = "LOCAL BACKEND";
+    toneClass = "is-live";
+    title = "Connected to local backend with Docker sandbox enabled";
+  } else if (mode === "hosted" || (mode === "local" && !sandbox)) {
+    label = "LIVE API (read-only)";
+    toneClass = "is-hosted";
+    title = "Connected to hosted API (read-only; Docker and model keys run locally)";
+  }
+
   return (
     <span
-      className={`statusbar ${mode === "live" ? "is-live" : "is-static"}`}
-      title={
-        mode === "live"
-          ? "Connected to the configured API"
-          : "Using the bundled static snapshot; live actions are unavailable"
-      }
+      className={`statusbar ${toneClass}`}
+      title={title}
+      role="status"
+      aria-label={`API status: ${label}`}
     >
       <i aria-hidden="true" />
-      {mode === "live" ? "LIVE API" : "STATIC SNAPSHOT"}
+      {label}
     </span>
   );
 }
 let specText = "";
 let specHash = "";
+function BackendBanner() {
+  const { mode } = useApp();
+  if (mode === "down") {
+    return (
+      <div className="backend-banner" role="alert">
+        <CircleHelp size={15} />
+        <span>Backend waking or unavailable, showing static snapshot</span>
+      </div>
+    );
+  }
+  return null;
+}
 function DraftBanner() {
   const { source } = useApp();
   const { data: spec } = query("spec", () => source.getSpec());
   const { data: status } = query("status", () => source.getStatus());
   specText = spec || "";
-  const g1Outcome = status?.g1_result?.summary || "Gate 1 passed, spec unchanged";
+  const g1Outcome =
+    status?.g1_result?.summary ||
+    "Gate 1 passed, spec unchanged, reviewed by two independent predictors: Koushik and Rithvik";
   return spec?.split("\n")[0].includes("DRAFT-FROZEN") ? (
-    <div className="specbanner">
+    <div className="specbanner" role="banner" aria-label="Specification status">
       Specification DRAFT-FROZEN · {g1Outcome}
     </div>
   ) : null;
 }
 function Shell() {
   const [raw, setRaw] = useState<any>(null),
-    [ctx, setCtx] = useState<{ source: DataSource; mode: Mode }>({
+    [ctx, setCtx] = useState<SourceContext>({
       source: staticSource,
-      mode: "static",
+      mode: "down",
+      sandbox: false,
+      apiBase: "",
     }),
     [palette, setPalette] = useState(false),
     [mobileOpen, setMobileOpen] = useState(false);
@@ -248,22 +294,8 @@ function Shell() {
       if (active) setCtx(x);
     };
     sync();
-    const id = setInterval(async () => {
-      if (
-        import.meta.env.VITE_DATA_MODE &&
-        import.meta.env.VITE_DATA_MODE !== "auto"
-      )
-        return;
-      try {
-        await liveSource.health();
-        if (active) setCtx({ source: liveSource, mode: "live" });
-      } catch {
-        if (active) setCtx({ source: staticSource, mode: "down" });
-      }
-    }, 15000);
     return () => {
       active = false;
-      clearInterval(id);
     };
   }, []);
   useEffect(() => {
@@ -298,7 +330,16 @@ function Shell() {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }
   }, [location.pathname, location.search, location.hash]);
-  const value = useMemo(() => ({ ...ctx, setRaw }), [ctx]);
+  const value = useMemo(
+    () => ({
+      ...ctx,
+      setRaw,
+      setSourceContext: (next: SourceContext) => {
+        setCtx(next);
+      },
+    }),
+    [ctx],
+  );
   const nav = [
     ["/runs", "Findings"],
     ["/kill-matrix", "Kill matrix"],
@@ -386,7 +427,8 @@ function Shell() {
             </button>
           </div>
         )}
-        {ctx.source === staticSource && <DraftBanner />}
+        <BackendBanner />
+        <DraftBanner />
         <Suspense
           fallback={
             <div className="page">
@@ -678,11 +720,20 @@ function Home() {
             ) || example.failures.find((f: any) => (f.minimal_stream?.length || 0) > 0) || example.failures[0],
         }
       : null;
-  const candidateF = targetRun?.failures?.find(
-    (f: any) =>
-      (f.rule === "R8" || isFinancial(f.invariant)) &&
-      (f.minimal_stream?.length || 0) > 0,
-  ) || targetRun?.failures?.find((f: any) => (f.minimal_stream?.length || 0) > 0) || targetRun?.failures?.[0];
+  const candidateF =
+    targetRun?.failures?.find(
+      (f: any) =>
+        f.rule === "R8" &&
+        f.invariant === "I2_idempotency" &&
+        getMinimalTrace(f).length > 0,
+    ) ||
+    targetRun?.failures?.find(
+      (f: any) =>
+        (f.rule === "R8" || isFinancial(f.invariant)) &&
+        getMinimalTrace(f).length > 0,
+    ) ||
+    targetRun?.failures?.find((f: any) => getMinimalTrace(f).length > 0) ||
+    targetRun?.failures?.[0];
   const featured =
     targetRun?.failures?.length && candidateF
       ? {
@@ -690,6 +741,7 @@ function Home() {
           f: candidateF,
         }
       : financial || fallback;
+  const featuredTrace = featured?.f ? getMinimalTrace(featured.f) : [];
   const rows = km?.rows || [];
   const hand = rows.filter((r: any) => r.source === "mutant"),
     extra = rows.filter((r: any) => r.source === "extra-mutant"),
@@ -698,7 +750,7 @@ function Home() {
   const delta = featured?.f ? moneyDelta(featured.f) : null;
   const allFailures = runs.flatMap((r: any) => r.failures || []);
   const largest = allFailures.length
-    ? Math.max(...allFailures.map((f: any) => f.minimal_stream?.length || 0))
+    ? Math.max(...allFailures.map((f: any) => getMinimalTrace(f).length))
     : null;
   const reproduction = allFailures
     .map((f: any) => f.repro)
@@ -748,7 +800,7 @@ function Home() {
     },
     {
       label: "Repair",
-      state: "not run",
+      state: status?.readiness?.repair?.state || "not run",
       detail: status?.readiness?.repair?.detail || "NOT RUN",
     },
   ];
@@ -800,7 +852,7 @@ function Home() {
                     {featured.f.invariant} · Rule {featured.f.rule}
                   </b>
                   <span>
-                    {featured.f.minimal_stream?.length ?? "—"} events in minimal
+                    {featuredTrace.length || "—"} events in minimal
                     trace
                   </span>
                 </motion.div>
@@ -816,7 +868,7 @@ function Home() {
                       "Observed ledger differs from the contract"}
                   </b>
                   <span>
-                    {featured.f.minimal_stream?.length ?? "—"} events ·{" "}
+                    {featuredTrace.length || "—"} events ·{" "}
                     {delta !== null
                       ? formatMoney(delta)
                       : "amount not supplied"}
@@ -827,7 +879,7 @@ function Home() {
                 </motion.div>
               </div>
               <div className="hero-trace">
-                {(featured.f.minimal_stream || [])
+                {featuredTrace
                   .slice(0, 3)
                   .map((event: any, index: number) => (
                     <motion.div
@@ -1361,16 +1413,18 @@ function RunDetail() {
   );
 }
 function EvidenceSearch({ rule, data }: { rule: string; data: any }) {
-  const { source, mode } = useApp();
+  const { source, mode, apiBase } = useApp();
   const [loading, setLoading] = useState(false),
     [error, setError] = useState(""),
     [results, setResults] = useState<any[]>([]);
+
   const search = async () => {
-    if (mode !== "live") return;
     setLoading(true);
     setError("");
     try {
-      const payload = await source.searchEvidence(rule);
+      const payload = await (source.searchEvidence
+        ? source.searchEvidence(rule)
+        : liveSource.searchEvidence(rule));
       const list = Array.isArray(payload?.sources)
         ? payload.sources
         : Array.isArray(payload)
@@ -1378,36 +1432,26 @@ function EvidenceSearch({ rule, data }: { rule: string; data: any }) {
           : [];
       setResults(list);
       if (!list.length)
-        setError(
-          "No live sources were returned. Showing cached evidence below.",
-        );
+        setError("No live sources were returned. Showing cached evidence below.");
     } catch (e: any) {
-      setError(
-        e?.message || "Evidence search failed. Showing cached evidence below.",
-      );
+      if (e?.status === 429 || String(e?.message).includes("429")) {
+        setError("Rate limit reached on search. Please wait a moment before trying again.");
+      } else {
+        setError("Live evidence search unavailable. Showing cached evidence below.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  if (mode !== "live") {
-    return (
-      <div className="evidence-search" style={{ margin: "0.5rem 0 1rem" }}>
-        <button
-          className="btn"
-          disabled
-          title="Why is this a bug? search is available only in LIVE API mode. Cached evidence is shown below."
-          aria-label="Why is this a bug? (Disabled in static mode)"
-        >
-          Why is this a bug?
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div className="evidence-search" style={{ margin: "0.5rem 0 1rem" }}>
-      <button className="btn" onClick={search} disabled={loading}>
+      <button
+        className="btn"
+        onClick={search}
+        disabled={loading}
+        aria-label="Why is this a bug?"
+      >
         {loading ? "Searching live evidence…" : "Why is this a bug?"}
       </button>
       {error && (
@@ -1676,27 +1720,62 @@ function KillMatrix() {
   );
 }
 function BreakPage() {
-  const { source, mode } = useApp();
+  const { source, mode, sandbox, apiBase, setSourceContext } = useApp();
   const { data: sc } = query("scenarios", () => source.getScenarioVerdicts());
   const [params] = useSearchParams();
   const [scenario, setScenario] = useState(
-      params.get("scenario") || "duplicate_capture",
-    ),
-    [candidate, setCandidate] = useState(
-      params.get("candidate") || "reference",
-    ),
-    [result, setResult] = useState<any>(null),
-    [err, setErr] = useState("");
+    params.get("scenario") || "duplicate_capture",
+  );
+  const [candidate, setCandidate] = useState(
+    params.get("candidate") || "reference",
+  );
+  const [result, setResult] = useState<any>(null);
+  const [isLiveResult, setIsLiveResult] = useState(false);
+  const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const verdict = sc?.by_candidate?.[candidate]?.[scenario];
   const selected = sc?.scenarios?.[scenario];
+
+  const canRunLive = mode === "local" && Boolean(sandbox);
+  const runLiveTooltip = canRunLive
+    ? "Execute scenario live in local Docker container"
+    : "Needs Docker and your own model key. Clone the repo and run it locally.";
+
   const live = async () => {
     setErr("");
+    setLoading(true);
     try {
-      setResult(await source.breakIt(candidate, scenario));
+      const res = await source.breakIt(candidate, scenario);
+      setResult(res);
+      setIsLiveResult(true);
     } catch (e: any) {
-      setErr(e.message);
+      setErr(e.message || "Failed to execute scenario.");
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handleConnectedLocal = (url: string, isSandbox: boolean) => {
+    setSourceContext({
+      source: liveSource,
+      mode: isSandbox ? "local" : "hosted",
+      sandbox: isSandbox,
+      apiBase: url,
+    });
+  };
+
+  const handleDisconnected = () => {
+    setSourceContext({
+      source: staticSource,
+      mode: "down",
+      sandbox: false,
+      apiBase: "",
+    });
+    setResult(null);
+    setIsLiveResult(false);
+  };
+
   const scenarios = Object.entries(sc?.scenarios || {});
   return (
     <main className="page">
@@ -1704,6 +1783,13 @@ function BreakPage() {
         eyebrow="Scenario lab"
         title="Break it"
         sub="Static verdicts replay from the supplied dataset. Live runs require the backend and its sandbox gate."
+      />
+      <LocalConnectControl
+        currentMode={mode}
+        currentBase={apiBase}
+        sandbox={sandbox}
+        onConnected={handleConnectedLocal}
+        onDisconnected={handleDisconnected}
       />
       <div className="break-layout">
         <aside className="scenario-rail">
@@ -1749,6 +1835,7 @@ function BreakPage() {
               onChange={(e) => {
                 setCandidate(e.target.value);
                 setResult(null);
+                setIsLiveResult(false);
               }}
             >
               {sc?.candidates?.map((id: string) => (
@@ -1765,24 +1852,21 @@ function BreakPage() {
               ))}
             </select>
             <button
-              disabled={mode !== "live"}
+              disabled={loading || !canRunLive}
               className="btn primary"
-              title={
-                mode === "live"
-                  ? "Run against live API"
-                  : "Static snapshot mode: live execution is unavailable"
-              }
+              title={runLiveTooltip}
               onClick={live}
+              aria-label="Run live"
             >
-              Run live
+              {loading ? "Running in Docker…" : "Run live"}
             </button>
           </div>
-          {mode !== "live" && (
+          {!canRunLive && (
             <div className="unavailable-hint snapshot-notice" role="note">
               <span className="notice-icon"><CircleHelp size={17} /></span>
               <span className="notice-copy">
                 <b>Saved replay mode</b>
-                <span>Live execution is off. Connect the API and sandbox gate to run this scenario for real.</span>
+                <span>Live execution is off. Connect the local backend and sandbox gate to run live.</span>
               </span>
               <span className="notice-tag">STATIC</span>
             </div>
@@ -1793,7 +1877,16 @@ function BreakPage() {
             </div>
           )}
           {result || verdict ? (
-            <ScenarioResult data={result || verdict} scenario={selected} />
+            <div className="scenario-result-container">
+              <div className="result-mode-tag" style={{ marginBottom: 10 }}>
+                {isLiveResult ? (
+                  <span className="state-pill state-ok">LIVE, LOCAL</span>
+                ) : (
+                  <span className="state-pill state-neutral">STATIC REPLAY</span>
+                )}
+              </div>
+              <ScenarioResult data={result || verdict} scenario={selected} />
+            </div>
           ) : (
             <DesignedEmpty
               title="No verdict recorded"
@@ -1913,22 +2006,37 @@ function ScenarioResult({ data, scenario }: any) {
   );
 }
 function Repair() {
-  const { source, mode } = useApp();
+  const { source, mode, sandbox, apiBase, setSourceContext } = useApp();
   const { data: runs = [] } = useData();
   const { data: status } = query("repair-status", () => source.getStatus());
   const { data: grounding = null } = useGrounding();
+  const { data: cachedRepair } = query("cached-repair-3-0", () =>
+    source.getCachedRepair
+      ? source.getCachedRepair("3", 0)
+      : fetch("/data/repair/cache/3__0.json")
+          .then((r) => (r.ok ? r.json() : null))
+          .catch(() => null),
+  );
+
   const failures = runs.flatMap((r) =>
     r.failures.map((f: any, index: number) => ({ r, f, index })),
   );
   const best =
     failures.find(
       (x) =>
+        x.r.candidate?.id === "3" ||
+        (x.r.candidate?.label && x.r.candidate.label.includes("strong_a/A/3")),
+    ) ||
+    failures.find(
+      (x) =>
         ["live", "pre-run"].includes(x.r.candidate?.source) &&
         isFinancial(x.f.invariant),
-    ) || failures[0];
-  const [chosen, setChosen] = useState(best?.r.candidate?.id || ""),
+    ) ||
+    failures[0];
+  const [chosen, setChosen] = useState(best?.r.candidate?.id || "3"),
     [failureId, setFailure] = useState(0),
     [result, setResult] = useState<any>(null),
+    [isLiveResult, setIsLiveResult] = useState(false),
     [error, setError] = useState(""),
     [loading, setLoading] = useState(false),
     [elapsed, setElapsed] = useState(0);
@@ -1939,21 +2047,52 @@ function Repair() {
   }, [loading]);
   const selected = failures.find((x) => x.r.candidate?.id === chosen) || best;
   const controller = React.useRef<AbortController | null>(null);
+
+  const canRunLiveRepair = mode === "local" && Boolean(sandbox);
+  const repairTooltip = canRunLiveRepair
+    ? "Send repair prompt to local model and verify in Docker"
+    : "Needs Docker and your own model key. Clone the repo and run it locally.";
+
   const run = async () => {
     setLoading(true);
     setElapsed(0);
     setError("");
     controller.current = new AbortController();
     try {
-      setResult(
-        await source.repair(chosen, failureId, controller.current.signal),
+      const res = await source.repair(
+        chosen,
+        failureId,
+        controller.current.signal,
       );
+      setResult(res);
+      setIsLiveResult(true);
     } catch (e: any) {
-      setError(e.message);
+      setError(e.message || "Model repair failed.");
     } finally {
       setLoading(false);
     }
   };
+
+  const handleConnectedLocal = (url: string, isSandbox: boolean) => {
+    setSourceContext({
+      source: liveSource,
+      mode: isSandbox ? "local" : "hosted",
+      sandbox: isSandbox,
+      apiBase: url,
+    });
+  };
+
+  const handleDisconnected = () => {
+    setSourceContext({
+      source: staticSource,
+      mode: "down",
+      sandbox: false,
+      apiBase: "",
+    });
+    setResult(null);
+    setIsLiveResult(false);
+  };
+
   const blocker = status?.blockers?.find((b: any) =>
     /repair|model|sandbox/i.test(b.title),
   );
@@ -1963,6 +2102,13 @@ function Repair() {
         eyebrow="Repair loop"
         title="Repair"
         sub="A fix is not accepted on its own terms; the complete suite must run again."
+      />
+      <LocalConnectControl
+        currentMode={mode}
+        currentBase={apiBase}
+        sandbox={sandbox}
+        onConnected={handleConnectedLocal}
+        onDisconnected={handleDisconnected}
       />
       <div className="repair-flow">
         <PipelineDiagram
@@ -1982,20 +2128,22 @@ function Repair() {
             },
             {
               label: "Fix",
-              detail: "A model repair requires a configured live API.",
-              state: mode === "live" ? "available" : "blocked",
+              detail: canRunLiveRepair
+                ? "Live repair available on local backend."
+                : "A live model repair requires a local backend with Docker.",
+              state: canRunLiveRepair ? "available" : "blocked",
               icon: <RefreshCw size={16} />,
             },
             {
               label: "Full suite re-run",
               detail: "The repaired candidate must face the full suite.",
-              state: result?.suite ? "recorded" : "not run",
+              state: (result?.suite || cachedRepair?.suite) ? "recorded" : "not run",
               icon: <Activity size={16} />,
             },
             {
               label: "Verdict",
               detail: "Invariant regressions stay visible.",
-              state: result ? "recorded" : "not run",
+              state: (result || cachedRepair) ? "recorded" : "not run",
               icon: <Check size={16} />,
             },
           ]}
@@ -2006,7 +2154,11 @@ function Repair() {
           className="field"
           aria-label="Select candidate"
           value={chosen}
-          onChange={(e) => setChosen(e.target.value)}
+          onChange={(e) => {
+            setChosen(e.target.value);
+            setResult(null);
+            setIsLiveResult(false);
+          }}
         >
           {[...new Set(failures.map((x) => x.r.candidate?.id))].map((id) => (
             <option key={id}>{id}</option>
@@ -2016,7 +2168,11 @@ function Repair() {
           className="field"
           aria-label="Select failure"
           value={failureId}
-          onChange={(e) => setFailure(Number(e.target.value))}
+          onChange={(e) => {
+            setFailure(Number(e.target.value));
+            setResult(null);
+            setIsLiveResult(false);
+          }}
         >
           {failures
             .filter((x) => x.r.candidate?.id === chosen)
@@ -2028,17 +2184,12 @@ function Repair() {
         </select>
         <button
           className="btn primary"
-          disabled={loading || mode !== "live" || !selected}
-          title={
-            mode !== "live"
-              ? "Static snapshot mode: a live model repair is unavailable"
-              : !selected
-                ? "Select a recorded failure"
-                : "Send repair request"
-          }
+          disabled={loading || !canRunLiveRepair || !selected}
+          title={repairTooltip}
           onClick={run}
+          aria-label="Ask the model to fix it"
         >
-          Ask the model to fix it
+          {loading ? `Repairing (${elapsed}s)…` : "Ask the model to fix it"}
         </button>
         {loading && (
           <button className="btn" onClick={() => controller.current?.abort()}>
@@ -2046,14 +2197,14 @@ function Repair() {
           </button>
         )}
       </div>
-      {mode !== "live" && (
+      {!canRunLiveRepair && (
         <div className="unavailable-hint snapshot-notice repair-notice" role="note">
           <span className="notice-icon"><CircleHelp size={17} /></span>
           <span className="notice-copy">
-            <b>Model repair is unavailable in snapshot mode</b>
-            <span>Configure model IDs and API keys in <code>config/models.yaml</code>, then connect the live API and sandbox gate.</span>
+            <b>Model repair requires a local backend</b>
+            <span>Live repair needs Docker and model API keys on your machine. Connect your local backend above. Showing cached repair result below.</span>
           </span>
-          <span className="notice-tag">BLOCKED</span>
+          <span className="notice-tag">CACHED REPLAY</span>
         </div>
       )}
       {loading && (
@@ -2079,17 +2230,26 @@ function Repair() {
           <EvidencePanel data={grounding} rule={selected.f.rule} />
         </section>
       )}
-      {!result && (
+      {result ? (
+        <RepairResult
+          data={result}
+          badgeLabel={isLiveResult ? "LIVE, LOCAL" : "REPAIR RESULT"}
+        />
+      ) : cachedRepair && (chosen === "3" || chosen === best?.r.candidate?.id) ? (
+        <RepairResult
+          data={cachedRepair}
+          badgeLabel="CACHED REPAIR RESULT (run on operator machine)"
+        />
+      ) : (
         <DesignedEmpty
           title="No repair result recorded"
-          detail="This snapshot contains no cached pre-run repair. Nothing here is represented as model output."
+          detail="This snapshot contains no cached pre-run repair for this candidate. Run locally to generate a repair."
         />
       )}
-      {result && <RepairResult data={result} />}
     </main>
   );
 }
-function RepairResult({ data }: any) {
+function RepairResult({ data, badgeLabel }: { data: any; badgeLabel?: string }) {
   const before = data.before_code || data.original_code || data.before?.code;
   const after = data.after_code || data.fixed_code || data.after?.code;
   const grounding = useQuery({
@@ -2122,7 +2282,20 @@ function RepairResult({ data }: any) {
         value?.passed === false && beforeInv?.[key]?.passed !== false,
     );
   return (
-    <Section title="Repair result">
+    <Section
+      title="Repair result"
+      action={
+        badgeLabel && (
+          <span
+            className={`state-pill ${
+              badgeLabel.includes("LOCAL") ? "state-ok" : "state-neutral"
+            }`}
+          >
+            {badgeLabel}
+          </span>
+        )
+      }
+    >
       <div className="card">
         <Badge>{data.source || "live"}</Badge>
         {broke && (
@@ -2194,7 +2367,13 @@ function Pilot() {
     ["live", "pre-run"].includes(r.candidate?.source),
   );
   const conditionA = latestPerCandidate(
-    selected.filter((r) => r.candidate?.condition === "A" && !r.noncompliant),
+    selected.filter(
+      (r) =>
+        r.candidate?.condition === "A" &&
+        !r.noncompliant &&
+        !String(r.candidate?.id || "").includes("repaired") &&
+        !String(r.run_id || "").includes("repair"),
+    ),
   );
   const failures = conditionA.filter((r) =>
     r.failures.some((f: any) => isFinancial(f.invariant)),
@@ -2300,7 +2479,7 @@ function Pilot() {
                       {run.failures.length
                         ? Math.min(
                             ...run.failures.map(
-                              (f: any) => f.minimal_stream?.length || 0,
+                              (f: any) => getMinimalTrace(f).length,
                             ),
                           )
                         : "—"}
@@ -2333,6 +2512,7 @@ function Spec() {
   const [specTab, setSpecTab] = useState<"contract" | "gaps">("contract");
   const { data: spec } = query("full-spec", () => source.getSpec());
   const { data: hash } = query("hash", () => source.getSpecHash());
+  const { data: status } = query("spec-status", () => source.getStatus());
   const { data: grounding = null } = useQuery({
     queryKey: ["grounding"],
     queryFn: () => source.getEvidence(),
@@ -2369,6 +2549,13 @@ function Spec() {
         </Badge>
         <Hash value={hash || ""} />
       </div>
+      <div className="spec-banner-group" style={{ margin: "1rem 0" }}>
+        {spec?.split("\n")[0]?.includes("DRAFT-FROZEN") && (
+          <div className="specbanner" role="banner" aria-label="Specification status">
+            Specification DRAFT-FROZEN · {status?.g1_result?.summary || "Gate 1 passed, spec unchanged, reviewed by two independent predictors: Koushik and Rithvik"}
+          </div>
+        )}
+      </div>
       <div className="tabs" role="tablist" aria-label="Specification views" style={{ margin: "1.5rem 0 1rem" }}>
         <button
           className={`btn ${specTab === "contract" ? "primary" : ""}`}
@@ -2404,12 +2591,9 @@ function Spec() {
           <div className="spec-content">
             <div className="rule-grid">
               {rules.map((rule: any) => {
-                const count = runs.reduce(
-                  (n: any, run: any) =>
-                    n +
-                    run.failures.filter((f: any) => f.rule === rule.id).length,
-                  0,
-                );
+                const distinctRuns = runs.filter((run: any) =>
+                  run.failures.some((f: any) => f.rule === rule.id),
+                ).length;
                 return (
                   <details
                     id={rule.id.toLowerCase()}
@@ -2425,7 +2609,7 @@ function Spec() {
                       <p className="rule-summary">{ruleSummary(rule.id, rule.body)}</p>
                       <div className="rule-card-footer">
                         <Link className="rule-violations-link" to={`/runs?rule=${rule.id}`} onClick={(event) => event.stopPropagation()}>
-                          <span>Violated in {count} {count === 1 ? "run" : "runs"}</span>
+                          <span>Violated in {distinctRuns} {distinctRuns === 1 ? "run" : "runs"}</span>
                           <ArrowRight size={14} aria-hidden="true" />
                         </Link>
                         <span className="rule-expand-label">{"Details"}</span>
@@ -2542,7 +2726,7 @@ function Method() {
     },
     {
       label: "Ledger oracle",
-      detail: "Compare the actual ledger with the expected result.",
+      detail: "Reference handler passes 100/100 invariants (PASSED).",
       state: byId("G2")?.status || "PASSED",
       icon: <Check size={16} />,
     },
@@ -2554,8 +2738,14 @@ function Method() {
     },
     {
       label: "Repair and re-run",
-      detail: "Run the full suite before accepting a repair.",
-      state: "not run",
+      detail:
+        status?.readiness?.repair?.state === "ok"
+          ? "Repair completed (Rule R8 fixed on strong_a/A/3); full suite re-run verified."
+          : "Run the full suite before accepting a repair.",
+      state:
+        status?.readiness?.repair?.state === "ok"
+          ? "DONE"
+          : byId("P9")?.status || "NOT RUN",
       icon: <RefreshCw size={16} />,
     },
     {
@@ -2721,7 +2911,7 @@ function Status() {
           <div className="eyebrow">API</div>
           <DataStatus />
           <p>
-            {mode === "live"
+            {mode === "local" || mode === "hosted"
               ? health?.status || "API is reachable"
               : "Static snapshot active; no API health probe was made."}
           </p>

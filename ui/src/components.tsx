@@ -5,10 +5,13 @@ import {
   Check,
   CircleHelp,
   Copy,
+  ExternalLink,
   Pause,
   Play,
+  ShieldAlert,
   SkipBack,
   SkipForward,
+  Terminal,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
@@ -23,6 +26,13 @@ import {
   type GroundingSource,
   type EvidenceLabel,
 } from "./data/grounding";
+import {
+  probeHealth,
+  getStoredLocalBackend,
+  setStoredLocalBackend,
+  setActiveApiBase,
+  type Mode,
+} from "./data/source";
 
 export function CopyChip({ value, label }: { value: string; label?: string }) {
   const [copied, setCopied] = useState(false);
@@ -551,6 +561,9 @@ export function EvidenceLanding({
           <p className="lead">
             Empirical documentation retrieved via search and evaluated against formal contract rules.
           </p>
+          <p className="partial-explanation muted">
+            Provider documentation mentions the concept (e.g., idempotency keys, webhooks) but does not specify the exact ledger/state-machine constraint enforced by this rule.
+          </p>
         </div>
         <div className="evidence-landing-preview">
           <EvidencePanel data={data} rule={targetRule} defaultOpen={true} />
@@ -767,6 +780,27 @@ export function KillMatrixHeatmap({ rows }: { rows: any[] }) {
                       const result = cell(row, invariant);
                       const failed = Number(result?.failed || 0);
                       const applicable = !!result;
+
+                      // Concurrency checks for M8 and M9
+                      const hasConc = row.concurrency && row.expected_invariant === invariant;
+                      const concA = row.concurrency?.scenario_A;
+                      const concB = row.concurrency?.scenario_B;
+                      const concFailed = (Number(concA?.failed) || 0) + (Number(concB?.failed) || 0);
+                      const concTrials = (Number(concA?.trials) || 0) + (Number(concB?.trials) || 0);
+
+                      if (!applicable && hasConc && concTrials > 0) {
+                        return (
+                          <td
+                            key={invariant}
+                            className="heat-cell heat-fail intended-rule"
+                            title={`Recorded concurrency checks: Scenario A ${concA?.failed || 0}/${concA?.trials || 0} fail, Scenario B ${concB?.failed || 0}/${concB?.trials || 0} fail · rules hit: ${row.rules_hit?.join(", ") || row.expected_rule}${row.notes ? ` · ${row.notes}` : ""}`}
+                          >
+                            {concFailed} conc fail
+                            <span aria-label="intended invariant"> · intended</span>
+                          </td>
+                        );
+                      }
+
                       return (
                         <td
                           key={invariant}
@@ -796,7 +830,142 @@ export function KillMatrixHeatmap({ rows }: { rows: any[] }) {
         <span className="legend-pass">0 fail · recorded checks pass</span>
         <span className="legend-fail">Recorded failures</span>
         <span>Outline · intended invariant</span>
+        <span className="legend-conc">conc fail · recorded concurrency trials fail (M8/M9)</span>
       </div>
+    </div>
+  );
+}
+
+export function LocalConnectControl({
+  currentMode,
+  currentBase,
+  sandbox,
+  onConnected,
+  onDisconnected,
+}: {
+  currentMode: Mode;
+  currentBase?: string;
+  sandbox?: boolean;
+  onConnected: (url: string, sandbox: boolean) => void;
+  onDisconnected: () => void;
+}) {
+  const [url, setUrl] = useState(
+    getStoredLocalBackend() || currentBase || "http://127.0.0.1:8000",
+  );
+  const [loading, setLoading] = useState(false);
+  const [statusMsg, setStatusMsg] = useState("");
+  const [statusTone, setStatusTone] = useState<"ok" | "err" | "info" | null>(null);
+
+  const handleConnect = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setLoading(true);
+    setStatusMsg("");
+    setStatusTone(null);
+    try {
+      const res = await probeHealth(url, 4000);
+      if (res.ok) {
+        if (res.sandbox) {
+          setStoredLocalBackend(url);
+          setActiveApiBase(url);
+          setStatusMsg("Connected to local backend with Docker sandbox enabled.");
+          setStatusTone("ok");
+          onConnected(url, true);
+        } else {
+          setStatusMsg("Connected, but Docker is not available. Live runs disabled.");
+          setStatusTone("err");
+          onConnected(url, false);
+        }
+      } else {
+        setStatusMsg(res.error);
+        setStatusTone("err");
+      }
+    } catch (err: any) {
+      setStatusMsg(err.message || "Failed to connect to local backend");
+      setStatusTone("err");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDisconnect = () => {
+    setStoredLocalBackend(null);
+    setStatusMsg("Disconnected from local backend.");
+    setStatusTone("info");
+    onDisconnected();
+  };
+
+  const isLocalActive = currentMode === "local" && Boolean(sandbox);
+
+  return (
+    <div className="local-connect-panel card" role="region" aria-label="Local backend connection">
+      <div className="local-connect-head">
+        <div className="local-connect-title">
+          <Terminal size={16} />
+          <b>Connect local backend</b>
+          {isLocalActive ? (
+            <span className="state-pill state-ok">LOCAL BACKEND</span>
+          ) : (
+            <span className="state-pill state-neutral">STANDBY</span>
+          )}
+        </div>
+        <a
+          href="https://github.com/nikhil-ravi-28/PaySift/blob/main/docs/DEPLOY.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-link"
+        >
+          How to run it locally <ExternalLink size={13} />
+        </a>
+      </div>
+      <p className="local-connect-hint">
+        Live breakout tests and model repair require Docker and your own model API keys. Run{" "}
+        <code>python cli.py serve</code> locally, then connect below:
+      </p>
+      <form className="local-connect-form" onSubmit={handleConnect}>
+        <input
+          type="url"
+          className="field local-connect-input"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="http://127.0.0.1:8000"
+          aria-label="Local backend URL"
+          required
+        />
+        <button
+          type="submit"
+          className="btn primary"
+          disabled={loading}
+          aria-label="Connect to local backend"
+        >
+          {loading ? "Probing…" : "Connect"}
+        </button>
+        {isLocalActive && (
+          <button
+            type="button"
+            className="btn"
+            onClick={handleDisconnect}
+            aria-label="Disconnect local backend"
+          >
+            Disconnect
+          </button>
+        )}
+      </form>
+      {statusMsg && (
+        <div
+          className={`local-connect-status ${
+            statusTone === "ok"
+              ? "status-success"
+              : statusTone === "err"
+                ? "status-error"
+                : "status-info"
+          }`}
+          role="status"
+        >
+          {statusTone === "err" && <ShieldAlert size={15} />}
+          {statusTone === "ok" && <Check size={15} />}
+          <span>{statusMsg}</span>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { normalizeGrounding, type GroundingData } from "./grounding";
 
 export type AnyRecord = Record<string, any>;
+
 export interface DataSource {
   health(signal?: AbortSignal): Promise<AnyRecord>;
   listRuns(signal?: AbortSignal): Promise<AnyRecord[]>;
@@ -27,11 +28,55 @@ export interface DataSource {
     extraTerms?: string,
     signal?: AbortSignal,
   ): Promise<AnyRecord>;
+  getCachedRepair?(candidateId?: string, failureId?: number): Promise<AnyRecord | null>;
 }
-const base = (import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000").replace(
-  /\/$/,
-  "",
-);
+
+const defaultBase = (
+  import.meta.env.VITE_API_BASE ||
+  (import.meta.env.DEV ? "http://127.0.0.1:8000" : "")
+).replace(/\/$/, "");
+
+let currentApiBase = defaultBase;
+
+export function getActiveApiBase(): string {
+  return currentApiBase;
+}
+
+export function setActiveApiBase(url: string) {
+  currentApiBase = (url || "").replace(/\/$/, "");
+}
+
+const LOCAL_STORAGE_KEY = "paysift_local_backend";
+
+export function getStoredLocalBackend(): string | null {
+  try {
+    return localStorage.getItem(LOCAL_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function setStoredLocalBackend(url: string | null) {
+  try {
+    if (url) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, url);
+    } else {
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+    }
+  } catch {}
+}
+
+export class ApiError extends Error {
+  status: number;
+  data: any;
+  constructor(status: number, message: string, data?: any) {
+    super(message);
+    this.status = status;
+    this.data = data;
+    this.name = "ApiError";
+  }
+}
+
 async function json<T>(
   url: string,
   init?: RequestInit,
@@ -47,24 +92,38 @@ async function json<T>(
         : c.signal,
     });
     if (!r.ok) {
-      let msg = `Request failed (${r.status})`;
+      let body: any = null;
       try {
-        const e = await r.json();
-        msg = e.detail || e.message || msg;
+        body = await r.json();
       } catch {}
-      throw new Error(msg);
+      let msg = body?.message || body?.detail || `Request failed (${r.status})`;
+      if (r.status === 403 && body?.error === "disabled_in_hosted_mode") {
+        msg = body.message || "Needs Docker and your own model key. Clone the repo and run it locally.";
+      } else if (r.status === 429) {
+        msg = body?.message || "Rate limit reached. Please wait a moment before trying again.";
+      } else if (r.status === 400) {
+        msg = body?.message || body?.detail || "Validation error: invalid request parameters.";
+      }
+      throw new ApiError(r.status, msg, body);
     }
     return await r.json();
+  } catch (err: any) {
+    if (err.name === "AbortError") {
+      throw new Error("Operation timed out. If Docker is downloading images, retry.");
+    }
+    throw err;
   } finally {
     clearTimeout(timer);
   }
 }
+
 async function staticJson<T>(file: string): Promise<T> {
   return json<T>(`/data/${file}`);
 }
+
 export const staticSource: DataSource = {
   health: () =>
-    staticJson<AnyRecord>("status.json").catch(() => ({ status: "snapshot" })),
+    staticJson<AnyRecord>("status.json").catch(() => ({ status: "snapshot", sandbox: false })),
   listRuns: async () => staticJson<AnyRecord[]>("index.json").catch(() => []),
   getRun: async (id) => {
     const ix = await staticJson<AnyRecord[]>("index.json").catch(() => []);
@@ -79,11 +138,23 @@ export const staticSource: DataSource = {
   getKillMatrix: () => staticJson<AnyRecord>("kill_matrix.json"),
   breakIt: async () => {
     throw new Error(
-      "Live scenario execution is available only in LIVE API mode.",
+      "Live scenario execution requires a local backend with Docker.",
     );
   },
   repair: async () => {
-    throw new Error("Live repair is available only in LIVE API mode.");
+    throw new Error("Live repair requires a local backend with Docker and model keys.");
+  },
+  getCachedRepair: async (candidateId?: string, failureId?: number) => {
+    try {
+      const cand = candidateId || "3";
+      const fail = failureId ?? 0;
+      if (cand === "3" || cand.includes("strong_a/A/3")) {
+        return await staticJson<AnyRecord>("repair/cache/3__0.json");
+      }
+      return null;
+    } catch {
+      return null;
+    }
   },
   getScenarioVerdicts: () => staticJson<AnyRecord>("scenario_verdicts.json"),
   getSpec: () => fetch("/data/SPEC.md").then((r) => r.text()),
@@ -109,29 +180,35 @@ export const staticSource: DataSource = {
     );
   },
 };
+
 export const liveSource: DataSource = {
-  health: () => json(`${base}/health`),
-  listRuns: () => json(`${base}/runs`),
-  getRun: (id) => json(`${base}/runs/${encodeURIComponent(id)}`),
-  getKillMatrix: () => json(`${base}/kill-matrix`),
+  health: (signal) => json(`${currentApiBase}/health`, { signal }, 6000),
+  listRuns: (signal) => json(`${currentApiBase}/runs`, { signal }),
+  getRun: (id, signal) => json(`${currentApiBase}/runs/${encodeURIComponent(id)}`, { signal }),
+  getKillMatrix: (signal) => json(`${currentApiBase}/kill-matrix`, { signal }),
   breakIt: (candidate_id, scenario, signal) =>
-    json(`${base}/break`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ candidate_id, scenario }),
-      signal,
-    }),
+    json(
+      `${currentApiBase}/break`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ candidate_id, scenario }),
+        signal,
+      },
+      90000,
+    ),
   repair: (candidate_id, failure_id, signal) =>
     json(
-      `${base}/repair`,
+      `${currentApiBase}/repair`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ candidate_id, failure_id }),
         signal,
       },
-      180000,
+      90000,
     ),
+  getCachedRepair: staticSource.getCachedRepair,
   getScenarioVerdicts: staticSource.getScenarioVerdicts,
   getSpec: staticSource.getSpec,
   getSpecHash: staticSource.getSpecHash,
@@ -139,7 +216,7 @@ export const liveSource: DataSource = {
   getPilotReport: staticSource.getPilotReport,
   getEvidence: async (signal) => {
     try {
-      const raw = await json<AnyRecord>(`${base}/evidence`, { signal });
+      const raw = await json<AnyRecord>(`${currentApiBase}/evidence`, { signal });
       return normalizeGrounding(raw);
     } catch {
       return staticSource.getEvidence(signal);
@@ -147,7 +224,7 @@ export const liveSource: DataSource = {
   },
   searchEvidence: (ruleId, extraTerms, signal) =>
     json(
-      `${base}/evidence/search`,
+      `${currentApiBase}/evidence/search`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -160,24 +237,110 @@ export const liveSource: DataSource = {
       15000,
     ),
 };
-export type Mode = "live" | "static" | "down";
-export async function chooseSource(): Promise<{
-  source: DataSource;
-  mode: Mode;
-}> {
-  const requested = import.meta.env.VITE_DATA_MODE || "auto";
-  if (requested === "static") return { source: staticSource, mode: "static" };
-  if (requested === "live") return { source: liveSource, mode: "live" };
+
+export type HealthProbeResult =
+  | { ok: true; data: AnyRecord; sandbox: boolean }
+  | { ok: false; error: string; blocked?: boolean; data?: AnyRecord };
+
+export async function probeHealth(url: string, timeoutMs = 4000): Promise<HealthProbeResult> {
+  const cleanUrl = url.replace(/\/$/, "");
+  const c = new AbortController();
+  const timer = setTimeout(() => c.abort(), timeoutMs);
   try {
-    await Promise.race([
-      liveSource.health(),
-      new Promise((_, rej) =>
-        setTimeout(() => rej(new Error("timeout")), 1500),
-      ),
-    ]);
-    return { source: liveSource, mode: "live" };
-  } catch {
-    return { source: staticSource, mode: "down" };
+    const r = await fetch(`${cleanUrl}/health`, {
+      signal: c.signal,
+      headers: { Accept: "application/json" },
+    });
+    if (!r.ok) {
+      return { ok: false, error: `Backend responded with HTTP ${r.status}` };
+    }
+    const data = await r.json();
+    return {
+      ok: true,
+      data,
+      sandbox: Boolean(data?.sandbox),
+    };
+  } catch (e: any) {
+    if (e.name === "AbortError") {
+      return { ok: false, error: `Connection timed out after ${timeoutMs / 1000}s` };
+    }
+    const isHttps = typeof window !== "undefined" && window.location.protocol === "https:";
+    const isHttpTarget = cleanUrl.startsWith("http://");
+    if (isHttps && isHttpTarget) {
+      return {
+        ok: false,
+        blocked: true,
+        error: "Browser blocked the connection (HTTPS to HTTP localhost mixed content). Run the UI locally via 'npm run dev' to connect.",
+      };
+    }
+    return {
+      ok: false,
+      error: `Local backend not reachable at ${cleanUrl}. Run 'python cli.py serve' first.`,
+    };
+  } finally {
+    clearTimeout(timer);
   }
 }
-export const apiBase = base;
+
+export type Mode = "local" | "hosted" | "static" | "down";
+
+export interface SourceContext {
+  source: DataSource;
+  mode: Mode;
+  sandbox: boolean;
+  apiBase: string;
+}
+
+export async function chooseSource(): Promise<SourceContext> {
+  const requested = import.meta.env.VITE_DATA_MODE || "auto";
+  if (requested === "static") {
+    return { source: staticSource, mode: "static", sandbox: false, apiBase: "" };
+  }
+
+  // 1. Check if user configured a local backend previously
+  const storedLocal = getStoredLocalBackend();
+  if (storedLocal) {
+    const probe = await probeHealth(storedLocal, 4000);
+    if (probe.ok && probe.sandbox) {
+      setActiveApiBase(storedLocal);
+      return {
+        source: liveSource,
+        mode: "local",
+        sandbox: true,
+        apiBase: storedLocal,
+      };
+    }
+  }
+
+  // 2. Check default API base if available
+  if (defaultBase) {
+    const probe = await probeHealth(defaultBase, 6000);
+    if (probe.ok) {
+      setActiveApiBase(defaultBase);
+      if (probe.sandbox) {
+        return {
+          source: liveSource,
+          mode: "local",
+          sandbox: true,
+          apiBase: defaultBase,
+        };
+      }
+      return {
+        source: liveSource,
+        mode: "hosted",
+        sandbox: false,
+        apiBase: defaultBase,
+      };
+    }
+  }
+
+  // 3. Fallback to static snapshot with "down" mode
+  return {
+    source: staticSource,
+    mode: "down",
+    sandbox: false,
+    apiBase: defaultBase,
+  };
+}
+
+export const apiBase = defaultBase;
