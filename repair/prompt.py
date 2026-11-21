@@ -2,7 +2,23 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+
+def load_grounding_for_rule(rule_id: str, grounding_file: Optional[Path] = None) -> List[Dict[str, Any]]:
+    """Load sources from runs/grounding.json for a given rule_id if available."""
+    gfile = grounding_file or Path("runs/grounding.json")
+    if not gfile.is_file():
+        return []
+    try:
+        data = json.loads(gfile.read_text(encoding="utf-8"))
+        rules = data.get("rules", {})
+        rule_info = rules.get(rule_id, {})
+        return rule_info.get("sources", [])
+    except Exception:
+        return []
 
 
 def build_repair_prompt(
@@ -12,6 +28,7 @@ def build_repair_prompt(
     rule_text: str,
     invariant: str,
     explanation: str,
+    sources: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """Construct the repair prompt sent to the LLM model to request corrected handler code."""
     trace_lines = []
@@ -27,13 +44,32 @@ def build_repair_prompt(
 
     trace_str = "\n".join(trace_lines) if trace_lines else "Single-step or empty counterexample."
 
+    if sources is None:
+        sources = load_grounding_for_rule(rule_id)
+
+    sources_section = ""
+    if sources:
+        lines = []
+        for s in sources:
+            sid = s.get("id", "")
+            title = s.get("title", "")
+            url = s.get("url", "")
+            snippet = s.get("snippet", "")
+            lines.append(f"- [{sid}] {title} ({url})\n  Snippet: {snippet}")
+        sources_section = (
+            "\n======================================================================\n"
+            "OFFICIAL DOCUMENTATION & VERIFIED SOURCES (You.com Grounding):\n"
+            + "\n".join(lines)
+            + "\n======================================================================\n"
+        )
+
     return f"""You are fixing a Python payment webhook handler for PaySift.
 The handler currently contains a bug that violates the financial contract.
 
 ======================================================================
 VIOLATED RULE: Rule {rule_id}
 {rule_text}
-======================================================================
+======================================================================{sources_section}
 INVARIANT: {invariant}
 
 MINIMAL REPRODUCIBLE COUNTEREXAMPLE TRACE:

@@ -125,6 +125,22 @@ def run_repair(
         before_after = compute_before_after(orig_run.get("results", {}), repair_run.get("results", {}))
         repair_run["before_after"] = before_after
 
+        # Grounding metadata (You.com evidence)
+        grounding_file = repo_root / "runs" / "grounding.json"
+        grounding_used = False
+        source_ids: List[str] = []
+        if grounding_file.is_file():
+            try:
+                gdata = json.loads(grounding_file.read_text(encoding="utf-8"))
+                rule_g = gdata.get("rules", {}).get(rule_id, {})
+                sources = rule_g.get("sources", [])
+                if sources:
+                    grounding_used = True
+                    source_ids = [s["id"] for s in sources if "id" in s]
+            except Exception:
+                pass
+        repair_run["grounding"] = {"used": grounding_used, "source_ids": source_ids}
+
         # Validate against run schema
         errs = validate_run_dict(repair_run)
         if errs:
