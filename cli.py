@@ -516,6 +516,40 @@ def cmd_selftest(args: argparse.Namespace) -> int:
     return run_selftest(full=full)
 
 
+def cmd_ground(args: argparse.Namespace) -> int:
+    """Execute ground command for You.com evidence retrieval and validation."""
+    from grounding.fetch import fetch_all_evidence
+    from grounding.judge import rebuild_grounding_json
+    from grounding.youcom import YouComClient
+
+    target_rules = None
+    if getattr(args, "rules", None):
+        target_rules = [r.strip() for r in args.rules.split(",") if r.strip()]
+
+    refresh = getattr(args, "refresh", False)
+    call_cap = getattr(args, "call_cap", 60)
+    allow_keyless = getattr(args, "allow_keyless", False)
+
+    if getattr(args, "fetch", False):
+        print(f"[ground] Fetching evidence from You.com (call cap={call_cap}, refresh={refresh})...")
+        client = YouComClient(call_cap=call_cap, allow_keyless=allow_keyless)
+        fetched = fetch_all_evidence(client=client, rules=target_rules, refresh=refresh)
+        print(f"[ground] Fetched evidence for {len(fetched)} rules. Calls used: {client.calls_used}/{call_cap}")
+        rebuild_grounding_json()
+        print("[ground] Rebuilt runs/grounding.json successfully.")
+        return 0
+
+    if getattr(args, "judge", False):
+        print("[ground] Model judge evaluation requested.")
+        rebuild_grounding_json()
+        print("[ground] runs/grounding.json rebuilt successfully.")
+        return 0
+
+    rebuild_grounding_json()
+    print("[ground] Rebuilt runs/grounding.json from cache.")
+    return 0
+
+
 def make_stub(command_name: str, phase_name: str):
     """Return a stub command handler."""
     def handler(args: argparse.Namespace) -> int:
@@ -598,6 +632,16 @@ def build_parser() -> argparse.ArgumentParser:
     p_selftest = subparsers.add_parser("selftest", help="Run end-to-end self-test pipeline (Gate G8)")
     p_selftest.add_argument("--full", action="store_true", help="Run full suite including all hostile tests & parity")
     p_selftest.set_defaults(func=cmd_selftest)
+
+    p_ground = subparsers.add_parser("ground", help="You.com evidence retrieval, caching, and model evaluation")
+    p_ground.add_argument("--fetch", action="store_true", help="Fetch and cache evidence from You.com")
+    p_ground.add_argument("--judge", action="store_true", help="Evaluate evidence with model judge")
+    p_ground.add_argument("--rules", type=str, default=None, help="Comma-separated list of rule IDs (e.g. R1,R3)")
+    p_ground.add_argument("--refresh", action="store_true", help="Refresh existing cached evidence")
+    p_ground.add_argument("--rebuild", action="store_true", help="Rebuild runs/grounding.json from cache")
+    p_ground.add_argument("--allow-keyless", action="store_true", help="Allow keyless fallback route if YDC_API_KEY unset")
+    p_ground.add_argument("--call-cap", type=int, default=60, help="Maximum allowed You.com API calls (default: 60)")
+    p_ground.set_defaults(func=cmd_ground)
 
     # All subcommands implemented - no stubs remain
     return parser
