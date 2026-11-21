@@ -1,0 +1,9 @@
+stage: K0
+owner: nikhil
+status: DONE
+completed_at: 2026-11-21T07:07:30Z
+work_commit: 63d697d2dbe263ca170f294aa52b3f13c33c8e6d
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Organizer rules recorded, agent git protocol enabled, handoff scaffold created
+organizer_decision: ALLOWED
+conditions: none
