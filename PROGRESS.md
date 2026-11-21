@@ -519,17 +519,24 @@
   - Generated `docs/SPEC_GAP_LIST.md` detailing all 10 gap rules (`R0`, `R2`, `R3`, `R4`, `R5`, `R6`, `R7`, `R8`, `R9`, `R10`) with framed review questions and "PaySift convention" classifications.
 
 
-### Stage N2 (Lean) Status & Deferred Items
+### Stage N2 (Lean) Status & Post-Handoff Fixes
 
-- **Timestamp:** 2026-11-21 15:40:00+05:30
-- **Status:** IN_PROGRESS
+- **Timestamp:** 2026-11-21 15:55:00+05:30
+- **Status:** COMPLETED
 - **Owner:** Nehaa
 - **Tasks Completed:**
   - `T6: API contract and examples`: FastAPI responses captured for all endpoints in `docs/API_EXAMPLES.json` and formal contract documented in `docs/API_CONTRACT.md`. Additive field aliases and CORS preflight tests added.
   - `T1: Honest status`: Updated phase table (P8 and P9 reflect live model blockers), updated G8 ("PASSED (skipped checks listed)").
+  - `T2: Naming consistency`: Canonical naming verified against `oracle/checks.py` and run schemas, documented in `docs/NAMING.md`, updated `runs/README.md` (contract version 1.1, real_example ₹561.25 figure).
+  - `T8: Finish verification`: Generated 264 static HTML reports via `cli.py report`, full pytest suite green, selftest passed with skips listed.
 - **Tasks Deferred (lean N2):**
   - `T3: Word accuracy in MORNING_HANDOFF.md / pilot/PILOT_REPORT.md`: deferred (lean N2).
   - `T4: Python 3.12 vermin scan and compatibility tests`: deferred (lean N2).
   - `T5: Sandbox --print-cmd and static check`: deferred (lean N2).
   - `T7: Manus bundle zip packaging`: deferred (lean N2).
+- **Post-Handoff Verification Results:**
+  - `python cli.py report`: 264 reports generated cleanly in `report/out/`.
+  - `python cli.py selftest`: PASSED (exit code 0; 1 skipped check: Gate 4 Docker check on fast mode).
+  - `pytest -q`: 100% green across all unit and API tests.
+  - `handoff/G1_RESULT`: Present, `spec_changed: false`, `spec_sha` matches `contract/SPEC_HASH`.
 - **Blocker Status:** BH items in `NEEDS_HUMAN.md` strictly preserved; BH-001 resolved via Gate 4 pass; BH-002, BH-003, BH-004 remain pending live model execution.
