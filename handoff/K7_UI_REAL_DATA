@@ -1,0 +1,13 @@
+stage: K7
+owner: nikhil
+status: DONE
+completed_at: 2026-11-21T12:08:00Z
+work_commit: 265a39417fc081bdc4828d19f045b95e3871f7cd
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Real pilot data and truthful hero wired to demo candidate strong_a/A/3 (Rule R8)
+hero_label: real model finding
+verify: pass
+check_api: pass
+demo_candidate: strong_a/A/3
+failing_rule: R8
+classification: a
