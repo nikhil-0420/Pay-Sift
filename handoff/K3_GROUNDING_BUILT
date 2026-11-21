@@ -1,0 +1,10 @@
+stage: K3
+owner: nikhil
+status: DONE
+completed_at: 2026-11-21T07:46:00Z
+work_commit: d5f6190e68ccc93094c16b1e841941ee1eec3f58
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: You.com grounding layer built, queries defined, cache populated, API and repair integration complete
+rules_fetched: 11
+you_calls_used: 30
+judged: false
