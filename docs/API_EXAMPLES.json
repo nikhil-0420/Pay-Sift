@@ -1077,5 +1077,95 @@
     "body": {
       "detail": "Invalid candidate_id format (path traversal characters forbidden)."
     }
+  },
+  "GET /evidence": {
+    "status": 200,
+    "body": {
+      "generated_at": "2026-11-21T10:06:59.485606+00:00",
+      "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+      "provider": "you.com",
+      "rules_count": 11,
+      "rule_ids": [
+        "R0",
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R7",
+        "R8",
+        "R9",
+        "R10"
+      ]
+    }
+  },
+  "GET /evidence/{rule_id}": {
+    "status": 200,
+    "body": {
+      "title": "Signature Verification",
+      "label": "SUPPORTED",
+      "convention": false,
+      "human_reviewed": false,
+      "sources": [
+        {
+          "id": "R1_s1",
+          "url": "https://docs.stripe.com/webhooks/signature",
+          "title": "Stripe Webhook Signatures",
+          "snippet": "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes. Do not verify signature over re-serialized JSON.",
+          "rank": 1,
+          "query": "site:docs.stripe.com/webhooks verify signature raw request body hmac sha256 stripe test",
+          "retrieved_at": "2026-11-21T07:38:51.048378+00:00",
+          "provider": "you.com"
+        },
+        {
+          "id": "R1_s2",
+          "url": "https://razorpay.com/docs/webhooks",
+          "title": "Razorpay Webhooks",
+          "snippet": "Compute the signature using hex digest of the raw request body.",
+          "rank": 2,
+          "query": "site:docs.stripe.com/webhooks verify signature raw request body hmac sha256 stripe test",
+          "retrieved_at": "2026-11-21T07:38:51.048378+00:00",
+          "provider": "you.com"
+        }
+      ],
+      "sources_used": [
+        "R1_s1"
+      ],
+      "quote": "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes. Do not verify signature over re-serialized JSON.",
+      "reason": "The retrieved documentation explicitly supports the requirement to compute the HMAC-SHA256 signature using the exact raw body bytes and explicitly warns against using re-serialized JSON.",
+      "judge": {
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 393,
+          "completion_tokens": 109,
+          "total_tokens": 502
+        },
+        "timestamp": "2026-11-21T08:40:21.423168+00:00"
+      }
+    }
+  },
+  "POST /evidence/search": {
+    "request_body": {
+      "rule_id": "R1",
+      "extra_terms": "stripe test"
+    },
+    "status": 200,
+    "body": {
+      "status": "ok",
+      "rule_id": "R1",
+      "sources_retrieved": 2,
+      "sample_source": {
+        "id": "R1_s1",
+        "url": "https://docs.stripe.com/webhooks/signature",
+        "title": "Stripe Webhook Signatures",
+        "snippet": "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes. Do not verify signature over re-serialized JSON.",
+        "rank": 1,
+        "query": "site:docs.stripe.com/webhooks verify signature raw request body hmac sha256 stripe test",
+        "retrieved_at": "2026-11-21T07:38:51.048378+00:00",
+        "provider": "you.com"
+      }
+    }
   }
 }

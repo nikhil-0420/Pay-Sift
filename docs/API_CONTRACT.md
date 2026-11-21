@@ -210,8 +210,147 @@ Validation errors (HTTP 422) return structured detail list:
 
 ---
 
-### 7. Grounding & Evidence Endpoints
-- **Path:** `GET /evidence/rules`
-- **Description:** Returns grounding sources, queries, and You.com citations for all contract rules.
-- **Path:** `GET /evidence/rules/{rule_id}`
-- **Description:** Returns grounding cache and citations for specific rule (e.g. `R1`).
+### 7. Grounding & Evidence Endpoints (You.com Layer)
+
+PaySift includes a live documentation grounding layer (`api/evidence.py`) that queries You.com for web documentation and official API references supporting or challenging contract rules.
+
+#### 7.1 Complete Grounding Artifact
+- **Path:** `GET /evidence`
+- **Description:** Returns the complete grounding artifact (`runs/grounding.json`), including rule text, citations, search queries, and LLM judge verdicts for all rules (R0 through R10).
+- **Request Body:** None
+- **Response (HTTP 200):**
+```json
+{
+  "generated_at": "2026-11-21T08:40:21.423168+00:00",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "provider": "you.com",
+  "rules": {
+    "R1": {
+      "title": "Signature Verification",
+      "label": "SUPPORTED",
+      "convention": false,
+      "human_reviewed": false,
+      "sources": [
+        {
+          "id": "R1_s1",
+          "url": "https://docs.stripe.com/webhooks/signature",
+          "title": "Stripe Webhook Signatures",
+          "snippet": "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes.",
+          "rank": 1,
+          "query": "site:docs.stripe.com/webhooks verify signature raw request body hmac sha256",
+          "retrieved_at": "2026-11-21T07:38:51.048378+00:00",
+          "provider": "you.com"
+        }
+      ],
+      "sources_used": ["R1_s1"],
+      "quote": "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes. Do not verify signature over re-serialized JSON.",
+      "reason": "The retrieved documentation explicitly supports the requirement to compute the HMAC-SHA256 signature using the exact raw body bytes.",
+      "judge": {
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 393,
+          "completion_tokens": 109,
+          "total_tokens": 502
+        },
+        "timestamp": "2026-11-21T08:40:21.423168+00:00"
+      }
+    }
+  }
+}
+```
+- **Errors:**
+  - `404 Not Found`: `runs/grounding.json` missing (run `python cli.py ground --fetch`).
+  - `500 Internal Server Error`: Disk read / JSON deserialization error.
+
+#### 7.2 Single Rule Evidence
+- **Path:** `GET /evidence/{rule_id}`
+- **Description:** Returns evidence citations, quotes, judge verdict, and review status for a single rule.
+- **Path Parameters:**
+  - `rule_id` (string, required): Specification rule ID matching regex `^R(10|[0-9])$`.
+- **Request Body:** None
+- **Response (HTTP 200):**
+```json
+{
+  "title": "Signature Verification",
+  "label": "SUPPORTED",
+  "convention": false,
+  "human_reviewed": false,
+  "sources": [
+    {
+      "id": "R1_s1",
+      "url": "https://docs.stripe.com/webhooks/signature",
+      "title": "Stripe Webhook Signatures",
+      "snippet": "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes.",
+      "rank": 1,
+      "query": "site:docs.stripe.com/webhooks verify signature raw request body hmac sha256",
+      "retrieved_at": "2026-11-21T07:38:51.048378+00:00",
+      "provider": "you.com"
+    }
+  ],
+  "sources_used": ["R1_s1"],
+  "quote": "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes. Do not verify signature over re-serialized JSON.",
+  "reason": "The retrieved documentation explicitly supports the requirement to compute the HMAC-SHA256 signature using the exact raw body bytes.",
+  "judge": {
+    "model": "gemini-3.5-flash-lite",
+    "temperature": 0.0,
+    "token_usage": {
+      "prompt_tokens": 393,
+      "completion_tokens": 109,
+      "total_tokens": 502
+    },
+    "timestamp": "2026-11-21T08:40:21.423168+00:00"
+  }
+}
+```
+- **Errors:**
+  - `400 Bad Request`: `rule_id` does not match regex `^R(10|[0-9])$`.
+  - `404 Not Found`: Rule ID not found in `runs/grounding.json` or cache.
+  - `500 Internal Server Error`: Disk read error.
+
+#### 7.3 Live Search & Re-Grounding
+- **Path:** `POST /evidence/search`
+- **Description:** Triggers an on-demand You.com search for a rule with optional extra search terms, updates `grounding/cache/{rule_id}.json`, and rebuilds `runs/grounding.json`.
+- **Rate Limit:** Per-process sliding window limit of 10 calls per 60 seconds (`429 Too Many Requests`).
+- **Request Body:**
+```json
+{
+  "rule_id": "R1",
+  "extra_terms": "stripe test"
+}
+```
+- **Fields:**
+  - `rule_id` (string, required): Specification rule ID matching regex `^R(10|[0-9])$`.
+  - `extra_terms` (string, optional): Extra terms to augment queries (max 80 chars, sanitized).
+- **Response (HTTP 200):**
+```json
+{
+  "status": "ok",
+  "rule_id": "R1",
+  "sources_retrieved": 2,
+  "data": {
+    "rule_id": "R1",
+    "rule_text": "Webhook endpoint MUST verify signature...",
+    "rule_text_sha": "d3b07384d113edec49eaa6238ad5ff00",
+    "queries": ["site:docs.stripe.com/webhooks verify signature raw request body hmac sha256 stripe test"],
+    "sources": [
+      {
+        "id": "R1_s1",
+        "url": "https://docs.stripe.com/webhooks/signature",
+        "title": "Stripe Webhook Signatures",
+        "snippet": "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes.",
+        "rank": 1,
+        "query": "site:docs.stripe.com/webhooks verify signature raw request body hmac sha256 stripe test",
+        "retrieved_at": "2026-11-21T07:38:51.048378+00:00",
+        "provider": "you.com"
+      }
+    ]
+  }
+}
+```
+- **Errors:**
+  - `400 Bad Request`: Malformed `rule_id` or `extra_terms` exceeds 80 characters.
+  - `404 Not Found`: Rule ID not defined in `grounding/queries.yaml`.
+  - `429 Too Many Requests`: Sliding-window rate limit (10 calls/min) or upstream You.com call cap exceeded.
+  - `502 Bad Gateway`: Upstream search request failed.
+  - `503 Service Unavailable`: `YDC_API_KEY` is missing / not configured on the server.
