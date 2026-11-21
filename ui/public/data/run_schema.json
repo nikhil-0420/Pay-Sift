@@ -1,0 +1,163 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PaySiftRunJSON_v1.1",
+  "type": "object",
+  "required": [
+    "run_id",
+    "contract_version",
+    "spec_sha",
+    "oracle_sha",
+    "created_at",
+    "candidate",
+    "harness",
+    "seeds",
+    "results",
+    "concurrency",
+    "failures",
+    "noncompliant",
+    "repair_of"
+  ],
+  "properties": {
+    "run_id": { "type": "string" },
+    "contract_version": { "type": "string" },
+    "spec_sha": { "type": "string" },
+    "oracle_sha": { "type": "string" },
+    "created_at": { "type": "string" },
+    "candidate": {
+      "type": "object",
+      "required": ["id", "model", "condition", "sample", "sha256", "source", "label"],
+      "properties": {
+        "id": { "type": "string" },
+        "model": { "type": "string" },
+        "condition": { "type": "string", "enum": ["A", "B", "-"] },
+        "sample": { "type": ["integer", "null"] },
+        "sha256": { "type": "string" },
+        "source": {
+          "type": "string",
+          "enum": ["live", "pre-run", "reference", "mutant", "extra-mutant", "stub"]
+        },
+        "label": { "type": "string" }
+      }
+    },
+    "harness": {
+      "type": "object",
+      "required": ["mode_set", "docker", "cpus"],
+      "properties": {
+        "mode_set": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["normal", "restart", "concurrency"] }
+        },
+        "docker": { "type": "boolean" },
+        "cpus": { "type": "integer" }
+      }
+    },
+    "seeds": {
+      "type": "array",
+      "items": { "type": "integer" },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "results": {
+      "type": "object",
+      "required": ["I1_signature", "I2_idempotency", "I3_conservation", "I4_bounds", "I5_interface"],
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "normal": {
+            "type": ["object", "null"],
+            "properties": {
+              "passed": { "type": "integer" },
+              "failed": { "type": "integer" }
+            },
+            "required": ["passed", "failed"]
+          },
+          "restart": {
+            "type": ["object", "null"],
+            "properties": {
+              "passed": { "type": "integer" },
+              "failed": { "type": "integer" }
+            },
+            "required": ["passed", "failed"]
+          }
+        }
+      }
+    },
+    "concurrency": {
+      "type": "object",
+      "required": ["scenario_A", "scenario_B"],
+      "properties": {
+        "scenario_A": {
+          "type": "object",
+          "required": ["trials", "failed", "warnings"],
+          "properties": {
+            "trials": { "type": "integer" },
+            "failed": { "type": "integer" },
+            "warnings": { "type": "integer" }
+          }
+        },
+        "scenario_B": {
+          "type": "object",
+          "required": ["trials", "failed", "warnings"],
+          "properties": {
+            "trials": { "type": "integer" },
+            "failed": { "type": "integer" },
+            "warnings": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "invariant",
+          "severity",
+          "rule",
+          "mode",
+          "seed",
+          "first_bad_step",
+          "stream",
+          "minimal_stream",
+          "one_minimal",
+          "shrink_history",
+          "expected",
+          "observed",
+          "explanation",
+          "classification"
+        ],
+        "properties": {
+          "invariant": { "type": "string" },
+          "severity": { "type": "string", "enum": ["financial", "interface"] },
+          "rule": { "type": "string" },
+          "mode": { "type": "string" },
+          "seed": { "type": ["integer", "null"] },
+          "first_bad_step": { "type": "integer" },
+          "stream": { "type": "array" },
+          "minimal_stream": { "type": "array" },
+          "one_minimal": { "type": "boolean" },
+          "shrink_history": { "type": "array" },
+          "expected": { "type": "object" },
+          "observed": { "type": "object" },
+          "explanation": { "type": "string" },
+          "evidence_refs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "classification": {
+            "type": "object",
+            "required": ["label", "by"],
+            "properties": {
+              "label": { "type": "string", "enum": ["a", "b", "c", "d", "unreviewed"] },
+              "by": { "type": "string", "enum": ["agent-proposed", "human"] },
+              "note": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "noncompliant": { "type": ["object", "null"] },
+    "repair_of": { "type": ["string", "null"] },
+    "kill_matrix": { "type": "object" }
+  }
+}

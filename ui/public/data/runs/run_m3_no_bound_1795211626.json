@@ -1,0 +1,250 @@
+{
+  "run_id": "run_m3_no_bound_1795211626",
+  "contract_version": "1.0",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "oracle_sha": "d2fb0681feeaca1190c9b092daf8aea126b409472143089acf42888f81601e26",
+  "created_at": "2026-11-20T21:53:46.208627+00:00",
+  "candidate": {
+    "id": "m3_no_bound",
+    "model": "reference",
+    "condition": "-",
+    "sample": null,
+    "sha256": "c4d3acd8ea84538bf9a5fa9aefc8acd93423edbefea03050c5f397c816ebd42e",
+    "source": "reference",
+    "label": "Candidate m3_no_bound"
+  },
+  "harness": {
+    "mode_set": [
+      "normal"
+    ],
+    "docker": false,
+    "cpus": 1
+  },
+  "seeds": [
+    2,
+    2
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 1,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 1,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 1,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 0,
+        "failed": 1
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 1,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [
+    {
+      "invariant": "I4_bounds",
+      "severity": "financial",
+      "rule": "R6",
+      "mode": "normal",
+      "seed": 2,
+      "first_bad_step": 5,
+      "stream": [
+        {
+          "amount_paise": 100000,
+          "event_id": "s2_cap_base",
+          "payment_id": "pay_2_rfd",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 20000,
+          "event_id": "s2_rfd_0",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_0",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 20000,
+          "event_id": "s2_rfd_1",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_1",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 20000,
+          "event_id": "s2_rfd_2",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_2",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s2_rfd_3",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_3",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 5000,
+          "event_id": "s2_final_over",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_over",
+          "type": "refund.processed"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_2_rfd",
+            "captured_paise": 100000,
+            "refunded_paise": 100000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "capture",
+            "amount_paise": 100000,
+            "event_id": "s2_cap_base"
+          },
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_0"
+          },
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_1"
+          },
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_2"
+          },
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 40000,
+            "event_id": "s2_rfd_3"
+          }
+        ],
+        "summary": {
+          "pay_2_rfd": {
+            "captures_count": 1,
+            "captures_sum": 100000,
+            "refunds_count": 4,
+            "refunds_sum": 100000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_2_rfd",
+            "captured_paise": 100000,
+            "refunded_paise": 105000
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_2_rfd",
+            "kind": "capture",
+            "amount_paise": 100000,
+            "event_id": "s2_cap_base"
+          },
+          {
+            "entry_id": 2,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_0"
+          },
+          {
+            "entry_id": 3,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_1"
+          },
+          {
+            "entry_id": 4,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_2"
+          },
+          {
+            "entry_id": 5,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 40000,
+            "event_id": "s2_rfd_3"
+          },
+          {
+            "entry_id": 6,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 5000,
+            "event_id": "s2_final_over"
+          }
+        ],
+        "summary": {
+          "pay_2_rfd": {
+            "captures_count": 1,
+            "captures_sum": 100000,
+            "refunds_count": 5,
+            "refunds_sum": 105000
+          }
+        }
+      },
+      "explanation": "Step 5: balance mismatch for 'pay_2_rfd'. Expected captured=100000, refunded=100000; Observed captured=100000, refunded=105000 (R6).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 2 failed at step 5"
+      }
+    }
+  ],
+  "noncompliant": null,
+  "repair_of": null
+}

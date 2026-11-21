@@ -1,0 +1,491 @@
+{
+  "run_id": "run_m1_no_dedupe_1795216867",
+  "contract_version": "1.0",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+  "created_at": "2026-11-20T23:21:07.090402+00:00",
+  "candidate": {
+    "id": "m1_no_dedupe",
+    "model": "reference",
+    "condition": "-",
+    "sample": null,
+    "sha256": "dc2c16deef610589d358dd4636a85babe73f1c3d8b785bc13adc81b5cbc9ee65",
+    "source": "mutant",
+    "label": "hand-written mutant, not model output"
+  },
+  "harness": {
+    "mode_set": [
+      "normal"
+    ],
+    "docker": false,
+    "cpus": 1
+  },
+  "seeds": [
+    0,
+    0
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 1,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 0,
+        "failed": 1
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 0,
+        "failed": 1
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 1,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 1,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R3",
+      "mode": "normal",
+      "seed": 0,
+      "first_bad_step": 1,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+          "tag": "capture_s0_cap_0",
+          "amount_paise": 56125,
+          "event_id": "s0_cap_0",
+          "payment_id": "pay_0_0",
+          "type": "payment.captured",
+          "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+          "tag": "capture_s0_cap_0_duplicate",
+          "amount_paise": 56125,
+          "event_id": "s0_cap_0",
+          "payment_id": "pay_0_0",
+          "type": "payment.captured",
+          "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwNzU1LCJldmVudF9pZCI6InMwX2NhcF8yIiwicGF5bWVudF9pZCI6InBheV8wXzIiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "0806c2f907990263ef324793720a3b356bb304804fafa89d6583a45fbe659628",
+          "tag": "capture_s0_cap_2",
+          "amount_paise": 40755,
+          "event_id": "s0_cap_2",
+          "payment_id": "pay_0_2",
+          "type": "payment.captured",
+          "summary": "payment.captured s0_cap_2 (Rs 407.55)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQ3OTMwLCJldmVudF9pZCI6InMwX2NhcF8zIiwicGF5bWVudF9pZCI6InBheV8wXzMiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "e2693c50a6e527611fdf00c3224ddd2f8923b08e832ba43f6bdbbcbd4cf3df70",
+          "tag": "capture_s0_cap_3",
+          "amount_paise": 47930,
+          "event_id": "s0_cap_3",
+          "payment_id": "pay_0_3",
+          "type": "payment.captured",
+          "summary": "payment.captured s0_cap_3 (Rs 479.30)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI5NjMxLCJldmVudF9pZCI6InMwX2NhcF80IiwicGF5bWVudF9pZCI6InBheV8wXzQiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "5a42d236829c55a3a8e8eabcf7d7f5ec03b7850c57d2b2b1ca84e5d364c5b498",
+          "tag": "capture_s0_cap_4",
+          "amount_paise": 29631,
+          "event_id": "s0_cap_4",
+          "payment_id": "pay_0_4",
+          "type": "payment.captured",
+          "summary": "payment.captured s0_cap_4 (Rs 296.31)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjM3OTQxLCJldmVudF9pZCI6InMwX2NhcF81IiwicGF5bWVudF9pZCI6InBheV8wXzUiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "20b6a0961389760a9875ac76269a3e8e204cb65559d286950f1692f16a5439c1",
+          "tag": "capture_s0_cap_5",
+          "amount_paise": 37941,
+          "event_id": "s0_cap_5",
+          "payment_id": "pay_0_5",
+          "type": "payment.captured",
+          "summary": "payment.captured s0_cap_5 (Rs 379.41)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+          "tag": "capture_s0_cap_0_duplicate",
+          "amount_paise": 56125,
+          "event_id": "s0_cap_0",
+          "payment_id": "pay_0_0",
+          "type": "payment.captured",
+          "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMzODM0LCJldmVudF9pZCI6InMwX2NhcF83IiwicGF5bWVudF9pZCI6InBheV8wXzciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "e20e7f595bfd2c14b3595ba04602eecbcb6c47f0cdc2cdb9e6facb1aab469821",
+          "tag": "capture_s0_cap_7",
+          "amount_paise": 33834,
+          "event_id": "s0_cap_7",
+          "payment_id": "pay_0_7",
+          "type": "payment.captured",
+          "summary": "payment.captured s0_cap_7 (Rs 338.34)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjcwODA0LCJldmVudF9pZCI6InMwX2NhcF84IiwicGF5bWVudF9pZCI6InBheV8wXzgiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "f8594c76d65a8a91406cb94968af79c22fdbda89be13a9142fd0c88c2ece8ca1",
+          "tag": "capture_s0_cap_8",
+          "amount_paise": 70804,
+          "event_id": "s0_cap_8",
+          "payment_id": "pay_0_8",
+          "type": "payment.captured",
+          "summary": "payment.captured s0_cap_8 (Rs 708.04)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjc5ODkyLCJldmVudF9pZCI6InMwX2NhcF85IiwicGF5bWVudF9pZCI6InBheV8wXzkiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "7ae0cb3b3826f25074c7267706e36602541473b5d9607fd26091cb4d38298dec",
+          "tag": "capture_s0_cap_9",
+          "amount_paise": 79892,
+          "event_id": "s0_cap_9",
+          "payment_id": "pay_0_9",
+          "type": "payment.captured",
+          "summary": "payment.captured s0_cap_9 (Rs 798.92)"
+        }
+      ],
+      "minimal_stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+          "tag": "capture_s0_cap_0",
+          "amount_paise": 56125,
+          "event_id": "s0_cap_0",
+          "payment_id": "pay_0_0",
+          "type": "payment.captured",
+          "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+          "tag": "capture_s0_cap_0_duplicate",
+          "amount_paise": 56125,
+          "event_id": "s0_cap_0",
+          "payment_id": "pay_0_0",
+          "type": "payment.captured",
+          "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+        }
+      ],
+      "one_minimal": true,
+      "shrink_history": [
+        [
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+            "tag": "capture_s0_cap_0",
+            "amount_paise": 56125,
+            "event_id": "s0_cap_0",
+            "payment_id": "pay_0_0",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+            "tag": "capture_s0_cap_0_duplicate",
+            "amount_paise": 56125,
+            "event_id": "s0_cap_0",
+            "payment_id": "pay_0_0",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwNzU1LCJldmVudF9pZCI6InMwX2NhcF8yIiwicGF5bWVudF9pZCI6InBheV8wXzIiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "0806c2f907990263ef324793720a3b356bb304804fafa89d6583a45fbe659628",
+            "tag": "capture_s0_cap_2",
+            "amount_paise": 40755,
+            "event_id": "s0_cap_2",
+            "payment_id": "pay_0_2",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_2 (Rs 407.55)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQ3OTMwLCJldmVudF9pZCI6InMwX2NhcF8zIiwicGF5bWVudF9pZCI6InBheV8wXzMiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "e2693c50a6e527611fdf00c3224ddd2f8923b08e832ba43f6bdbbcbd4cf3df70",
+            "tag": "capture_s0_cap_3",
+            "amount_paise": 47930,
+            "event_id": "s0_cap_3",
+            "payment_id": "pay_0_3",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_3 (Rs 479.30)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI5NjMxLCJldmVudF9pZCI6InMwX2NhcF80IiwicGF5bWVudF9pZCI6InBheV8wXzQiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "5a42d236829c55a3a8e8eabcf7d7f5ec03b7850c57d2b2b1ca84e5d364c5b498",
+            "tag": "capture_s0_cap_4",
+            "amount_paise": 29631,
+            "event_id": "s0_cap_4",
+            "payment_id": "pay_0_4",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_4 (Rs 296.31)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjM3OTQxLCJldmVudF9pZCI6InMwX2NhcF81IiwicGF5bWVudF9pZCI6InBheV8wXzUiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "20b6a0961389760a9875ac76269a3e8e204cb65559d286950f1692f16a5439c1",
+            "tag": "capture_s0_cap_5",
+            "amount_paise": 37941,
+            "event_id": "s0_cap_5",
+            "payment_id": "pay_0_5",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_5 (Rs 379.41)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+            "tag": "capture_s0_cap_0_duplicate",
+            "amount_paise": 56125,
+            "event_id": "s0_cap_0",
+            "payment_id": "pay_0_0",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMzODM0LCJldmVudF9pZCI6InMwX2NhcF83IiwicGF5bWVudF9pZCI6InBheV8wXzciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "e20e7f595bfd2c14b3595ba04602eecbcb6c47f0cdc2cdb9e6facb1aab469821",
+            "tag": "capture_s0_cap_7",
+            "amount_paise": 33834,
+            "event_id": "s0_cap_7",
+            "payment_id": "pay_0_7",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_7 (Rs 338.34)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjcwODA0LCJldmVudF9pZCI6InMwX2NhcF84IiwicGF5bWVudF9pZCI6InBheV8wXzgiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "f8594c76d65a8a91406cb94968af79c22fdbda89be13a9142fd0c88c2ece8ca1",
+            "tag": "capture_s0_cap_8",
+            "amount_paise": 70804,
+            "event_id": "s0_cap_8",
+            "payment_id": "pay_0_8",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_8 (Rs 708.04)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjc5ODkyLCJldmVudF9pZCI6InMwX2NhcF85IiwicGF5bWVudF9pZCI6InBheV8wXzkiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "7ae0cb3b3826f25074c7267706e36602541473b5d9607fd26091cb4d38298dec",
+            "tag": "capture_s0_cap_9",
+            "amount_paise": 79892,
+            "event_id": "s0_cap_9",
+            "payment_id": "pay_0_9",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_9 (Rs 798.92)"
+          }
+        ],
+        [
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+            "tag": "capture_s0_cap_0",
+            "amount_paise": 56125,
+            "event_id": "s0_cap_0",
+            "payment_id": "pay_0_0",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+            "tag": "capture_s0_cap_0_duplicate",
+            "amount_paise": 56125,
+            "event_id": "s0_cap_0",
+            "payment_id": "pay_0_0",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwNzU1LCJldmVudF9pZCI6InMwX2NhcF8yIiwicGF5bWVudF9pZCI6InBheV8wXzIiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "0806c2f907990263ef324793720a3b356bb304804fafa89d6583a45fbe659628",
+            "tag": "capture_s0_cap_2",
+            "amount_paise": 40755,
+            "event_id": "s0_cap_2",
+            "payment_id": "pay_0_2",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_2 (Rs 407.55)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQ3OTMwLCJldmVudF9pZCI6InMwX2NhcF8zIiwicGF5bWVudF9pZCI6InBheV8wXzMiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "e2693c50a6e527611fdf00c3224ddd2f8923b08e832ba43f6bdbbcbd4cf3df70",
+            "tag": "capture_s0_cap_3",
+            "amount_paise": 47930,
+            "event_id": "s0_cap_3",
+            "payment_id": "pay_0_3",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_3 (Rs 479.30)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI5NjMxLCJldmVudF9pZCI6InMwX2NhcF80IiwicGF5bWVudF9pZCI6InBheV8wXzQiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "5a42d236829c55a3a8e8eabcf7d7f5ec03b7850c57d2b2b1ca84e5d364c5b498",
+            "tag": "capture_s0_cap_4",
+            "amount_paise": 29631,
+            "event_id": "s0_cap_4",
+            "payment_id": "pay_0_4",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_4 (Rs 296.31)"
+          }
+        ],
+        [
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+            "tag": "capture_s0_cap_0",
+            "amount_paise": 56125,
+            "event_id": "s0_cap_0",
+            "payment_id": "pay_0_0",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+            "tag": "capture_s0_cap_0_duplicate",
+            "amount_paise": 56125,
+            "event_id": "s0_cap_0",
+            "payment_id": "pay_0_0",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI5NjMxLCJldmVudF9pZCI6InMwX2NhcF80IiwicGF5bWVudF9pZCI6InBheV8wXzQiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "5a42d236829c55a3a8e8eabcf7d7f5ec03b7850c57d2b2b1ca84e5d364c5b498",
+            "tag": "capture_s0_cap_4",
+            "amount_paise": 29631,
+            "event_id": "s0_cap_4",
+            "payment_id": "pay_0_4",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_4 (Rs 296.31)"
+          }
+        ],
+        [
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+            "tag": "capture_s0_cap_0",
+            "amount_paise": 56125,
+            "event_id": "s0_cap_0",
+            "payment_id": "pay_0_0",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+            "tag": "capture_s0_cap_0_duplicate",
+            "amount_paise": 56125,
+            "event_id": "s0_cap_0",
+            "payment_id": "pay_0_0",
+            "type": "payment.captured",
+            "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+          }
+        ]
+      ],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_0_0",
+            "captured_paise": 56125,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_0_0",
+            "kind": "capture",
+            "amount_paise": 56125,
+            "event_id": "s0_cap_0"
+          }
+        ],
+        "summary": {
+          "pay_0_0": {
+            "captures_count": 1,
+            "captures_sum": 56125,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_0_0",
+            "captured_paise": 112250,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_0_0",
+            "kind": "capture",
+            "amount_paise": 56125,
+            "event_id": "s0_cap_0"
+          },
+          {
+            "entry_id": 2,
+            "payment_id": "pay_0_0",
+            "kind": "capture",
+            "amount_paise": 56125,
+            "event_id": "s0_cap_0"
+          }
+        ],
+        "summary": {
+          "pay_0_0": {
+            "captures_count": 2,
+            "captures_sum": 112250,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "capture s0_cap_0 (Rs 561.25) delivered twice: the ledger shows 2 capture entries totaling Rs 1,122.50; the model expects 1 entry totaling Rs 561.25. Rule R3.",
+      "classification": {
+        "label": "a",
+        "by": "agent-proposed",
+        "note": "Hand-written mutant m1_no_dedupe: duplicate capture accepted violating Rule R3"
+      },
+      "repro": {
+        "runs": 10,
+        "reproduced": 10
+      }
+    }
+  ],
+  "noncompliant": null,
+  "repair_of": null
+}

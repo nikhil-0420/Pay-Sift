@@ -1,0 +1,843 @@
+{
+  "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "created_at": "2026-11-20T22:16:31.131849+00:00",
+  "rows": [
+    {
+      "id": "ref",
+      "label": "handler_ref.py",
+      "source": "reference",
+      "expected_rule": "none",
+      "expected_invariant": "none",
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {
+        "scenario_A": {
+          "trials": 50,
+          "failed": 0,
+          "warnings": 0,
+          "evidence": null
+        },
+        "scenario_B": {
+          "trials": 50,
+          "failed": 0,
+          "warnings": 0,
+          "evidence": null
+        }
+      },
+      "killed": false,
+      "rules_hit": [],
+      "notes": "Reference implementation clean across all invariants and concurrency trials"
+    },
+    {
+      "id": "m1",
+      "label": "no dedupe",
+      "source": "mutant",
+      "expected_rule": "R3",
+      "expected_invariant": "I2_idempotency",
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 90,
+            "failed": 10
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 70,
+            "failed": 30
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 71,
+            "failed": 29
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 80,
+            "failed": 20
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {},
+      "killed": true,
+      "rules_hit": [
+        "R3",
+        "R4"
+      ],
+      "notes": "self-attested by the agent; omits deduplication check and applies duplicate captures"
+    },
+    {
+      "id": "m2",
+      "label": "ledger written, payments not updated",
+      "source": "mutant",
+      "expected_rule": "R7",
+      "expected_invariant": "I3_conservation",
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 0,
+            "failed": 100
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {},
+      "killed": true,
+      "rules_hit": [
+        "R7"
+      ],
+      "notes": "self-attested by the agent; writes ledger entries but leaves payments balance out of sync"
+    },
+    {
+      "id": "m3",
+      "label": "no refund bound",
+      "source": "mutant",
+      "expected_rule": "R6",
+      "expected_invariant": "I4_bounds",
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 96,
+            "failed": 4
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 96,
+            "failed": 4
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 94,
+            "failed": 6
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 84,
+            "failed": 16
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {},
+      "killed": true,
+      "rules_hit": [
+        "R6"
+      ],
+      "notes": "self-attested by the agent; omits refunded + amount <= captured check, permitting over-refunds"
+    },
+    {
+      "id": "m4",
+      "label": "accepts negative amount",
+      "source": "mutant",
+      "expected_rule": "R2",
+      "expected_invariant": "I4_bounds",
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 90,
+            "failed": 10
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 90,
+            "failed": 10
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {},
+      "killed": true,
+      "rules_hit": [
+        "R2"
+      ],
+      "notes": "self-attested by the agent; relaxes lower bound check on amount_paise"
+    },
+    {
+      "id": "m5",
+      "label": "rejected events consume event_id",
+      "source": "mutant",
+      "expected_rule": "R8",
+      "expected_invariant": "I2_idempotency",
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 90,
+            "failed": 10
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 80,
+            "failed": 20
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {},
+      "killed": true,
+      "rules_hit": [
+        "R8"
+      ],
+      "notes": "self-attested by the agent; records rejected event_id into dedupe table so redelivery is marked duplicate"
+    },
+    {
+      "id": "m6",
+      "label": "verifies signature over json.dumps(parsed)",
+      "source": "mutant",
+      "expected_rule": "R1",
+      "expected_invariant": "I1_integrity",
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 0,
+            "failed": 100
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {},
+      "killed": true,
+      "rules_hit": [
+        "R1"
+      ],
+      "notes": "self-attested by the agent; checks HMAC against default-spaced serialized JSON rather than raw bytes"
+    },
+    {
+      "id": "m7",
+      "label": "state stored in memory, lost on restart",
+      "source": "mutant",
+      "expected_rule": "R9",
+      "expected_invariant": "I2_idempotency",
+      "results": {
+        "I1_signature": {
+          "normal": null,
+          "restart": {
+            "passed": 20,
+            "failed": 0
+          }
+        },
+        "I2_idempotency": {
+          "normal": null,
+          "restart": {
+            "passed": 15,
+            "failed": 5
+          }
+        },
+        "I3_conservation": {
+          "normal": null,
+          "restart": {
+            "passed": 20,
+            "failed": 0
+          }
+        },
+        "I4_bounds": {
+          "normal": null,
+          "restart": {
+            "passed": 15,
+            "failed": 5
+          }
+        },
+        "I5_interface": {
+          "normal": null,
+          "restart": {
+            "passed": 10,
+            "failed": 10
+          }
+        }
+      },
+      "concurrency": {},
+      "killed": true,
+      "rules_hit": [
+        "R0",
+        "R9"
+      ],
+      "notes": "self-attested by the agent; module-level set() dedupe lost across fresh processes"
+    },
+    {
+      "id": "m8",
+      "label": "check-then-insert without transaction",
+      "source": "mutant",
+      "expected_rule": "R10",
+      "expected_invariant": "I2_idempotency",
+      "results": {},
+      "concurrency": {
+        "scenario_A": {
+          "trials": 50,
+          "failed": 10,
+          "warnings": 0,
+          "evidence": {
+            "scenario": "scenario_A",
+            "expected": {
+              "captures_count": 1,
+              "captured_paise": 50000
+            },
+            "observed": {
+              "captures_count": 7,
+              "captured_paise": 50000,
+              "ledger": [
+                {
+                  "entry_id": 1,
+                  "payment_id": "pay_conc_a",
+                  "kind": "capture",
+                  "amount_paise": 50000,
+                  "event_id": "evt_conc_a_dup"
+                },
+                {
+                  "entry_id": 2,
+                  "payment_id": "pay_conc_a",
+                  "kind": "capture",
+                  "amount_paise": 50000,
+                  "event_id": "evt_conc_a_dup"
+                },
+                {
+                  "entry_id": 3,
+                  "payment_id": "pay_conc_a",
+                  "kind": "capture",
+                  "amount_paise": 50000,
+                  "event_id": "evt_conc_a_dup"
+                },
+                {
+                  "entry_id": 4,
+                  "payment_id": "pay_conc_a",
+                  "kind": "capture",
+                  "amount_paise": 50000,
+                  "event_id": "evt_conc_a_dup"
+                },
+                {
+                  "entry_id": 5,
+                  "payment_id": "pay_conc_a",
+                  "kind": "capture",
+                  "amount_paise": 50000,
+                  "event_id": "evt_conc_a_dup"
+                },
+                {
+                  "entry_id": 6,
+                  "payment_id": "pay_conc_a",
+                  "kind": "capture",
+                  "amount_paise": 50000,
+                  "event_id": "evt_conc_a_dup"
+                },
+                {
+                  "entry_id": 7,
+                  "payment_id": "pay_conc_a",
+                  "kind": "capture",
+                  "amount_paise": 50000,
+                  "event_id": "evt_conc_a_dup"
+                }
+              ]
+            }
+          }
+        },
+        "scenario_B": {
+          "trials": 50,
+          "failed": 47,
+          "warnings": 0,
+          "evidence": {
+            "scenario": "scenario_B",
+            "expected": {
+              "refunds_count": 1,
+              "refunded_paise": 60000
+            },
+            "observed": {
+              "refunds_count": 4,
+              "refunded_paise": 240000,
+              "ledger": [
+                {
+                  "entry_id": 1,
+                  "payment_id": "pay_conc_b",
+                  "kind": "capture",
+                  "amount_paise": 100000,
+                  "event_id": "evt_cap_init"
+                },
+                {
+                  "entry_id": 2,
+                  "payment_id": "pay_conc_b",
+                  "kind": "refund",
+                  "amount_paise": 60000,
+                  "event_id": "evt_ref_y"
+                },
+                {
+                  "entry_id": 3,
+                  "payment_id": "pay_conc_b",
+                  "kind": "refund",
+                  "amount_paise": 60000,
+                  "event_id": "evt_ref_x"
+                },
+                {
+                  "entry_id": 4,
+                  "payment_id": "pay_conc_b",
+                  "kind": "refund",
+                  "amount_paise": 60000,
+                  "event_id": "evt_ref_x"
+                },
+                {
+                  "entry_id": 5,
+                  "payment_id": "pay_conc_b",
+                  "kind": "refund",
+                  "amount_paise": 60000,
+                  "event_id": "evt_ref_y"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "killed": true,
+      "rules_hit": [
+        "R10"
+      ],
+      "notes": "self-attested by the agent; autocommit statements allow duplicate capture race (window widened)"
+    },
+    {
+      "id": "m9",
+      "label": "refund bound checked in separate statement",
+      "source": "mutant",
+      "expected_rule": "R10",
+      "expected_invariant": "I4_bounds",
+      "results": {},
+      "concurrency": {
+        "scenario_A": {
+          "trials": 50,
+          "failed": 0,
+          "warnings": 0,
+          "evidence": null
+        },
+        "scenario_B": {
+          "trials": 50,
+          "failed": 50,
+          "warnings": 0,
+          "evidence": {
+            "scenario": "scenario_B",
+            "expected": {
+              "refunds_count": 1,
+              "refunded_paise": 60000
+            },
+            "observed": {
+              "refunds_count": 6,
+              "refunded_paise": 360000,
+              "ledger": [
+                {
+                  "entry_id": 1,
+                  "payment_id": "pay_conc_b",
+                  "kind": "capture",
+                  "amount_paise": 100000,
+                  "event_id": "evt_cap_init"
+                },
+                {
+                  "entry_id": 2,
+                  "payment_id": "pay_conc_b",
+                  "kind": "refund",
+                  "amount_paise": 60000,
+                  "event_id": "evt_ref_y"
+                },
+                {
+                  "entry_id": 3,
+                  "payment_id": "pay_conc_b",
+                  "kind": "refund",
+                  "amount_paise": 60000,
+                  "event_id": "evt_ref_y"
+                },
+                {
+                  "entry_id": 4,
+                  "payment_id": "pay_conc_b",
+                  "kind": "refund",
+                  "amount_paise": 60000,
+                  "event_id": "evt_ref_x"
+                },
+                {
+                  "entry_id": 5,
+                  "payment_id": "pay_conc_b",
+                  "kind": "refund",
+                  "amount_paise": 60000,
+                  "event_id": "evt_ref_y"
+                },
+                {
+                  "entry_id": 6,
+                  "payment_id": "pay_conc_b",
+                  "kind": "refund",
+                  "amount_paise": 60000,
+                  "event_id": "evt_ref_x"
+                },
+                {
+                  "entry_id": 7,
+                  "payment_id": "pay_conc_b",
+                  "kind": "refund",
+                  "amount_paise": 60000,
+                  "event_id": "evt_ref_x"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "killed": true,
+      "rules_hit": [
+        "R10"
+      ],
+      "notes": "self-attested by the agent; autocommit statements allow over-refund race (window widened)"
+    },
+    {
+      "id": "x1",
+      "label": "accepts bool as amount",
+      "source": "extra-mutant",
+      "expected_rule": "R2",
+      "expected_invariant": "I4_bounds",
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 96,
+            "failed": 4
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 96,
+            "failed": 4
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {},
+      "killed": true,
+      "rules_hit": [
+        "R2"
+      ],
+      "notes": "self-attested by the agent; accepts boolean true as integer 1"
+    },
+    {
+      "id": "x2",
+      "label": "accepts float amount",
+      "source": "extra-mutant",
+      "expected_rule": "R2",
+      "expected_invariant": "I4_bounds",
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 96,
+            "failed": 4
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 96,
+            "failed": 4
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {},
+      "killed": true,
+      "rules_hit": [
+        "R2"
+      ],
+      "notes": "self-attested by the agent; accepts float values like 5.0"
+    },
+    {
+      "id": "x3",
+      "label": "crashes on non-ASCII signature",
+      "source": "extra-mutant",
+      "expected_rule": "R0",
+      "expected_invariant": "I5_totality",
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 90,
+            "failed": 10
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {},
+      "killed": true,
+      "rules_hit": [
+        "R0"
+      ],
+      "notes": "self-attested by the agent; unhandled UnicodeEncodeError on non-ASCII signature"
+    },
+    {
+      "id": "x4",
+      "label": "verifies signature over canonical serialized JSON",
+      "source": "extra-mutant",
+      "expected_rule": "R1",
+      "expected_invariant": "I1_integrity",
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 90,
+            "failed": 10
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {},
+      "killed": true,
+      "rules_hit": [
+        "R1"
+      ],
+      "notes": "self-attested by the agent; re-serializes payload canonically; caught only by non-canonical bodies"
+    }
+  ]
+}

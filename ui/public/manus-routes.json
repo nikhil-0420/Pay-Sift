@@ -1,0 +1,19 @@
+{
+  "routes": [
+    { "path": "/", "title": "PaySift" },
+    { "path": "/runs", "title": "Findings" },
+    { "path": "/runs/:runId", "title": "Run detail" },
+    { "path": "/runs/:runId/failures/:index", "title": "Failure deep-dive" },
+    { "path": "/kill-matrix", "title": "Kill matrix" },
+    { "path": "/break", "title": "Break it" },
+    { "path": "/repair", "title": "Repair" },
+    { "path": "/pilot", "title": "Pilot" },
+    { "path": "/spec", "title": "Specification" },
+    { "path": "/method", "title": "Method" },
+    { "path": "/gaps", "title": "Questions for review" },
+    { "path": "/demo", "title": "Guided demo" },
+    { "path": "/status", "title": "Status" },
+    { "path": "/dev/contract", "title": "Contract diagnostics" },
+    { "path": "/dev/sample", "title": "Sample gallery" }
+  ]
+}

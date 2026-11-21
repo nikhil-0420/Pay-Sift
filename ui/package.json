@@ -1,0 +1,50 @@
+{
+  "name": "paysift-ui",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5173 --strictPort",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 5173 --strictPort",
+    "typecheck": "tsc -b --pretty",
+    "lint": "tsc -b --pretty",
+    "test": "vitest run",
+    "gen:types": "node scripts/gen-types.mjs",
+    "sync-data": "node scripts/sync-data.mjs",
+    "check:contract": "node scripts/check-contract.mjs",
+    "check:api": "node scripts/check-api.mjs",
+    "verify": "npm run typecheck && npm run test && npm run check:contract && npm run build",
+    "dev:managed": "vite --host 0.0.0.0 --port 3000 --strictPort"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.2.6",
+    "@fontsource-variable/inter-tight": "^5.2.6",
+    "@fontsource/jetbrains-mono": "^5.2.6",
+    "@tanstack/react-query": "^5.66.0",
+    "@tanstack/react-virtual": "^3.13.0",
+    "ajv": "^8.17.1",
+    "cmdk": "^1.1.1",
+    "dompurify": "^3.2.4",
+    "framer-motion": "^12.4.7",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^9.0.3",
+    "react-router-dom": "^6.28.1",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^3.0.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.7.0",
+    "postcss": "^8.5.33",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vitest": "^3.0.5"
+  },
+  "packageManager": "npm@10.9.9"
+}

@@ -1,0 +1,1028 @@
+{
+  "run_id": "run_m3_no_bound_1795206639",
+  "contract_version": "1.0",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "oracle_sha": "a2212b2b5ab0dbdde5ef9773ef6b17a9fab9bd46cb99fa2bbcbbb2a554e1f857",
+  "created_at": "2026-11-20T20:30:39.300511+00:00",
+  "candidate": {
+    "id": "m3_no_bound",
+    "model": "reference",
+    "condition": "-",
+    "sample": null,
+    "sha256": "c4d3acd8ea84538bf9a5fa9aefc8acd93423edbefea03050c5f397c816ebd42e",
+    "source": "reference",
+    "label": "Candidate m3_no_bound"
+  },
+  "harness": {
+    "mode_set": [
+      "normal"
+    ],
+    "docker": false,
+    "cpus": 1
+  },
+  "seeds": [
+    0,
+    9
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 10,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 9,
+        "failed": 1
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 9,
+        "failed": 1
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 8,
+        "failed": 2
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 10,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [
+    {
+      "invariant": "I4_bounds",
+      "severity": "financial",
+      "rule": "R6",
+      "mode": "normal",
+      "seed": 2,
+      "first_bad_step": 5,
+      "stream": [
+        {
+          "amount_paise": 100000,
+          "event_id": "s2_cap_base",
+          "payment_id": "pay_2_rfd",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 20000,
+          "event_id": "s2_rfd_0",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_0",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 20000,
+          "event_id": "s2_rfd_1",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_1",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 20000,
+          "event_id": "s2_rfd_2",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_2",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s2_rfd_3",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_3",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 5000,
+          "event_id": "s2_final_over",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_over",
+          "type": "refund.processed"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_2_rfd",
+            "captured_paise": 100000,
+            "refunded_paise": 100000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "capture",
+            "amount_paise": 100000,
+            "event_id": "s2_cap_base"
+          },
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_0"
+          },
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_1"
+          },
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_2"
+          },
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 40000,
+            "event_id": "s2_rfd_3"
+          }
+        ],
+        "summary": {
+          "pay_2_rfd": {
+            "captures_count": 1,
+            "captures_sum": 100000,
+            "refunds_count": 4,
+            "refunds_sum": 100000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_2_rfd",
+            "captured_paise": 100000,
+            "refunded_paise": 105000
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_2_rfd",
+            "kind": "capture",
+            "amount_paise": 100000,
+            "event_id": "s2_cap_base"
+          },
+          {
+            "entry_id": 2,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_0"
+          },
+          {
+            "entry_id": 3,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_1"
+          },
+          {
+            "entry_id": 4,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_2"
+          },
+          {
+            "entry_id": 5,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 40000,
+            "event_id": "s2_rfd_3"
+          },
+          {
+            "entry_id": 6,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 5000,
+            "event_id": "s2_final_over"
+          }
+        ],
+        "summary": {
+          "pay_2_rfd": {
+            "captures_count": 1,
+            "captures_sum": 100000,
+            "refunds_count": 5,
+            "refunds_sum": 105000
+          }
+        }
+      },
+      "explanation": "Step 5: balance mismatch for 'pay_2_rfd'. Expected captured=100000, refunded=100000; Observed captured=100000, refunded=105000 (R6).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 2 failed at step 5"
+      }
+    },
+    {
+      "invariant": "I4_bounds",
+      "severity": "financial",
+      "rule": "R6",
+      "mode": "normal",
+      "seed": 9,
+      "first_bad_step": 28,
+      "stream": [
+        {
+          "amount_paise": 55013,
+          "event_id": "s9_long_0",
+          "payment_id": "pay_long_9_0",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 20843,
+          "event_id": "s9_long_1",
+          "payment_id": "pay_long_9_1",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 80780,
+          "event_id": "s9_long_2",
+          "payment_id": "pay_long_9_2",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 10000,
+          "event_id": "s9_long_3",
+          "payment_id": "pay_long_9_0",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25360,
+          "event_id": "s9_long_4",
+          "payment_id": "pay_long_9_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 20843,
+          "event_id": "s9_long_1",
+          "payment_id": "pay_long_9_1",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25360,
+          "event_id": "s9_long_4",
+          "payment_id": "pay_long_9_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 10000,
+          "event_id": "s9_long_7",
+          "payment_id": "pay_long_9_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 51196,
+          "event_id": "s9_long_8",
+          "payment_id": "pay_long_9_4",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 37357,
+          "event_id": "s9_long_9",
+          "payment_id": "pay_long_9_5",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 9150,
+          "event_id": "s9_long_10",
+          "payment_id": "pay_long_9_4",
+          "refund_id": "r_10",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 25360,
+          "event_id": "s9_long_4",
+          "payment_id": "pay_long_9_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 55013,
+          "event_id": "s9_long_0",
+          "payment_id": "pay_long_9_0",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 10000,
+          "event_id": "s9_long_13",
+          "payment_id": "pay_long_9_1",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 32640,
+          "event_id": "s9_long_14",
+          "payment_id": "pay_long_9_5",
+          "refund_id": "r_14",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 10000,
+          "event_id": "s9_long_15",
+          "payment_id": "pay_long_9_2",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 10000,
+          "event_id": "s9_long_16",
+          "payment_id": "pay_long_9_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25661,
+          "event_id": "s9_long_17",
+          "payment_id": "pay_long_9_6",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 20690,
+          "event_id": "s9_long_18",
+          "payment_id": "pay_long_9_7",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 10000,
+          "event_id": "s9_long_19",
+          "payment_id": "pay_long_9_0",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 10000,
+          "event_id": "s9_long_20",
+          "payment_id": "pay_long_9_7",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 51029,
+          "event_id": "s9_long_21",
+          "payment_id": "pay_long_9_8",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 5253,
+          "event_id": "s9_long_22",
+          "payment_id": "pay_long_9_1",
+          "refund_id": "r_22",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 95851,
+          "event_id": "s9_long_23",
+          "payment_id": "pay_long_9_9",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 46614,
+          "event_id": "s9_long_24",
+          "payment_id": "pay_long_9_10",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30944,
+          "event_id": "s9_long_25",
+          "payment_id": "pay_long_9_11",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 22289,
+          "event_id": "s9_long_26",
+          "payment_id": "pay_long_9_12",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 37554,
+          "event_id": "s9_long_27",
+          "payment_id": "pay_long_9_9",
+          "refund_id": "r_27",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 32532,
+          "event_id": "s9_long_28",
+          "payment_id": "pay_long_9_3",
+          "refund_id": "r_28",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 45187,
+          "event_id": "s9_long_29",
+          "payment_id": "pay_long_9_13",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 14526,
+          "event_id": "s9_long_30",
+          "payment_id": "pay_long_9_1",
+          "refund_id": "r_30",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 99808,
+          "event_id": "s9_long_31",
+          "payment_id": "pay_long_9_14",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 55013,
+          "event_id": "s9_long_0",
+          "payment_id": "pay_long_9_0",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 92752,
+          "event_id": "s9_long_33",
+          "payment_id": "pay_long_9_15",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 22584,
+          "event_id": "s9_long_34",
+          "payment_id": "pay_long_9_4",
+          "refund_id": "r_34",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 20843,
+          "event_id": "s9_long_1",
+          "payment_id": "pay_long_9_1",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 72739,
+          "event_id": "s9_long_36",
+          "payment_id": "pay_long_9_16",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_long_9_0",
+            "captured_paise": 55013,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_1",
+            "captured_paise": 20843,
+            "refunded_paise": 5253
+          },
+          {
+            "payment_id": "pay_long_9_10",
+            "captured_paise": 46614,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_11",
+            "captured_paise": 30944,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_12",
+            "captured_paise": 22289,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_2",
+            "captured_paise": 80780,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_3",
+            "captured_paise": 25360,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_4",
+            "captured_paise": 51196,
+            "refunded_paise": 9150
+          },
+          {
+            "payment_id": "pay_long_9_5",
+            "captured_paise": 37357,
+            "refunded_paise": 32640
+          },
+          {
+            "payment_id": "pay_long_9_6",
+            "captured_paise": 25661,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_7",
+            "captured_paise": 20690,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_8",
+            "captured_paise": 51029,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_9",
+            "captured_paise": 95851,
+            "refunded_paise": 37554
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_long_9_0",
+            "kind": "capture",
+            "amount_paise": 55013,
+            "event_id": "s9_long_0"
+          },
+          {
+            "payment_id": "pay_long_9_1",
+            "kind": "capture",
+            "amount_paise": 20843,
+            "event_id": "s9_long_1"
+          },
+          {
+            "payment_id": "pay_long_9_2",
+            "kind": "capture",
+            "amount_paise": 80780,
+            "event_id": "s9_long_2"
+          },
+          {
+            "payment_id": "pay_long_9_3",
+            "kind": "capture",
+            "amount_paise": 25360,
+            "event_id": "s9_long_4"
+          },
+          {
+            "payment_id": "pay_long_9_4",
+            "kind": "capture",
+            "amount_paise": 51196,
+            "event_id": "s9_long_8"
+          },
+          {
+            "payment_id": "pay_long_9_5",
+            "kind": "capture",
+            "amount_paise": 37357,
+            "event_id": "s9_long_9"
+          },
+          {
+            "payment_id": "pay_long_9_4",
+            "kind": "refund",
+            "amount_paise": 9150,
+            "event_id": "s9_long_10"
+          },
+          {
+            "payment_id": "pay_long_9_5",
+            "kind": "refund",
+            "amount_paise": 32640,
+            "event_id": "s9_long_14"
+          },
+          {
+            "payment_id": "pay_long_9_6",
+            "kind": "capture",
+            "amount_paise": 25661,
+            "event_id": "s9_long_17"
+          },
+          {
+            "payment_id": "pay_long_9_7",
+            "kind": "capture",
+            "amount_paise": 20690,
+            "event_id": "s9_long_18"
+          },
+          {
+            "payment_id": "pay_long_9_8",
+            "kind": "capture",
+            "amount_paise": 51029,
+            "event_id": "s9_long_21"
+          },
+          {
+            "payment_id": "pay_long_9_1",
+            "kind": "refund",
+            "amount_paise": 5253,
+            "event_id": "s9_long_22"
+          },
+          {
+            "payment_id": "pay_long_9_9",
+            "kind": "capture",
+            "amount_paise": 95851,
+            "event_id": "s9_long_23"
+          },
+          {
+            "payment_id": "pay_long_9_10",
+            "kind": "capture",
+            "amount_paise": 46614,
+            "event_id": "s9_long_24"
+          },
+          {
+            "payment_id": "pay_long_9_11",
+            "kind": "capture",
+            "amount_paise": 30944,
+            "event_id": "s9_long_25"
+          },
+          {
+            "payment_id": "pay_long_9_12",
+            "kind": "capture",
+            "amount_paise": 22289,
+            "event_id": "s9_long_26"
+          },
+          {
+            "payment_id": "pay_long_9_9",
+            "kind": "refund",
+            "amount_paise": 37554,
+            "event_id": "s9_long_27"
+          }
+        ],
+        "summary": {
+          "pay_long_9_0": {
+            "captures_count": 1,
+            "captures_sum": 55013,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_1": {
+            "captures_count": 1,
+            "captures_sum": 20843,
+            "refunds_count": 1,
+            "refunds_sum": 5253
+          },
+          "pay_long_9_2": {
+            "captures_count": 1,
+            "captures_sum": 80780,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_3": {
+            "captures_count": 1,
+            "captures_sum": 25360,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_4": {
+            "captures_count": 1,
+            "captures_sum": 51196,
+            "refunds_count": 1,
+            "refunds_sum": 9150
+          },
+          "pay_long_9_5": {
+            "captures_count": 1,
+            "captures_sum": 37357,
+            "refunds_count": 1,
+            "refunds_sum": 32640
+          },
+          "pay_long_9_6": {
+            "captures_count": 1,
+            "captures_sum": 25661,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_7": {
+            "captures_count": 1,
+            "captures_sum": 20690,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_8": {
+            "captures_count": 1,
+            "captures_sum": 51029,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_9": {
+            "captures_count": 1,
+            "captures_sum": 95851,
+            "refunds_count": 1,
+            "refunds_sum": 37554
+          },
+          "pay_long_9_10": {
+            "captures_count": 1,
+            "captures_sum": 46614,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_11": {
+            "captures_count": 1,
+            "captures_sum": 30944,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_12": {
+            "captures_count": 1,
+            "captures_sum": 22289,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_long_9_0",
+            "captured_paise": 55013,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_1",
+            "captured_paise": 20843,
+            "refunded_paise": 5253
+          },
+          {
+            "payment_id": "pay_long_9_10",
+            "captured_paise": 46614,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_11",
+            "captured_paise": 30944,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_12",
+            "captured_paise": 22289,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_2",
+            "captured_paise": 80780,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_3",
+            "captured_paise": 25360,
+            "refunded_paise": 32532
+          },
+          {
+            "payment_id": "pay_long_9_4",
+            "captured_paise": 51196,
+            "refunded_paise": 9150
+          },
+          {
+            "payment_id": "pay_long_9_5",
+            "captured_paise": 37357,
+            "refunded_paise": 32640
+          },
+          {
+            "payment_id": "pay_long_9_6",
+            "captured_paise": 25661,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_7",
+            "captured_paise": 20690,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_8",
+            "captured_paise": 51029,
+            "refunded_paise": 0
+          },
+          {
+            "payment_id": "pay_long_9_9",
+            "captured_paise": 95851,
+            "refunded_paise": 37554
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_long_9_0",
+            "kind": "capture",
+            "amount_paise": 55013,
+            "event_id": "s9_long_0"
+          },
+          {
+            "entry_id": 2,
+            "payment_id": "pay_long_9_1",
+            "kind": "capture",
+            "amount_paise": 20843,
+            "event_id": "s9_long_1"
+          },
+          {
+            "entry_id": 3,
+            "payment_id": "pay_long_9_2",
+            "kind": "capture",
+            "amount_paise": 80780,
+            "event_id": "s9_long_2"
+          },
+          {
+            "entry_id": 4,
+            "payment_id": "pay_long_9_3",
+            "kind": "capture",
+            "amount_paise": 25360,
+            "event_id": "s9_long_4"
+          },
+          {
+            "entry_id": 5,
+            "payment_id": "pay_long_9_4",
+            "kind": "capture",
+            "amount_paise": 51196,
+            "event_id": "s9_long_8"
+          },
+          {
+            "entry_id": 6,
+            "payment_id": "pay_long_9_5",
+            "kind": "capture",
+            "amount_paise": 37357,
+            "event_id": "s9_long_9"
+          },
+          {
+            "entry_id": 7,
+            "payment_id": "pay_long_9_4",
+            "kind": "refund",
+            "amount_paise": 9150,
+            "event_id": "s9_long_10"
+          },
+          {
+            "entry_id": 8,
+            "payment_id": "pay_long_9_5",
+            "kind": "refund",
+            "amount_paise": 32640,
+            "event_id": "s9_long_14"
+          },
+          {
+            "entry_id": 9,
+            "payment_id": "pay_long_9_6",
+            "kind": "capture",
+            "amount_paise": 25661,
+            "event_id": "s9_long_17"
+          },
+          {
+            "entry_id": 10,
+            "payment_id": "pay_long_9_7",
+            "kind": "capture",
+            "amount_paise": 20690,
+            "event_id": "s9_long_18"
+          },
+          {
+            "entry_id": 11,
+            "payment_id": "pay_long_9_8",
+            "kind": "capture",
+            "amount_paise": 51029,
+            "event_id": "s9_long_21"
+          },
+          {
+            "entry_id": 12,
+            "payment_id": "pay_long_9_1",
+            "kind": "refund",
+            "amount_paise": 5253,
+            "event_id": "s9_long_22"
+          },
+          {
+            "entry_id": 13,
+            "payment_id": "pay_long_9_9",
+            "kind": "capture",
+            "amount_paise": 95851,
+            "event_id": "s9_long_23"
+          },
+          {
+            "entry_id": 14,
+            "payment_id": "pay_long_9_10",
+            "kind": "capture",
+            "amount_paise": 46614,
+            "event_id": "s9_long_24"
+          },
+          {
+            "entry_id": 15,
+            "payment_id": "pay_long_9_11",
+            "kind": "capture",
+            "amount_paise": 30944,
+            "event_id": "s9_long_25"
+          },
+          {
+            "entry_id": 16,
+            "payment_id": "pay_long_9_12",
+            "kind": "capture",
+            "amount_paise": 22289,
+            "event_id": "s9_long_26"
+          },
+          {
+            "entry_id": 17,
+            "payment_id": "pay_long_9_9",
+            "kind": "refund",
+            "amount_paise": 37554,
+            "event_id": "s9_long_27"
+          },
+          {
+            "entry_id": 18,
+            "payment_id": "pay_long_9_3",
+            "kind": "refund",
+            "amount_paise": 32532,
+            "event_id": "s9_long_28"
+          }
+        ],
+        "summary": {
+          "pay_long_9_0": {
+            "captures_count": 1,
+            "captures_sum": 55013,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_1": {
+            "captures_count": 1,
+            "captures_sum": 20843,
+            "refunds_count": 1,
+            "refunds_sum": 5253
+          },
+          "pay_long_9_2": {
+            "captures_count": 1,
+            "captures_sum": 80780,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_3": {
+            "captures_count": 1,
+            "captures_sum": 25360,
+            "refunds_count": 1,
+            "refunds_sum": 32532
+          },
+          "pay_long_9_4": {
+            "captures_count": 1,
+            "captures_sum": 51196,
+            "refunds_count": 1,
+            "refunds_sum": 9150
+          },
+          "pay_long_9_5": {
+            "captures_count": 1,
+            "captures_sum": 37357,
+            "refunds_count": 1,
+            "refunds_sum": 32640
+          },
+          "pay_long_9_6": {
+            "captures_count": 1,
+            "captures_sum": 25661,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_7": {
+            "captures_count": 1,
+            "captures_sum": 20690,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_8": {
+            "captures_count": 1,
+            "captures_sum": 51029,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_9": {
+            "captures_count": 1,
+            "captures_sum": 95851,
+            "refunds_count": 1,
+            "refunds_sum": 37554
+          },
+          "pay_long_9_10": {
+            "captures_count": 1,
+            "captures_sum": 46614,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_11": {
+            "captures_count": 1,
+            "captures_sum": 30944,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          },
+          "pay_long_9_12": {
+            "captures_count": 1,
+            "captures_sum": 22289,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 28: balance mismatch for 'pay_long_9_3'. Expected captured=25360, refunded=0; Observed captured=25360, refunded=32532 (R6).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 9 failed at step 28"
+      }
+    }
+  ],
+  "noncompliant": null,
+  "repair_of": null
+}

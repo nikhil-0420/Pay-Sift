@@ -1,0 +1,146 @@
+{
+  "generated_at": "2026-11-21T09:22:47.743Z",
+  "run_count": 216,
+  "phases": [
+    {
+      "id": "P0",
+      "title": "Bootstrap, rules, skeleton, git baseline",
+      "status": "DONE"
+    },
+    {
+      "id": "P1",
+      "title": "Contract (spec, schema, cases, prompts, sample.json)",
+      "status": "DONE"
+    },
+    {
+      "id": "P2",
+      "title": "Oracle, reference handler, streams, runner normal, m1-m3",
+      "status": "DONE"
+    },
+    {
+      "id": "P3",
+      "title": "Mutants m4-m6, x1-x4, kill matrix",
+      "status": "DONE"
+    },
+    {
+      "id": "P4",
+      "title": "Sandbox, AST gate, hostile tests, parity",
+      "status": "PARTIAL (blocked: Docker)"
+    },
+    {
+      "id": "P5",
+      "title": "Restart & concurrency, m7-m9",
+      "status": "DONE"
+    },
+    {
+      "id": "P6",
+      "title": "Shrinker, explanations",
+      "status": "DONE"
+    },
+    {
+      "id": "P7",
+      "title": "Model generation & intake",
+      "status": "PARTIAL (no model keys)"
+    },
+    {
+      "id": "P8",
+      "title": "Pilot runs, packets, report",
+      "status": "PARTIAL (blocked: Docker)"
+    },
+    {
+      "id": "P9",
+      "title": "Repair loop, scenarios, API, static report",
+      "status": "PARTIAL (blocked: Docker)"
+    },
+    {
+      "id": "P10",
+      "title": "CLI pipeline, selftest, morning handoff",
+      "status": "DONE"
+    }
+  ],
+  "gates": [
+    {
+      "id": "G1",
+      "title": "Independent spec prediction & freeze",
+      "status": "PENDING HUMAN"
+    },
+    {
+      "id": "G2",
+      "title": "Reference handler passes 100/100 invariants",
+      "status": "PASSED"
+    },
+    {
+      "id": "G3",
+      "title": "Reference clean; m1-m6 & x1-x4 fail intended rule",
+      "status": "PASSED"
+    },
+    {
+      "id": "G4",
+      "title": "Hostile tests contained; sandbox parity",
+      "status": "BLOCKED / FAILED"
+    },
+    {
+      "id": "G5",
+      "title": "m7 fails restart, passes normal; ref passes restart",
+      "status": "PASSED"
+    },
+    {
+      "id": "G6",
+      "title": "Ref 50/50 on A & B (3x); m8/m9 caught >=9/10",
+      "status": "PASSED"
+    },
+    {
+      "id": "G7",
+      "title": "Sequential failures shrink <=4 events (10/10)",
+      "status": "PASSED"
+    },
+    {
+      "id": "G8",
+      "title": "selftest passes end-to-end",
+      "status": "PASSED (Docker checks skipped)"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "NH-001",
+      "title": "Model IDs and API Keys not configured in config/models.yaml",
+      "severity": "IMPORTANT"
+    },
+    {
+      "id": "NH-002",
+      "title": "Host Python version is 3.14.5 instead of 3.12",
+      "severity": "FYI"
+    },
+    {
+      "id": "NH-003",
+      "title": "Docker CLI and daemon not detected",
+      "severity": "IMPORTANT"
+    },
+    {
+      "id": "SQ-001",
+      "title": "Attribution of R10 Concurrency Scenarios",
+      "severity": "FYI"
+    },
+    {
+      "id": "BH-001",
+      "title": "Docker Unavailable on Host (Gate 4 Hard Blocker)",
+      "severity": "FYI"
+    },
+    {
+      "id": "BH-002",
+      "title": "No Usable Model Config (P7 Blocker)",
+      "severity": "FYI"
+    },
+    {
+      "id": "BH-003",
+      "title": "Pilot Blocked (Sandbox Gate Not Passed)",
+      "severity": "FYI"
+    },
+    {
+      "id": "BH-004",
+      "title": "Real Repair Pre-generation Blocked (Stub Stand-in Used)",
+      "severity": "FYI"
+    }
+  ],
+  "spec_draft_frozen": true
+}
