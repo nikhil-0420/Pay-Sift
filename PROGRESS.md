@@ -493,3 +493,27 @@
 - **SQ-001 Resolution:** `CONFIRMED` (Scenario A attributes to I2_idempotency, Scenario B attributes to I4_bounds)
 - **Specification Status:** Unchanged (`SPEC_HASH` is `289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a`)
 - **Regen Required:** `false` (spec unchanged)
+
+
+### Stage K4 Report (Evidence Review & Spec Gap List)
+
+- **Timestamp:** 2026-11-21 15:40:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nikhil
+- **Mode:** APPLY
+- **Review Status:** DONE
+- **Overrides Applied:**
+  - `R8`: Overridden from `SUPPORTED` to `PARTIAL` (Note: "Quote is about API idempotency keys, not webhook event ids; supports the concept only.")
+  - `R9`: Overridden from `SUPPORTED` to `PARTIAL` (Note: "Source only says SQLite survives crashes; it does not cover idempotency across restarts.")
+  - `R10`: Overridden from `SUPPORTED` to `PARTIAL` (Note: "Only source is a blog post, not official provider docs.")
+- **Offline Rebuild:**
+  - `grounding/overrides.yaml` created with exact reviewer inputs.
+  - `runs/grounding.json` rebuilt offline via `python cli.py ground --rebuild` (0 model calls, 0 You.com calls).
+  - Validation: 0 errors against `contract/grounding_schema.json`; `spec_sha` matches `contract/SPEC_HASH`.
+- **Post-Override Label Distribution:**
+  - `SUPPORTED`: 1 rule (`R1`)
+  - `PARTIAL`: 5 rules (`R3`, `R6`, `R8`, `R9`, `R10`)
+  - `NOT_FOUND`: 5 rules (`R0`, `R2`, `R4`, `R5`, `R7`)
+  - `CONFLICT`: 0 rules
+- **Gap Rules & Questions for Review:**
+  - Generated `docs/SPEC_GAP_LIST.md` detailing all 10 gap rules (`R0`, `R2`, `R3`, `R4`, `R5`, `R6`, `R7`, `R8`, `R9`, `R10`) with framed review questions and "PaySift convention" classifications.

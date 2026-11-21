@@ -2,7 +2,7 @@
 
 - **Generated:** `2026-11-21T09:35:05.959042+00:00`
 - **Specification SHA:** `289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a`
-- **Review Status:** PENDING HUMAN REVIEW
+- **Review Status:** REVIEW COMPLETED (Human Overrides Applied)
 
 > **Instructions for Reviewer:**
 > 1. Open every source link below to verify whether the source is authentic, authoritative, and relevant.
@@ -14,7 +14,7 @@
 
 ## Rule R0: Totality & Interface
 
-- [ ] **Reviewed: R0**
+- [x] **Reviewed: R0**
 - **Current Label:** `NOT_FOUND`
 - **Convention Flag:** `true (PaySift convention)`
 - **Judge Model:** `gemini-3.5-flash-lite`
@@ -93,7 +93,7 @@
 
 ## Rule R1: Signature Verification
 
-- [ ] **Reviewed: R1**
+- [x] **Reviewed: R1**
 - **Current Label:** `SUPPORTED`
 - **Convention Flag:** `false (documented)`
 - **Judge Model:** `gemini-3.5-flash-lite`
@@ -123,7 +123,7 @@
 
 ## Rule R2: Payload Validation
 
-- [ ] **Reviewed: R2**
+- [x] **Reviewed: R2**
 - **Current Label:** `NOT_FOUND`
 - **Convention Flag:** `true (PaySift convention)`
 - **Judge Model:** `gemini-3.5-flash-lite`
@@ -202,7 +202,7 @@
 
 ## Rule R3: Event Idempotency
 
-- [ ] **Reviewed: R3**
+- [x] **Reviewed: R3**
 - **Current Label:** `PARTIAL`
 - **Convention Flag:** `false (documented)`
 - **Judge Model:** `gemini-3.5-flash-lite`
@@ -281,7 +281,7 @@
 
 ## Rule R4: Payment Capture
 
-- [ ] **Reviewed: R4**
+- [x] **Reviewed: R4**
 - **Current Label:** `NOT_FOUND`
 - **Convention Flag:** `true (PaySift convention)`
 - **Judge Model:** `gemini-3.5-flash-lite`
@@ -360,7 +360,7 @@
 
 ## Rule R5: Refund Target Existence
 
-- [ ] **Reviewed: R5**
+- [x] **Reviewed: R5**
 - **Current Label:** `NOT_FOUND`
 - **Convention Flag:** `true (PaySift convention)`
 - **Judge Model:** `gemini-3.5-flash-lite`
@@ -432,7 +432,7 @@
 
 ## Rule R6: Refund Balance Bound
 
-- [ ] **Reviewed: R6**
+- [x] **Reviewed: R6**
 - **Current Label:** `PARTIAL`
 - **Convention Flag:** `false (documented)`
 - **Judge Model:** `gemini-3.5-flash-lite`
@@ -504,7 +504,7 @@
 
 ## Rule R7: Financial Atomicity
 
-- [ ] **Reviewed: R7**
+- [x] **Reviewed: R7**
 - **Current Label:** `NOT_FOUND`
 - **Convention Flag:** `true (PaySift convention)`
 - **Judge Model:** `gemini-3.5-flash-lite`
@@ -583,7 +583,7 @@
 
 ## Rule R8: Rejection Non-Consumption
 
-- [ ] **Reviewed: R8**
+- [x] **Reviewed: R8**
 - **Current Label:** `SUPPORTED`
 - **Convention Flag:** `false (documented)`
 - **Judge Model:** `gemini-3.5-flash-lite`
@@ -662,7 +662,7 @@
 
 ## Rule R9: Durability Across Restarts
 
-- [ ] **Reviewed: R9**
+- [x] **Reviewed: R9**
 - **Current Label:** `SUPPORTED`
 - **Convention Flag:** `false (documented)`
 - **Judge Model:** `gemini-3.5-flash-lite`
@@ -734,7 +734,7 @@
 
 ## Rule R10: Concurrency Safety
 
-- [ ] **Reviewed: R10**
+- [x] **Reviewed: R10**
 - **Current Label:** `SUPPORTED`
 - **Convention Flag:** `false (documented)`
 - **Judge Model:** `gemini-3.5-flash-lite`

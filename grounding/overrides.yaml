@@ -1,0 +1,12 @@
+# Human reviewer overrides for PaySift evidence grounding
+# Applied in Stage K4
+rules:
+  R8:
+    label: PARTIAL
+    note: "Quote is about API idempotency keys, not webhook event ids; supports the concept only."
+  R9:
+    label: PARTIAL
+    note: "Source only says SQLite survives crashes; it does not cover idempotency across restarts."
+  R10:
+    label: PARTIAL
+    note: "Only source is a blog post, not official provider docs."
