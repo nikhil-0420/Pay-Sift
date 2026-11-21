@@ -637,10 +637,18 @@ function Home() {
       .then((r) => (r.ok ? r.json() : null))
       .catch(() => null),
   );
+  const { data: featuredMeta } = query("featured-meta", () =>
+    fetch("/data/featured.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null),
+  );
   const { data: grounding = null } = useGrounding();
   const modelRuns = runs.filter((r) =>
     ["live", "pre-run"].includes(r.candidate?.source),
   );
+  const targetRun = featuredMeta?.id
+    ? runs.find((r) => r.run_id === featuredMeta.id)
+    : null;
   const financial = modelRuns
     .flatMap((r) =>
       r.failures
@@ -660,7 +668,16 @@ function Home() {
             example.failures[0],
         }
       : null;
-  const featured = financial || fallback;
+  const featured =
+    targetRun?.failures?.length
+      ? {
+          r: targetRun,
+          f:
+            targetRun.failures.find(
+              (f: any) => isFinancial(f.invariant) || f.rule === "R8",
+            ) || targetRun.failures[0],
+        }
+      : financial || fallback;
   const rows = km?.rows || [];
   const hand = rows.filter((r: any) => r.source === "mutant"),
     extra = rows.filter((r: any) => r.source === "extra-mutant"),
@@ -747,7 +764,11 @@ function Home() {
         </div>
         <div className="hero-proof">
           <div className="eyebrow">
-            Recorded failure / source classification retained
+            {featured?.r.candidate?.condition === "B"
+              ? "ILLUSTRATIVE (CONDITION B)"
+              : featured?.r.candidate?.source === "live" || featured?.r.candidate?.source === "pre-run"
+                ? "REAL MODEL FINDING"
+                : "RECORDED COUNTEREXAMPLE"}
           </div>
           {featured ? (
             <>
@@ -808,10 +829,12 @@ function Home() {
               <span className="source-line">
                 {featured.r.candidate?.source === "mutant" ||
                 String(featured.r.candidate?.id || "").startsWith("m")
-                  ? "HAND-WRITTEN MUTANT — not model output"
+                  ? "HAND-WRITTEN MUTANT, not model output"
                   : String(featured.r.candidate?.id || "").startsWith("x")
-                    ? "EXTRA-MUTANT — not model output"
-                    : sourceLabel(featured.r.candidate?.source)}
+                    ? "EXTRA-MUTANT, not model output"
+                    : featured.r.candidate?.condition === "B"
+                      ? `illustrative (Condition B) — ${featured.r.candidate?.model || sourceLabel(featured.r.candidate?.source)}`
+                      : `real model finding — ${featured.r.candidate?.label || `Candidate ${featured.r.candidate?.id}`} (${featured.r.candidate?.model || "model output"})`}
               </span>
             </>
           ) : (
@@ -918,7 +941,13 @@ function Home() {
         </div>
       </Section>
       <Section
-        title="Recorded failure"
+        title={
+          featured?.r.candidate?.condition === "B"
+            ? "Illustrative finding"
+            : featured?.r.candidate?.source === "live" || featured?.r.candidate?.source === "pre-run"
+              ? "Real model finding"
+              : "Recorded failure"
+        }
         action={
           <Link to="/kill-matrix" className="btn">
             Open kill matrix
@@ -933,7 +962,13 @@ function Home() {
           >
             <div className="featured-paper-topline">
               <div>
-                <div className="eyebrow">RECORDED COUNTEREXAMPLE</div>
+                <div className="eyebrow">
+                  {featured.r.candidate?.condition === "B"
+                    ? "ILLUSTRATIVE (CONDITION B)"
+                    : featured.r.candidate?.source === "live" || featured.r.candidate?.source === "pre-run"
+                      ? "REAL MODEL FINDING"
+                      : "RECORDED COUNTEREXAMPLE"}
+                </div>
                 <span className="featured-rule">{featured.f.invariant} <span>/</span> Rule {featured.f.rule}</span>
               </div>
               <span className="featured-open">Inspect trace <ArrowRight size={15} /></span>

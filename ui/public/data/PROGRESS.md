@@ -565,3 +565,49 @@
   - `cli.py report`: 159 static HTML reports generated cleanly.
   - `cli.py selftest`: 10/11 checks PASS; 1 expected git baseline check on fresh clone noted.
   - `pytest -q`: Core unit test suite green (98 passed, 1 expected git baseline note).
+
+
+### Stage N6 Report (Real Candidate Generation)
+
+- **Timestamp:** 2026-11-21 16:38:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nehaa
+- **Generation Summary:**
+  - Candidates Planned: 30 (3 models x 2 conditions x 5 samples)
+  - Candidates Generated: 15
+  - Candidates Compliant: 15 (100% compliant with AST gate & intake)
+  - Candidates Non-Compliant: 0
+  - API Calls Used: 48 / 110 (within 120-call budget cap; 10 reserved for repair)
+- **Model Breakdown:**
+  - `strong_a` (`gemini-3.5-flash-lite`): 10/10 generated and compliant (5 Condition A, 5 Condition B; 1 regeneration on AST gate).
+  - `strong_b` (`qwen/qwen3.8-27b` via Groq): 5/10 generated and compliant (Samples 1, 2, 4 on Cond A; Samples 2, 3 on Cond B; remaining samples hit Groq free-tier 1000 OTPM rate limit).
+  - `strong_c` (`inclusionai/ling-3.2-flash:free` via OpenRouter): 0/10 generated (all attempts returned HTTP 429 upstream rate-limiting from OpenRouter shared pool).
+- **Execution Policy:** Zero candidates executed natively during this stage (Model-generated code is treated strictly as data).
+- **Artifacts Created:**
+  - `candidates/strong_a/A/1..5.py` (+ raw text and meta JSON)
+  - `candidates/strong_a/B/1..5.py` (+ raw text and meta JSON)
+  - `candidates/strong_b/A/1, 2, 4.py` (+ raw text and meta JSON)
+  - `candidates/strong_b/B/2, 3.py` (+ raw text and meta JSON)
+  - `candidates/GENERATION_SUMMARY.md`
+
+
+### Stage N7 Report (Pilot Evaluation & Human Classification)
+
+- **Timestamp:** 2026-11-21 17:11:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nehaa
+- **Execution Mode:** FINALIZE
+- **Decision:** `FINDING`
+- **Demo Candidate:** `strong_a/A/3` (Gemini 3.5 Flash Lite)
+- **Failing Rule:** `Rule R8: Rejection Non-Consumption` (Invariant `I2_idempotency`)
+- **Classification:** `(a)` - Rule violated as written (confirmed by Nikhil and Nehaa)
+- **Illustrative Only:** `false` (Condition A full contract prompt)
+- **Pitch Label:** `"real model finding"`
+- **Candidate Population:** 15 candidates evaluated in Docker sandbox across seeds 0–99 (Gemini 10, Groq 5, OpenRouter 0 rate-limited).
+- **Run Outputs:** `runs/run_3_1795260584.json` updated with human classification and validated against schema with 0 errors.
+- **Artifacts:**
+  - `pilot/REVIEW_SHEET.md`
+  - `pilot/DECISION.md`
+  - `pilot/packets/3__0.md` through `3__9.md`
+  - `handoff/N7_PILOT_RAN`
+  - `handoff/N7_PILOT_DONE`

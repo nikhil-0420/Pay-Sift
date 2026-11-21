@@ -1,0 +1,1542 @@
+{
+  "run_id": "run_3_1795260584",
+  "contract_version": "1.0",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+  "created_at": "2026-11-21T11:29:44.505861+00:00",
+  "candidate": {
+    "id": "3",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "A",
+    "sample": 3,
+    "sha256": "b4276d438de2dfb4ac4132882ecaf0991887d9e9f3d0690ba69be9194849042a",
+    "source": "live",
+    "label": "Candidate strong_a_A_3"
+  },
+  "harness": {
+    "mode_set": [
+      "normal"
+    ],
+    "docker": true,
+    "cpus": 1
+  },
+  "seeds": [
+    0,
+    99
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 90,
+        "failed": 10
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 90,
+        "failed": 10
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 6,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM2X3JmZF9yOCIsInBheW1lbnRfaWQiOiJwYXlfNl9yOCIsInJlZnVuZF9pZCI6InJfcjgiLCJ0eXBlIjoicmVmdW5kLnByb2Nlc3NlZCJ9",
+          "signature": "2d22d88b1f3061b8eb919b4727d0b877c9c0cc7ec28f2f7cf2f9b2f7cb8d9404",
+          "tag": "premature_refund_r5",
+          "amount_paise": 25000,
+          "event_id": "s6_rfd_r8",
+          "payment_id": "pay_6_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s6_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InM2X2NhcF9yOCIsInBheW1lbnRfaWQiOiJwYXlfNl9yOCIsInR5cGUiOiJwYXltZW50LmNhcHR1cmVkIn0=",
+          "signature": "4e7812b7fad1bf9010079b5d7ab8c17e9809d3f09b839d93d74e4daa461ea346",
+          "tag": "capture_applied_r4",
+          "amount_paise": 60000,
+          "event_id": "s6_cap_r8",
+          "payment_id": "pay_6_r8",
+          "type": "payment.captured",
+          "summary": "payment.captured s6_cap_r8 (Rs 600)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM2X3JmZF9yOCIsInBheW1lbnRfaWQiOiJwYXlfNl9yOCIsInJlZnVuZF9pZCI6InJfcjgiLCJ0eXBlIjoicmVmdW5kLnByb2Nlc3NlZCJ9",
+          "signature": "2d22d88b1f3061b8eb919b4727d0b877c9c0cc7ec28f2f7cf2f9b2f7cb8d9404",
+          "tag": "redelivered_refund_applied_r8",
+          "amount_paise": 25000,
+          "event_id": "s6_rfd_r8",
+          "payment_id": "pay_6_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s6_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM2X2JhZHNpZ190aGVuX2dvb2QiLCJwYXltZW50X2lkIjoicGF5X2JzZ182IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "0d7bc8e00ab6c0db3828eb02c0e47b17f4919ecc1c7b0a6b239f64d006222bff",
+          "tag": "bad_signature_r1",
+          "amount_paise": 40000,
+          "event_id": "s6_badsig_then_good",
+          "payment_id": "pay_bsg_6",
+          "type": "payment.captured",
+          "summary": "payment.captured s6_badsig_then_good (Rs 400)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM2X2JhZHNpZ190aGVuX2dvb2QiLCJwYXltZW50X2lkIjoicGF5X2JzZ182IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "4d7bc8e00ab6c0db3828eb02c0e47b17f4919ecc1c7b0a6b239f64d006222bff",
+          "tag": "good_signature_redelivery_r8",
+          "amount_paise": 40000,
+          "event_id": "s6_badsig_then_good",
+          "payment_id": "pay_bsg_6",
+          "type": "payment.captured",
+          "summary": "payment.captured s6_badsig_then_good (Rs 400)"
+        }
+      ],
+      "minimal_stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM2X3JmZF9yOCIsInBheW1lbnRfaWQiOiJwYXlfNl9yOCIsInJlZnVuZF9pZCI6InJfcjgiLCJ0eXBlIjoicmVmdW5kLnByb2Nlc3NlZCJ9",
+          "signature": "2d22d88b1f3061b8eb919b4727d0b877c9c0cc7ec28f2f7cf2f9b2f7cb8d9404",
+          "tag": "premature_refund_r5",
+          "amount_paise": 25000,
+          "event_id": "s6_rfd_r8",
+          "payment_id": "pay_6_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s6_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InM2X2NhcF9yOCIsInBheW1lbnRfaWQiOiJwYXlfNl9yOCIsInR5cGUiOiJwYXltZW50LmNhcHR1cmVkIn0=",
+          "signature": "4e7812b7fad1bf9010079b5d7ab8c17e9809d3f09b839d93d74e4daa461ea346",
+          "tag": "capture_applied_r4",
+          "amount_paise": 60000,
+          "event_id": "s6_cap_r8",
+          "payment_id": "pay_6_r8",
+          "type": "payment.captured",
+          "summary": "payment.captured s6_cap_r8 (Rs 600)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM2X3JmZF9yOCIsInBheW1lbnRfaWQiOiJwYXlfNl9yOCIsInJlZnVuZF9pZCI6InJfcjgiLCJ0eXBlIjoicmVmdW5kLnByb2Nlc3NlZCJ9",
+          "signature": "2d22d88b1f3061b8eb919b4727d0b877c9c0cc7ec28f2f7cf2f9b2f7cb8d9404",
+          "tag": "redelivered_refund_applied_r8",
+          "amount_paise": 25000,
+          "event_id": "s6_rfd_r8",
+          "payment_id": "pay_6_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s6_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM2X2JhZHNpZ190aGVuX2dvb2QiLCJwYXltZW50X2lkIjoicGF5X2JzZ182IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "0d7bc8e00ab6c0db3828eb02c0e47b17f4919ecc1c7b0a6b239f64d006222bff",
+          "tag": "bad_signature_r1",
+          "amount_paise": 40000,
+          "event_id": "s6_badsig_then_good",
+          "payment_id": "pay_bsg_6",
+          "type": "payment.captured",
+          "summary": "payment.captured s6_badsig_then_good (Rs 400)"
+        }
+      ],
+      "one_minimal": false,
+      "shrink_history": [
+        [
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM2X3JmZF9yOCIsInBheW1lbnRfaWQiOiJwYXlfNl9yOCIsInJlZnVuZF9pZCI6InJfcjgiLCJ0eXBlIjoicmVmdW5kLnByb2Nlc3NlZCJ9",
+            "signature": "2d22d88b1f3061b8eb919b4727d0b877c9c0cc7ec28f2f7cf2f9b2f7cb8d9404",
+            "tag": "premature_refund_r5",
+            "amount_paise": 25000,
+            "event_id": "s6_rfd_r8",
+            "payment_id": "pay_6_r8",
+            "refund_id": "r_r8",
+            "type": "refund.processed",
+            "summary": "refund.processed s6_rfd_r8 (Rs 250)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InM2X2NhcF9yOCIsInBheW1lbnRfaWQiOiJwYXlfNl9yOCIsInR5cGUiOiJwYXltZW50LmNhcHR1cmVkIn0=",
+            "signature": "4e7812b7fad1bf9010079b5d7ab8c17e9809d3f09b839d93d74e4daa461ea346",
+            "tag": "capture_applied_r4",
+            "amount_paise": 60000,
+            "event_id": "s6_cap_r8",
+            "payment_id": "pay_6_r8",
+            "type": "payment.captured",
+            "summary": "payment.captured s6_cap_r8 (Rs 600)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM2X3JmZF9yOCIsInBheW1lbnRfaWQiOiJwYXlfNl9yOCIsInJlZnVuZF9pZCI6InJfcjgiLCJ0eXBlIjoicmVmdW5kLnByb2Nlc3NlZCJ9",
+            "signature": "2d22d88b1f3061b8eb919b4727d0b877c9c0cc7ec28f2f7cf2f9b2f7cb8d9404",
+            "tag": "redelivered_refund_applied_r8",
+            "amount_paise": 25000,
+            "event_id": "s6_rfd_r8",
+            "payment_id": "pay_6_r8",
+            "refund_id": "r_r8",
+            "type": "refund.processed",
+            "summary": "refund.processed s6_rfd_r8 (Rs 250)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM2X2JhZHNpZ190aGVuX2dvb2QiLCJwYXltZW50X2lkIjoicGF5X2JzZ182IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+            "signature": "0d7bc8e00ab6c0db3828eb02c0e47b17f4919ecc1c7b0a6b239f64d006222bff",
+            "tag": "bad_signature_r1",
+            "amount_paise": 40000,
+            "event_id": "s6_badsig_then_good",
+            "payment_id": "pay_bsg_6",
+            "type": "payment.captured",
+            "summary": "payment.captured s6_badsig_then_good (Rs 400)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM2X2JhZHNpZ190aGVuX2dvb2QiLCJwYXltZW50X2lkIjoicGF5X2JzZ182IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+            "signature": "4d7bc8e00ab6c0db3828eb02c0e47b17f4919ecc1c7b0a6b239f64d006222bff",
+            "tag": "good_signature_redelivery_r8",
+            "amount_paise": 40000,
+            "event_id": "s6_badsig_then_good",
+            "payment_id": "pay_bsg_6",
+            "type": "payment.captured",
+            "summary": "payment.captured s6_badsig_then_good (Rs 400)"
+          }
+        ],
+        [
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM2X3JmZF9yOCIsInBheW1lbnRfaWQiOiJwYXlfNl9yOCIsInJlZnVuZF9pZCI6InJfcjgiLCJ0eXBlIjoicmVmdW5kLnByb2Nlc3NlZCJ9",
+            "signature": "2d22d88b1f3061b8eb919b4727d0b877c9c0cc7ec28f2f7cf2f9b2f7cb8d9404",
+            "tag": "premature_refund_r5",
+            "amount_paise": 25000,
+            "event_id": "s6_rfd_r8",
+            "payment_id": "pay_6_r8",
+            "refund_id": "r_r8",
+            "type": "refund.processed",
+            "summary": "refund.processed s6_rfd_r8 (Rs 250)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InM2X2NhcF9yOCIsInBheW1lbnRfaWQiOiJwYXlfNl9yOCIsInR5cGUiOiJwYXltZW50LmNhcHR1cmVkIn0=",
+            "signature": "4e7812b7fad1bf9010079b5d7ab8c17e9809d3f09b839d93d74e4daa461ea346",
+            "tag": "capture_applied_r4",
+            "amount_paise": 60000,
+            "event_id": "s6_cap_r8",
+            "payment_id": "pay_6_r8",
+            "type": "payment.captured",
+            "summary": "payment.captured s6_cap_r8 (Rs 600)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM2X3JmZF9yOCIsInBheW1lbnRfaWQiOiJwYXlfNl9yOCIsInJlZnVuZF9pZCI6InJfcjgiLCJ0eXBlIjoicmVmdW5kLnByb2Nlc3NlZCJ9",
+            "signature": "2d22d88b1f3061b8eb919b4727d0b877c9c0cc7ec28f2f7cf2f9b2f7cb8d9404",
+            "tag": "redelivered_refund_applied_r8",
+            "amount_paise": 25000,
+            "event_id": "s6_rfd_r8",
+            "payment_id": "pay_6_r8",
+            "refund_id": "r_r8",
+            "type": "refund.processed",
+            "summary": "refund.processed s6_rfd_r8 (Rs 250)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM2X2JhZHNpZ190aGVuX2dvb2QiLCJwYXltZW50X2lkIjoicGF5X2JzZ182IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+            "signature": "0d7bc8e00ab6c0db3828eb02c0e47b17f4919ecc1c7b0a6b239f64d006222bff",
+            "tag": "bad_signature_r1",
+            "amount_paise": 40000,
+            "event_id": "s6_badsig_then_good",
+            "payment_id": "pay_bsg_6",
+            "type": "payment.captured",
+            "summary": "payment.captured s6_badsig_then_good (Rs 400)"
+          }
+        ]
+      ],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_6_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_6_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s6_cap_r8"
+          },
+          {
+            "payment_id": "pay_6_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s6_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_6_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_6_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_6_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s6_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_6_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Previously rejected event s6_rfd_r8 redelivered: expected rejection to persist with 'rejected'. Observed status 'unknown'. Rule R8.",
+      "classification": {
+        "label": "a",
+        "by": "human",
+        "note": "R8 rejected events consumed; confirmed by Nikhil and Nehaa in packet review"
+      },
+      "repro": {
+        "runs": 10,
+        "reproduced": 10
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 16,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InMxNl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5XzE2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "dec593de8134e28b6a997e5a41fea60e2867165baa159ce61960cf47e33b4905",
+          "tag": "premature_refund_r5",
+          "amount_paise": 25000,
+          "event_id": "s16_rfd_r8",
+          "payment_id": "pay_16_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s16_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InMxNl9jYXBfcjgiLCJwYXltZW50X2lkIjoicGF5XzE2X3I4IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "c84aa5321133914c1b768dfe0912c9aecc65f6f28327517503f0d074d3ac93c8",
+          "tag": "capture_applied_r4",
+          "amount_paise": 60000,
+          "event_id": "s16_cap_r8",
+          "payment_id": "pay_16_r8",
+          "type": "payment.captured",
+          "summary": "payment.captured s16_cap_r8 (Rs 600)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InMxNl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5XzE2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "dec593de8134e28b6a997e5a41fea60e2867165baa159ce61960cf47e33b4905",
+          "tag": "redelivered_refund_applied_r8",
+          "amount_paise": 25000,
+          "event_id": "s16_rfd_r8",
+          "payment_id": "pay_16_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s16_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InMxNl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfMTYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "1061f0be5fee727e5d89e307a260236c371c4ecda00cc4aa56b5ea3576e44974",
+          "tag": "bad_signature_r1",
+          "amount_paise": 40000,
+          "event_id": "s16_badsig_then_good",
+          "payment_id": "pay_bsg_16",
+          "type": "payment.captured",
+          "summary": "payment.captured s16_badsig_then_good (Rs 400)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InMxNl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfMTYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "0061f0be5fee727e5d89e307a260236c371c4ecda00cc4aa56b5ea3576e44974",
+          "tag": "good_signature_redelivery_r8",
+          "amount_paise": 40000,
+          "event_id": "s16_badsig_then_good",
+          "payment_id": "pay_bsg_16",
+          "type": "payment.captured",
+          "summary": "payment.captured s16_badsig_then_good (Rs 400)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_16_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_16_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s16_cap_r8"
+          },
+          {
+            "payment_id": "pay_16_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s16_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_16_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_16_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_16_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s16_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_16_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_16_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "a",
+        "by": "human",
+        "note": "R8 rejected events consumed; confirmed by Nikhil and Nehaa in packet review"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 26,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InMyNl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5XzI2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "b04d8f06d068b2b91a6d38cdd80f30a7737c19aa9aaaafd0c79cd07280fdc72e",
+          "tag": "premature_refund_r5",
+          "amount_paise": 25000,
+          "event_id": "s26_rfd_r8",
+          "payment_id": "pay_26_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s26_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InMyNl9jYXBfcjgiLCJwYXltZW50X2lkIjoicGF5XzI2X3I4IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "ff1e65420acafc7d9053e1d12d28bc125991b00361412ea26889003ba369f7e7",
+          "tag": "capture_applied_r4",
+          "amount_paise": 60000,
+          "event_id": "s26_cap_r8",
+          "payment_id": "pay_26_r8",
+          "type": "payment.captured",
+          "summary": "payment.captured s26_cap_r8 (Rs 600)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InMyNl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5XzI2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "b04d8f06d068b2b91a6d38cdd80f30a7737c19aa9aaaafd0c79cd07280fdc72e",
+          "tag": "redelivered_refund_applied_r8",
+          "amount_paise": 25000,
+          "event_id": "s26_rfd_r8",
+          "payment_id": "pay_26_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s26_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InMyNl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfMjYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "02b7b2561675203a1c9bbf5faf2a94aaebfc1a5dc12690b5f7d436e507da5343",
+          "tag": "bad_signature_r1",
+          "amount_paise": 40000,
+          "event_id": "s26_badsig_then_good",
+          "payment_id": "pay_bsg_26",
+          "type": "payment.captured",
+          "summary": "payment.captured s26_badsig_then_good (Rs 400)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InMyNl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfMjYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "82b7b2561675203a1c9bbf5faf2a94aaebfc1a5dc12690b5f7d436e507da5343",
+          "tag": "good_signature_redelivery_r8",
+          "amount_paise": 40000,
+          "event_id": "s26_badsig_then_good",
+          "payment_id": "pay_bsg_26",
+          "type": "payment.captured",
+          "summary": "payment.captured s26_badsig_then_good (Rs 400)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_26_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_26_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s26_cap_r8"
+          },
+          {
+            "payment_id": "pay_26_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s26_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_26_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_26_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_26_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s26_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_26_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_26_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "a",
+        "by": "human",
+        "note": "R8 rejected events consumed; confirmed by Nikhil and Nehaa in packet review"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 36,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InMzNl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5XzM2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "52634e0678a27c78bc2a81e8d35358da5f57b59e3daac9c31297e697dfea2ae0",
+          "tag": "premature_refund_r5",
+          "amount_paise": 25000,
+          "event_id": "s36_rfd_r8",
+          "payment_id": "pay_36_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s36_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InMzNl9jYXBfcjgiLCJwYXltZW50X2lkIjoicGF5XzM2X3I4IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "fc9f11fb73cde54875f87ecba27a6205c49fbcadb8e2b6f717c8a17bd86e7414",
+          "tag": "capture_applied_r4",
+          "amount_paise": 60000,
+          "event_id": "s36_cap_r8",
+          "payment_id": "pay_36_r8",
+          "type": "payment.captured",
+          "summary": "payment.captured s36_cap_r8 (Rs 600)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InMzNl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5XzM2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "52634e0678a27c78bc2a81e8d35358da5f57b59e3daac9c31297e697dfea2ae0",
+          "tag": "redelivered_refund_applied_r8",
+          "amount_paise": 25000,
+          "event_id": "s36_rfd_r8",
+          "payment_id": "pay_36_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s36_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InMzNl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfMzYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "0d083090476b2f5601c89257bcda91c7da9b64a1d1edef086e8c32bda7c28f49",
+          "tag": "bad_signature_r1",
+          "amount_paise": 40000,
+          "event_id": "s36_badsig_then_good",
+          "payment_id": "pay_bsg_36",
+          "type": "payment.captured",
+          "summary": "payment.captured s36_badsig_then_good (Rs 400)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InMzNl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfMzYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "fd083090476b2f5601c89257bcda91c7da9b64a1d1edef086e8c32bda7c28f49",
+          "tag": "good_signature_redelivery_r8",
+          "amount_paise": 40000,
+          "event_id": "s36_badsig_then_good",
+          "payment_id": "pay_bsg_36",
+          "type": "payment.captured",
+          "summary": "payment.captured s36_badsig_then_good (Rs 400)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_36_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_36_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s36_cap_r8"
+          },
+          {
+            "payment_id": "pay_36_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s36_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_36_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_36_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_36_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s36_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_36_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_36_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "a",
+        "by": "human",
+        "note": "R8 rejected events consumed; confirmed by Nikhil and Nehaa in packet review"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 46,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM0Nl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5XzQ2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "b108e80105fdd6df7b80c24a44982d7f3fc1fff17e67851e6c66b2d34d714212",
+          "tag": "premature_refund_r5",
+          "amount_paise": 25000,
+          "event_id": "s46_rfd_r8",
+          "payment_id": "pay_46_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s46_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InM0Nl9jYXBfcjgiLCJwYXltZW50X2lkIjoicGF5XzQ2X3I4IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "7a1d992a9e2077a4cf44a3dc82c6241fe5a95a14eefb972a61a753d54aaad552",
+          "tag": "capture_applied_r4",
+          "amount_paise": 60000,
+          "event_id": "s46_cap_r8",
+          "payment_id": "pay_46_r8",
+          "type": "payment.captured",
+          "summary": "payment.captured s46_cap_r8 (Rs 600)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM0Nl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5XzQ2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "b108e80105fdd6df7b80c24a44982d7f3fc1fff17e67851e6c66b2d34d714212",
+          "tag": "redelivered_refund_applied_r8",
+          "amount_paise": 25000,
+          "event_id": "s46_rfd_r8",
+          "payment_id": "pay_46_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s46_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM0Nl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfNDYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "023d1a4b316d9fce5b43e4f6a04baf52bb872805e9a40b31ca42953cde1a50c0",
+          "tag": "bad_signature_r1",
+          "amount_paise": 40000,
+          "event_id": "s46_badsig_then_good",
+          "payment_id": "pay_bsg_46",
+          "type": "payment.captured",
+          "summary": "payment.captured s46_badsig_then_good (Rs 400)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM0Nl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfNDYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "923d1a4b316d9fce5b43e4f6a04baf52bb872805e9a40b31ca42953cde1a50c0",
+          "tag": "good_signature_redelivery_r8",
+          "amount_paise": 40000,
+          "event_id": "s46_badsig_then_good",
+          "payment_id": "pay_bsg_46",
+          "type": "payment.captured",
+          "summary": "payment.captured s46_badsig_then_good (Rs 400)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_46_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_46_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s46_cap_r8"
+          },
+          {
+            "payment_id": "pay_46_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s46_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_46_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_46_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_46_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s46_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_46_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_46_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "a",
+        "by": "human",
+        "note": "R8 rejected events consumed; confirmed by Nikhil and Nehaa in packet review"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 56,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM1Nl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5XzU2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "ef7191e8f4e4764532d6d8bfe82dfd8a591e60df6abb0c10276932085067787d",
+          "tag": "premature_refund_r5",
+          "amount_paise": 25000,
+          "event_id": "s56_rfd_r8",
+          "payment_id": "pay_56_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s56_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InM1Nl9jYXBfcjgiLCJwYXltZW50X2lkIjoicGF5XzU2X3I4IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "bbca019aa48a1ebc488a075808fc5bda24745ca5c4c267f40edf091d74379ada",
+          "tag": "capture_applied_r4",
+          "amount_paise": 60000,
+          "event_id": "s56_cap_r8",
+          "payment_id": "pay_56_r8",
+          "type": "payment.captured",
+          "summary": "payment.captured s56_cap_r8 (Rs 600)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM1Nl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5XzU2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "ef7191e8f4e4764532d6d8bfe82dfd8a591e60df6abb0c10276932085067787d",
+          "tag": "redelivered_refund_applied_r8",
+          "amount_paise": 25000,
+          "event_id": "s56_rfd_r8",
+          "payment_id": "pay_56_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s56_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM1Nl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfNTYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "0d568443f9e2cae4ceac8568bccdba9a7db760912c0ccd5fb6f2cb062061c03b",
+          "tag": "bad_signature_r1",
+          "amount_paise": 40000,
+          "event_id": "s56_badsig_then_good",
+          "payment_id": "pay_bsg_56",
+          "type": "payment.captured",
+          "summary": "payment.captured s56_badsig_then_good (Rs 400)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM1Nl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfNTYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "7d568443f9e2cae4ceac8568bccdba9a7db760912c0ccd5fb6f2cb062061c03b",
+          "tag": "good_signature_redelivery_r8",
+          "amount_paise": 40000,
+          "event_id": "s56_badsig_then_good",
+          "payment_id": "pay_bsg_56",
+          "type": "payment.captured",
+          "summary": "payment.captured s56_badsig_then_good (Rs 400)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_56_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_56_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s56_cap_r8"
+          },
+          {
+            "payment_id": "pay_56_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s56_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_56_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_56_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_56_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s56_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_56_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_56_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "a",
+        "by": "human",
+        "note": "R8 rejected events consumed; confirmed by Nikhil and Nehaa in packet review"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 66,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM2Nl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5XzY2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "724036d3043dc1a8e3d50a605c457aa20cdde4a56ef946d7913d47c38c60fa76",
+          "tag": "premature_refund_r5",
+          "amount_paise": 25000,
+          "event_id": "s66_rfd_r8",
+          "payment_id": "pay_66_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s66_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InM2Nl9jYXBfcjgiLCJwYXltZW50X2lkIjoicGF5XzY2X3I4IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "b645553ac3db625c8e104f7e7bbf0ec1a2b4fd0e31fc903b65bab958d18c8019",
+          "tag": "capture_applied_r4",
+          "amount_paise": 60000,
+          "event_id": "s66_cap_r8",
+          "payment_id": "pay_66_r8",
+          "type": "payment.captured",
+          "summary": "payment.captured s66_cap_r8 (Rs 600)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM2Nl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5XzY2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "724036d3043dc1a8e3d50a605c457aa20cdde4a56ef946d7913d47c38c60fa76",
+          "tag": "redelivered_refund_applied_r8",
+          "amount_paise": 25000,
+          "event_id": "s66_rfd_r8",
+          "payment_id": "pay_66_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s66_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM2Nl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfNjYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "0370fefea970416496c3c6692061a448f917dd79ed167be384beef0168b2aa4a",
+          "tag": "bad_signature_r1",
+          "amount_paise": 40000,
+          "event_id": "s66_badsig_then_good",
+          "payment_id": "pay_bsg_66",
+          "type": "payment.captured",
+          "summary": "payment.captured s66_badsig_then_good (Rs 400)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM2Nl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfNjYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "8370fefea970416496c3c6692061a448f917dd79ed167be384beef0168b2aa4a",
+          "tag": "good_signature_redelivery_r8",
+          "amount_paise": 40000,
+          "event_id": "s66_badsig_then_good",
+          "payment_id": "pay_bsg_66",
+          "type": "payment.captured",
+          "summary": "payment.captured s66_badsig_then_good (Rs 400)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_66_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_66_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s66_cap_r8"
+          },
+          {
+            "payment_id": "pay_66_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s66_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_66_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_66_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_66_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s66_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_66_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_66_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "a",
+        "by": "human",
+        "note": "R8 rejected events consumed; confirmed by Nikhil and Nehaa in packet review"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 76,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM3Nl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5Xzc2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "d6bf80c7e247aceee78d104b2f0809cf434960d4ce97439705a491c5f7fe21ed",
+          "tag": "premature_refund_r5",
+          "amount_paise": 25000,
+          "event_id": "s76_rfd_r8",
+          "payment_id": "pay_76_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s76_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InM3Nl9jYXBfcjgiLCJwYXltZW50X2lkIjoicGF5Xzc2X3I4IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "380ed28d9cc05a812c81f49a0117dcc414cc29bb82b9e37e23cfc9446c33e7b6",
+          "tag": "capture_applied_r4",
+          "amount_paise": 60000,
+          "event_id": "s76_cap_r8",
+          "payment_id": "pay_76_r8",
+          "type": "payment.captured",
+          "summary": "payment.captured s76_cap_r8 (Rs 600)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM3Nl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5Xzc2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "d6bf80c7e247aceee78d104b2f0809cf434960d4ce97439705a491c5f7fe21ed",
+          "tag": "redelivered_refund_applied_r8",
+          "amount_paise": 25000,
+          "event_id": "s76_rfd_r8",
+          "payment_id": "pay_76_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s76_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM3Nl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfNzYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "0789cc19f3d754950e362051b361ca2f0df6224b768827a393f3d5e3f814f80e",
+          "tag": "bad_signature_r1",
+          "amount_paise": 40000,
+          "event_id": "s76_badsig_then_good",
+          "payment_id": "pay_bsg_76",
+          "type": "payment.captured",
+          "summary": "payment.captured s76_badsig_then_good (Rs 400)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM3Nl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfNzYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "2789cc19f3d754950e362051b361ca2f0df6224b768827a393f3d5e3f814f80e",
+          "tag": "good_signature_redelivery_r8",
+          "amount_paise": 40000,
+          "event_id": "s76_badsig_then_good",
+          "payment_id": "pay_bsg_76",
+          "type": "payment.captured",
+          "summary": "payment.captured s76_badsig_then_good (Rs 400)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_76_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_76_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s76_cap_r8"
+          },
+          {
+            "payment_id": "pay_76_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s76_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_76_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_76_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_76_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s76_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_76_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_76_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "a",
+        "by": "human",
+        "note": "R8 rejected events consumed; confirmed by Nikhil and Nehaa in packet review"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 86,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM4Nl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5Xzg2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "c83bf09401466959007ac5d4896672de6f5abdcb9199a9a06133dd1f707446da",
+          "tag": "premature_refund_r5",
+          "amount_paise": 25000,
+          "event_id": "s86_rfd_r8",
+          "payment_id": "pay_86_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s86_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InM4Nl9jYXBfcjgiLCJwYXltZW50X2lkIjoicGF5Xzg2X3I4IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "51e85c3c31fa4c273aadc405e854ed666ded854ed8f14707842c066bb14f0d92",
+          "tag": "capture_applied_r4",
+          "amount_paise": 60000,
+          "event_id": "s86_cap_r8",
+          "payment_id": "pay_86_r8",
+          "type": "payment.captured",
+          "summary": "payment.captured s86_cap_r8 (Rs 600)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM4Nl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5Xzg2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "c83bf09401466959007ac5d4896672de6f5abdcb9199a9a06133dd1f707446da",
+          "tag": "redelivered_refund_applied_r8",
+          "amount_paise": 25000,
+          "event_id": "s86_rfd_r8",
+          "payment_id": "pay_86_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s86_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM4Nl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfODYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "06df3b191f026c91b31083071fb43a3c06c5ebd3d1c074e1bcde6d2042175c41",
+          "tag": "bad_signature_r1",
+          "amount_paise": 40000,
+          "event_id": "s86_badsig_then_good",
+          "payment_id": "pay_bsg_86",
+          "type": "payment.captured",
+          "summary": "payment.captured s86_badsig_then_good (Rs 400)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM4Nl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfODYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "f6df3b191f026c91b31083071fb43a3c06c5ebd3d1c074e1bcde6d2042175c41",
+          "tag": "good_signature_redelivery_r8",
+          "amount_paise": 40000,
+          "event_id": "s86_badsig_then_good",
+          "payment_id": "pay_bsg_86",
+          "type": "payment.captured",
+          "summary": "payment.captured s86_badsig_then_good (Rs 400)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_86_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_86_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s86_cap_r8"
+          },
+          {
+            "payment_id": "pay_86_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s86_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_86_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_86_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_86_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s86_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_86_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_86_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "a",
+        "by": "human",
+        "note": "R8 rejected events consumed; confirmed by Nikhil and Nehaa in packet review"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 96,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM5Nl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5Xzk2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "49a41cf834358616262494889da5f555dac3eaefa402eef3a41cc5dc539a89a7",
+          "tag": "premature_refund_r5",
+          "amount_paise": 25000,
+          "event_id": "s96_rfd_r8",
+          "payment_id": "pay_96_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s96_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjYwMDAwLCJldmVudF9pZCI6InM5Nl9jYXBfcjgiLCJwYXltZW50X2lkIjoicGF5Xzk2X3I4IiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "5933a042a2e29c4c4b11c348bd47a6e90b0ae93c7b6ed80f6334b89de42c9067",
+          "tag": "capture_applied_r4",
+          "amount_paise": 60000,
+          "event_id": "s96_cap_r8",
+          "payment_id": "pay_96_r8",
+          "type": "payment.captured",
+          "summary": "payment.captured s96_cap_r8 (Rs 600)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjI1MDAwLCJldmVudF9pZCI6InM5Nl9yZmRfcjgiLCJwYXltZW50X2lkIjoicGF5Xzk2X3I4IiwicmVmdW5kX2lkIjoicl9yOCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "49a41cf834358616262494889da5f555dac3eaefa402eef3a41cc5dc539a89a7",
+          "tag": "redelivered_refund_applied_r8",
+          "amount_paise": 25000,
+          "event_id": "s96_rfd_r8",
+          "payment_id": "pay_96_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed",
+          "summary": "refund.processed s96_rfd_r8 (Rs 250)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM5Nl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfOTYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "0a1ab3afe24e2b65548e62084c4e44d6a5719871794d679acb9b0dcacbed532e",
+          "tag": "bad_signature_r1",
+          "amount_paise": 40000,
+          "event_id": "s96_badsig_then_good",
+          "payment_id": "pay_bsg_96",
+          "type": "payment.captured",
+          "summary": "payment.captured s96_badsig_then_good (Rs 400)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InM5Nl9iYWRzaWdfdGhlbl9nb29kIiwicGF5bWVudF9pZCI6InBheV9ic2dfOTYiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "5a1ab3afe24e2b65548e62084c4e44d6a5719871794d679acb9b0dcacbed532e",
+          "tag": "good_signature_redelivery_r8",
+          "amount_paise": 40000,
+          "event_id": "s96_badsig_then_good",
+          "payment_id": "pay_bsg_96",
+          "type": "payment.captured",
+          "summary": "payment.captured s96_badsig_then_good (Rs 400)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_96_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_96_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s96_cap_r8"
+          },
+          {
+            "payment_id": "pay_96_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s96_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_96_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_96_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_96_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s96_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_96_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_96_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "a",
+        "by": "human",
+        "note": "R8 rejected events consumed; confirmed by Nikhil and Nehaa in packet review"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    }
+  ],
+  "noncompliant": null,
+  "repair_of": null
+}

@@ -1,5 +1,203 @@
 [
   {
+    "id": "run_1_1795260421",
+    "file": "runs/run_1_1795260421.json",
+    "candidateId": "1",
+    "source": "live",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "A",
+    "created_at": "2026-11-21T11:27:01.519046+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 0,
+    "financialInvariantsFailed": []
+  },
+  {
+    "id": "run_1_1795260835",
+    "file": "runs/run_1_1795260835.json",
+    "candidateId": "1",
+    "source": "live",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "B",
+    "created_at": "2026-11-21T11:33:55.530946+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 100,
+    "financialInvariantsFailed": [
+      "I4_bounds"
+    ]
+  },
+  {
+    "id": "run_1_1795261326",
+    "file": "runs/run_1_1795261326.json",
+    "candidateId": "1",
+    "source": "live",
+    "model": "qwen/qwen3.8-27b",
+    "condition": "A",
+    "created_at": "2026-11-21T11:42:06.451454+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 0,
+    "financialInvariantsFailed": []
+  },
+  {
+    "id": "run_2_1795260491",
+    "file": "runs/run_2_1795260491.json",
+    "candidateId": "2",
+    "source": "live",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "A",
+    "created_at": "2026-11-21T11:28:11.205828+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 0,
+    "financialInvariantsFailed": []
+  },
+  {
+    "id": "run_2_1795260952",
+    "file": "runs/run_2_1795260952.json",
+    "candidateId": "2",
+    "source": "live",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "B",
+    "created_at": "2026-11-21T11:35:52.082652+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 100,
+    "financialInvariantsFailed": [
+      "I4_bounds"
+    ]
+  },
+  {
+    "id": "run_2_1795261426",
+    "file": "runs/run_2_1795261426.json",
+    "candidateId": "2",
+    "source": "live",
+    "model": "qwen/qwen3.8-27b",
+    "condition": "A",
+    "created_at": "2026-11-21T11:43:46.442505+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 10,
+    "financialInvariantsFailed": [
+      "I1_signature"
+    ]
+  },
+  {
+    "id": "run_2_1795261607",
+    "file": "runs/run_2_1795261607.json",
+    "candidateId": "2",
+    "source": "live",
+    "model": "qwen/qwen3.8-27b",
+    "condition": "B",
+    "created_at": "2026-11-21T11:46:47.157065+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 100,
+    "financialInvariantsFailed": [
+      "I3_conservation"
+    ]
+  },
+  {
+    "id": "run_3_1795260584",
+    "file": "runs/run_3_1795260584.json",
+    "candidateId": "3",
+    "source": "live",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "A",
+    "created_at": "2026-11-21T11:29:44.505861+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 10,
+    "financialInvariantsFailed": [
+      "I2_idempotency"
+    ]
+  },
+  {
+    "id": "run_3_1795261044",
+    "file": "runs/run_3_1795261044.json",
+    "candidateId": "3",
+    "source": "live",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "B",
+    "created_at": "2026-11-21T11:37:24.932479+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 100,
+    "financialInvariantsFailed": [
+      "I4_bounds"
+    ]
+  },
+  {
+    "id": "run_3_1795261719",
+    "file": "runs/run_3_1795261719.json",
+    "candidateId": "3",
+    "source": "live",
+    "model": "qwen/qwen3.8-27b",
+    "condition": "B",
+    "created_at": "2026-11-21T11:48:39.353574+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 100,
+    "financialInvariantsFailed": [
+      "I4_bounds"
+    ]
+  },
+  {
+    "id": "run_4_1795260642",
+    "file": "runs/run_4_1795260642.json",
+    "candidateId": "4",
+    "source": "live",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "A",
+    "created_at": "2026-11-21T11:30:42.071549+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 0,
+    "financialInvariantsFailed": []
+  },
+  {
+    "id": "run_4_1795261149",
+    "file": "runs/run_4_1795261149.json",
+    "candidateId": "4",
+    "source": "live",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "B",
+    "created_at": "2026-11-21T11:39:09.056979+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 100,
+    "financialInvariantsFailed": [
+      "I4_bounds"
+    ]
+  },
+  {
+    "id": "run_4_1795261497",
+    "file": "runs/run_4_1795261497.json",
+    "candidateId": "4",
+    "source": "live",
+    "model": "qwen/qwen3.8-27b",
+    "condition": "A",
+    "created_at": "2026-11-21T11:44:57.757022+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 0,
+    "financialInvariantsFailed": []
+  },
+  {
+    "id": "run_5_1795260722",
+    "file": "runs/run_5_1795260722.json",
+    "candidateId": "5",
+    "source": "live",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "A",
+    "created_at": "2026-11-21T11:32:02.815416+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 0,
+    "financialInvariantsFailed": []
+  },
+  {
+    "id": "run_5_1795261259",
+    "file": "runs/run_5_1795261259.json",
+    "candidateId": "5",
+    "source": "live",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "B",
+    "created_at": "2026-11-21T11:40:59.525780+00:00",
+    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+    "failureCount": 100,
+    "financialInvariantsFailed": [
+      "I4_bounds"
+    ]
+  },
+  {
     "id": "run_handler_ref_1795205994",
     "file": "runs/run_handler_ref_1795205994.json",
     "candidateId": "handler_ref",

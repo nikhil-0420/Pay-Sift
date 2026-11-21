@@ -1,0 +1,79 @@
+{
+  "run_id": "run_1_1795260421",
+  "contract_version": "1.0",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+  "created_at": "2026-11-21T11:27:01.519046+00:00",
+  "candidate": {
+    "id": "1",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "A",
+    "sample": 1,
+    "sha256": "26fffcfccdfca809ac2f3f5315816017e759038ec3c3f1dd632a6d8c9978627c",
+    "source": "live",
+    "label": "Candidate strong_a_A_1"
+  },
+  "harness": {
+    "mode_set": [
+      "normal"
+    ],
+    "docker": true,
+    "cpus": 1
+  },
+  "seeds": [
+    0,
+    99
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [],
+  "noncompliant": null,
+  "repair_of": null
+}

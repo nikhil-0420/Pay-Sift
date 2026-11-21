@@ -148,11 +148,41 @@ fs.writeFileSync(
   path.join(out, "status.json"),
   JSON.stringify(status, null, 2),
 );
-const model = index
-  .filter((x) => x.source === "live" || x.source === "pre-run")
-  .sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)))
-  .at(-1);
-let featured = model;
+let featured = null;
+const n7Path = path.join(src, "handoff/N7_PILOT_DONE");
+if (fs.existsSync(n7Path)) {
+  try {
+    const content = fs.readFileSync(n7Path, "utf8");
+    const demoCand = content.match(/^demo_candidate:\s*(.+)$/m)?.[1]?.trim();
+    if (demoCand) {
+      const parts = demoCand.split("/");
+      const candId = parts[parts.length - 1];
+      const cond = parts.length > 1 ? parts[1] : undefined;
+      const matchRun = index.find(
+        (r) =>
+          (r.candidateId === candId || r.id.includes(`_${candId}_`)) &&
+          (!cond || r.condition === cond) &&
+          (r.source === "live" || r.source === "pre-run")
+      );
+      if (matchRun) {
+        featured = matchRun;
+      }
+    }
+  } catch {}
+}
+if (!featured) {
+  const condAFinding = index.find(
+    (x) =>
+      (x.source === "live" || x.source === "pre-run") &&
+      x.condition === "A" &&
+      x.failureCount > 0
+  );
+  const model = index
+    .filter((x) => x.source === "live" || x.source === "pre-run")
+    .sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)))
+    .at(-1);
+  featured = condAFinding || model;
+}
 if (!featured) {
   try {
     const r = JSON.parse(

@@ -1,11 +1,14 @@
 {
-  "id": "run_m1_no_dedupe_1795216867",
-  "file": "real_example.json",
-  "candidateId": "m1_no_dedupe",
-  "source": "mutant",
-  "model": "reference",
-  "condition": "-",
-  "created_at": "2026-11-20T23:21:07.090402+00:00",
+  "id": "run_3_1795260584",
+  "file": "runs/run_3_1795260584.json",
+  "candidateId": "3",
+  "source": "live",
+  "model": "gemini-3.5-flash-lite",
+  "condition": "A",
+  "created_at": "2026-11-21T11:29:44.505861+00:00",
   "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
-  "failureCount": 1
+  "failureCount": 10,
+  "financialInvariantsFailed": [
+    "I2_idempotency"
+  ]
 }
