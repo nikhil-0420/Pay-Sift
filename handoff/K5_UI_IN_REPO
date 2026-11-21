@@ -1,0 +1,10 @@
+stage: K5
+owner: nikhil
+status: DONE
+completed_at: 2026-11-21T09:25:00Z
+work_commit: ca3cdd1a4e466334e5d3d943a70af6a900eb481e
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Integrated Manus UI into ui/ with sync-data, contract validation, and live backend API checks passing
+check_contract: pass
+check_api: pass
+adapter_changes: 3
