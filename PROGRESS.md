@@ -21,7 +21,7 @@
 
 | Gate | Description | Status | Started | Finished | Notes |
 |---|---|---|---|---|---|
-| G1 | Independent spec prediction & freeze | PENDING HUMAN | - | - | Human-only gate (packet prepared) |
+| G1 | Independent spec prediction & freeze | PASSED | 2026-11-21 15:10 | 2026-11-21 15:15 | PASSED with partner Nikhil. Disagreements: NONE. Spec unchanged (hash 289fa48f). SQ-001 confirmed. |
 | G2 | Reference handler passes 100/100 invariants | PASSED | 2026-11-21 01:50 | 2026-11-21 02:15 | Reference handler 100/100 pass across seeds 0-99; repeatable across runs; m1-m3 killed with intended rules. |
 | G3 | Reference clean; m1-m6 & x1-x4 fail intended rule | PASSED | 2026-11-21 02:40 | 2026-11-21 03:07 | Reference clean (0 failures across all invariants); all 10 mutants killed with intended rules; x4 sensitive only to family 8. |
 | G4 | Hostile tests contained; sandbox parity | BLOCKED / FAILED | 2026-11-21 03:20 | 2026-11-21 03:24 | Docker unavailable on host. runs/GATE4_FAILED.md generated; BH-001 logged; untrusted execution blocked. |
@@ -480,3 +480,16 @@
   - Added unit tests in `tests/test_grounding.py` with mock adapter covering: fenced JSON, prose before/after, truncated JSON with recovery on retry, unparseable output after retry, and verbatim-quote violations.
   - Re-judged rule R2: parsed cleanly into `NOT_FOUND` with reason `"None of the retrieved documentation snippets contain the specific payload validation rules, field constraints, or error handling behavior described in rule R2."` (no longer failing on JSON parsing).
   - Validated `runs/grounding.json` against `contract/grounding_schema.json` (0 errors, `spec_sha` matches).
+
+
+### Stage N3 Report (Gate G1 Recorded)
+
+- **Timestamp:** 2026-11-21 15:15:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nehaa (executed by Nikhil under project owner override)
+- **Gate G1 Outcome:** `PASSED`
+- **Partner:** Nikhil
+- **Disagreements Summary:** `NONE`
+- **SQ-001 Resolution:** `CONFIRMED` (Scenario A attributes to I2_idempotency, Scenario B attributes to I4_bounds)
+- **Specification Status:** Unchanged (`SPEC_HASH` is `289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a`)
+- **Regen Required:** `false` (spec unchanged)
