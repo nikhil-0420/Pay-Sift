@@ -1,0 +1,9 @@
+stage: K4
+owner: nikhil
+status: DONE
+completed_at: 2026-11-21T10:12:30Z
+work_commit: 167208877a976c84f66a5a0da4fe8cc6eb649a24
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Human overrides applied to evidence grounding and specification gap list produced
+overrides_applied: R8, R9, R10
+gap_rules: R0, R2, R3, R4, R5, R6, R7, R8, R9, R10
