@@ -99,8 +99,25 @@ export function latestPerCandidate(runs: any[]) {
   for (const r of [...runs].sort((a, b) =>
     String(b.created_at || "").localeCompare(String(a.created_at || "")),
   )) {
-    const id = r.candidate?.id || r.candidateId || r.run_id;
-    if (!map.has(id)) map.set(id, r);
+    const model = r.candidate?.model || r.model || "";
+    const cond = r.candidate?.condition || r.condition || "";
+    const candId = r.candidate?.id || r.candidateId || r.candidate?.label || r.run_id || r.id;
+    const key = model || cond ? `${model}/${cond}/${candId}` : String(candId);
+    if (!map.has(key)) map.set(key, r);
   }
   return [...map.values()];
+}
+
+export function getMinimalTrace(failure: any): any[] {
+  if (Array.isArray(failure?.minimal_stream) && failure.minimal_stream.length > 0) {
+    return failure.minimal_stream;
+  }
+  if (Array.isArray(failure?.shrink_history) && failure.shrink_history.length > 0) {
+    const last = failure.shrink_history[failure.shrink_history.length - 1];
+    if (Array.isArray(last) && last.length > 0) return last;
+  }
+  if (Array.isArray(failure?.stream) && failure.stream.length > 0) {
+    return failure.stream;
+  }
+  return [];
 }

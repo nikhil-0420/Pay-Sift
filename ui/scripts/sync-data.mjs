@@ -44,6 +44,17 @@ for (const [options, dest] of [
 copyAny(["runs/grounding.json", "grounding.json"], "grounding.json");
 copyAny(["runs/grounding.json", "grounding.json"], "runs/grounding.json");
 copyAny(["contract/grounding_schema.json"], "contract/grounding_schema.json");
+const repairCacheDir = path.join(src, "repair", "cache");
+if (fs.existsSync(repairCacheDir)) {
+  const outRepairDir = path.join(out, "repair", "cache");
+  fs.mkdirSync(outRepairDir, { recursive: true });
+  for (const f of fs.readdirSync(repairCacheDir)) {
+    if (f.endsWith(".json")) {
+      fs.copyFileSync(path.join(repairCacheDir, f), path.join(outRepairDir, f));
+      copied++;
+    }
+  }
+}
 const runsDir = path.join(src, "runs");
 let files = [];
 if (fs.existsSync(runsDir))
@@ -195,7 +206,7 @@ status.readiness = {
   },
   repair: {
     state: hasRepair ? "ok" : "not run",
-    detail: hasRepair ? "Repair completed" : "NOT RUN (standing by for pilot repair loop)",
+    detail: hasRepair ? "Repair completed (Rule R8 fixed on strong_a/A/3)" : "NOT RUN (standing by for pilot repair loop)",
   },
   oracle_gate: {
     state: status.gates.find((g) => g.id === "G2")?.status || "PASSED",

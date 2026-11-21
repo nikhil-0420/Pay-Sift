@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-21T17:02:45.564Z",
-  "run_count": 183,
+  "generated_at": "2026-11-21T18:07:45.047Z",
+  "run_count": 184,
   "phases": [
     {
       "id": "P0",
@@ -160,8 +160,8 @@
       "detail": "Pilot completed (15 candidate runs evaluated)"
     },
     "repair": {
-      "state": "not run",
-      "detail": "NOT RUN (standing by for pilot repair loop)"
+      "state": "ok",
+      "detail": "Repair completed (Rule R8 fixed on strong_a/A/3)"
     },
     "oracle_gate": {
       "state": "PASSED",
