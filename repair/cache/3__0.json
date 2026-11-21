@@ -1,0 +1,137 @@
+{
+  "source": "live",
+  "repair_run_id": "run_repair_3_1795281671",
+  "repair_of": "run_3_1795260584",
+  "candidate_id": "3",
+  "candidate_label": "strong_a/A/3",
+  "failure_id": 0,
+  "failing_rule": "R8",
+  "invariant": "I2_idempotency",
+  "before_code": "import sqlite3\nimport hmac\nimport hashlib\nimport json\nimport time\nfrom typing import Dict, Any\nfrom contextlib import contextmanager\n\n@contextmanager\ndef get_db(db_path: str):\n    conn = sqlite3.connect(db_path, timeout=5.0)\n    conn.execute(\"PRAGMA journal_mode=WAL;\")\n    conn.execute(\"PRAGMA busy_timeout=5000;\")\n    try:\n        yield conn\n        conn.commit()\n    except Exception:\n        conn.rollback()\n        raise\n    finally:\n        conn.close()\n\ndef init_aux(conn: sqlite3.Connection):\n    conn.execute(\"\"\"\n        CREATE TABLE IF NOT EXISTS processed_events (\n            event_id TEXT PRIMARY KEY,\n            status TEXT NOT NULL\n        )\n    \"\"\")\n\ndef handle_event(db_path: str, raw_body: bytes, signature: str, secret: str) -> dict:\n    try:\n        if not isinstance(signature, str):\n            return {\"status\": \"rejected\", \"reason\": \"Invalid signature type\"}\n        \n        expected_sig = hmac.new(\n            secret.encode(\"utf-8\"),\n            raw_body,\n            hashlib.sha256\n        ).hexdigest()\n        \n        if not hmac.compare_digest(expected_sig, signature):\n            return {\"status\": \"rejected\", \"reason\": \"Signature mismatch\"}\n\n        try:\n            body_str = raw_body.decode(\"utf-8\")\n        except UnicodeDecodeError:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid UTF-8\"}\n\n        try:\n            payload = json.loads(body_str)\n        except json.JSONDecodeError:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid JSON\"}\n\n        if not isinstance(payload, dict):\n            return {\"status\": \"rejected\", \"reason\": \"Payload must be object\"}\n\n        event_id = payload.get(\"event_id\")\n        if not isinstance(event_id, str) or not event_id or len(event_id) > 64:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid event_id\"}\n\n        event_type = payload.get(\"type\")\n        if event_type not in (\"payment.captured\", \"refund.processed\"):\n            return {\"status\": \"rejected\", \"reason\": \"Invalid type\"}\n\n        payment_id = payload.get(\"payment_id\")\n        if not isinstance(payment_id, str) or not payment_id or len(payment_id) > 64:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid payment_id\"}\n\n        amount_paise = payload.get(\"amount_paise\")\n        if isinstance(amount_paise, bool) or not isinstance(amount_paise, int):\n            return {\"status\": \"rejected\", \"reason\": \"amount_paise must be integer\"}\n        if amount_paise < 1 or amount_paise > 10**12:\n            return {\"status\": \"rejected\", \"reason\": \"amount_paise out of bounds\"}\n\n        if event_type == \"refund.processed\":\n            refund_id = payload.get(\"refund_id\")\n            if not isinstance(refund_id, str) or not refund_id:\n                return {\"status\": \"rejected\", \"reason\": \"Missing refund_id\"}\n\n        with get_db(db_path) as conn:\n            init_aux(conn)\n            cursor = conn.cursor()\n            \n            cursor.execute(\"SELECT status FROM processed_events WHERE event_id = ?\", (event_id,))\n            row = cursor.fetchone()\n            if row:\n                return {\"status\": \"duplicate\", \"reason\": \"Event already processed\"}\n\n            if event_type == \"payment.captured\":\n                cursor.execute(\"SELECT captured_paise FROM payments WHERE payment_id = ?\", (payment_id,))\n                p_row = cursor.fetchone()\n                if p_row is not None:\n                    cursor.execute(\"INSERT INTO processed_events (event_id, status) VALUES (?, ?)\", (event_id, \"rejected\"))\n                    return {\"status\": \"rejected\", \"reason\": \"Payment already captured\"}\n\n                cursor.execute(\n                    \"INSERT INTO payments (payment_id, captured_paise, refunded_paise) VALUES (?, ?, 0)\",\n                    (payment_id, amount_paise)\n                )\n                cursor.execute(\n                    \"INSERT INTO ledger (payment_id, kind, amount_paise, event_id) VALUES (?, 'capture', ?, ?)\",\n                    (payment_id, amount_paise, event_id)\n                )\n                cursor.execute(\"INSERT INTO processed_events (event_id, status) VALUES (?, ?)\", (event_id, \"applied\"))\n                return {\"status\": \"applied\", \"reason\": \"Payment captured successfully\"}\n\n            elif event_type == \"refund.processed\":\n                cursor.execute(\"SELECT captured_paise, refunded_paise FROM payments WHERE payment_id = ?\", (payment_id,))\n                p_row = cursor.fetchone()\n                if p_row is None:\n                    cursor.execute(\"INSERT INTO processed_events (event_id, status) VALUES (?, ?)\", (event_id, \"rejected\"))\n                    return {\"status\": \"rejected\", \"reason\": \"Payment not found\"}\n\n                captured, refunded = p_row\n                if refunded + amount_paise > captured:\n                    cursor.execute(\"INSERT INTO processed_events (event_id, status) VALUES (?, ?)\", (event_id, \"rejected\"))\n                    return {\"status\": \"rejected\", \"reason\": \"Refund exceeds capture\"}\n\n                cursor.execute(\n                    \"UPDATE payments SET refunded_paise = refunded_paise + ? WHERE payment_id = ?\",\n                    (amount_paise, payment_id)\n                )\n                cursor.execute(\n                    \"INSERT INTO ledger (payment_id, kind, amount_paise, event_id) VALUES (?, 'refund', ?, ?)\",\n                    (payment_id, amount_paise, event_id)\n                )\n                cursor.execute(\"INSERT INTO processed_events (event_id, status) VALUES (?, ?)\", (event_id, \"applied\"))\n                return {\"status\": \"applied\", \"reason\": \"Refund processed successfully\"}\n\n        return {\"status\": \"rejected\", \"reason\": \"Unknown error\"}\n    except Exception as e:\n        return {\"status\": \"rejected\", \"reason\": f\"Internal error: {str(e)}\"}\n",
+  "after_code": "import sqlite3\nimport hmac\nimport hashlib\nimport json\nimport time\nfrom typing import Dict, Any\nfrom contextlib import contextmanager\n\n@contextmanager\ndef get_db(db_path: str):\n    conn = sqlite3.connect(db_path, timeout=5.0)\n    conn.execute(\"PRAGMA journal_mode=WAL;\")\n    conn.execute(\"PRAGMA busy_timeout=5000;\")\n    try:\n        yield conn\n        conn.commit()\n    except Exception:\n        conn.rollback()\n        raise\n    finally:\n        conn.close()\n\ndef init_aux(conn: sqlite3.Connection):\n    conn.execute(\"\"\"\n        CREATE TABLE IF NOT EXISTS processed_events (\n            event_id TEXT PRIMARY KEY,\n            status TEXT NOT NULL\n        )\n    \"\"\")\n\ndef handle_event(db_path: str, raw_body: bytes, signature: str, secret: str) -> dict:\n    try:\n        if not isinstance(signature, str):\n            return {\"status\": \"rejected\", \"reason\": \"Invalid signature type\"}\n        \n        expected_sig = hmac.new(\n            secret.encode(\"utf-8\"),\n            raw_body,\n            hashlib.sha256\n        ).hexdigest()\n        \n        if not hmac.compare_digest(expected_sig, signature):\n            return {\"status\": \"rejected\", \"reason\": \"Signature mismatch\"}\n\n        try:\n            body_str = raw_body.decode(\"utf-8\")\n        except UnicodeDecodeError:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid UTF-8\"}\n\n        try:\n            payload = json.loads(body_str)\n        except json.JSONDecodeError:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid JSON\"}\n\n        if not isinstance(payload, dict):\n            return {\"status\": \"rejected\", \"reason\": \"Payload must be object\"}\n\n        event_id = payload.get(\"event_id\")\n        if not isinstance(event_id, str) or not event_id or len(event_id) > 64:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid event_id\"}\n\n        event_type = payload.get(\"type\")\n        if event_type not in (\"payment.captured\", \"refund.processed\"):\n            return {\"status\": \"rejected\", \"reason\": \"Invalid type\"}\n\n        payment_id = payload.get(\"payment_id\")\n        if not isinstance(payment_id, str) or not payment_id or len(payment_id) > 64:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid payment_id\"}\n\n        amount_paise = payload.get(\"amount_paise\")\n        if isinstance(amount_paise, bool) or not isinstance(amount_paise, int):\n            return {\"status\": \"rejected\", \"reason\": \"amount_paise must be integer\"}\n        if amount_paise < 1 or amount_paise > 10**12:\n            return {\"status\": \"rejected\", \"reason\": \"amount_paise out of bounds\"}\n\n        if event_type == \"refund.processed\":\n            refund_id = payload.get(\"refund_id\")\n            if not isinstance(refund_id, str) or not refund_id:\n                return {\"status\": \"rejected\", \"reason\": \"Missing refund_id\"}\n\n        with get_db(db_path) as conn:\n            init_aux(conn)\n            cursor = conn.cursor()\n            \n            cursor.execute(\"SELECT status FROM processed_events WHERE event_id = ?\", (event_id,))\n            row = cursor.fetchone()\n            if row:\n                existing_status = row[0]\n                if existing_status == \"applied\":\n                    return {\"status\": \"duplicate\", \"reason\": \"Event already processed\"}\n                # If previously rejected, do NOT treat as duplicate/consumed; allow re-processing per Rule R8.\n\n            if event_type == \"payment.captured\":\n                cursor.execute(\"SELECT captured_paise FROM payments WHERE payment_id = ?\", (payment_id,))\n                p_row = cursor.fetchone()\n                if p_row is not None:\n                    # Do not insert into processed_events for a business rejection (Rule R8: \"A 'rejected' event produces no state change and does NOT consume its event_id\")\n                    return {\"status\": \"rejected\", \"reason\": \"Payment already captured\"}\n\n                cursor.execute(\n                    \"INSERT INTO payments (payment_id, captured_paise, refunded_paise) VALUES (?, ?, 0)\",\n                    (payment_id, amount_paise)\n                )\n                cursor.execute(\n                    \"INSERT INTO ledger (payment_id, kind, amount_paise, event_id) VALUES (?, 'capture', ?, ?)\",\n                    (payment_id, amount_paise, event_id)\n                )\n                cursor.execute(\n                    \"INSERT OR REPLACE INTO processed_events (event_id, status) VALUES (?, ?)\",\n                    (event_id, \"applied\")\n                )\n                return {\"status\": \"applied\", \"reason\": \"Payment captured successfully\"}\n\n            elif event_type == \"refund.processed\":\n                cursor.execute(\"SELECT captured_paise, refunded_paise FROM payments WHERE payment_id = ?\", (payment_id,))\n                p_row = cursor.fetchone()\n                if p_row is None:\n                    return {\"status\": \"rejected\", \"reason\": \"Payment not found\"}\n\n                captured, refunded = p_row\n                if refunded + amount_paise > captured:\n                    return {\"status\": \"rejected\", \"reason\": \"Refund exceeds capture\"}\n\n                cursor.execute(\n                    \"UPDATE payments SET refunded_paise = refunded_paise + ? WHERE payment_id = ?\",\n                    (amount_paise, payment_id)\n                )\n                cursor.execute(\n                    \"INSERT INTO ledger (payment_id, kind, amount_paise, event_id) VALUES (?, 'refund', ?, ?)\",\n                    (payment_id, amount_paise, event_id)\n                )\n                cursor.execute(\n                    \"INSERT OR REPLACE INTO processed_events (event_id, status) VALUES (?, ?)\",\n                    (event_id, \"applied\")\n                )\n                return {\"status\": \"applied\", \"reason\": \"Refund processed successfully\"}\n\n        return {\"status\": \"rejected\", \"reason\": \"Unknown error\"}\n    except Exception as e:\n        return {\"status\": \"rejected\", \"reason\": f\"Internal error: {str(e)}\"}\n",
+  "fixed_code": "import sqlite3\nimport hmac\nimport hashlib\nimport json\nimport time\nfrom typing import Dict, Any\nfrom contextlib import contextmanager\n\n@contextmanager\ndef get_db(db_path: str):\n    conn = sqlite3.connect(db_path, timeout=5.0)\n    conn.execute(\"PRAGMA journal_mode=WAL;\")\n    conn.execute(\"PRAGMA busy_timeout=5000;\")\n    try:\n        yield conn\n        conn.commit()\n    except Exception:\n        conn.rollback()\n        raise\n    finally:\n        conn.close()\n\ndef init_aux(conn: sqlite3.Connection):\n    conn.execute(\"\"\"\n        CREATE TABLE IF NOT EXISTS processed_events (\n            event_id TEXT PRIMARY KEY,\n            status TEXT NOT NULL\n        )\n    \"\"\")\n\ndef handle_event(db_path: str, raw_body: bytes, signature: str, secret: str) -> dict:\n    try:\n        if not isinstance(signature, str):\n            return {\"status\": \"rejected\", \"reason\": \"Invalid signature type\"}\n        \n        expected_sig = hmac.new(\n            secret.encode(\"utf-8\"),\n            raw_body,\n            hashlib.sha256\n        ).hexdigest()\n        \n        if not hmac.compare_digest(expected_sig, signature):\n            return {\"status\": \"rejected\", \"reason\": \"Signature mismatch\"}\n\n        try:\n            body_str = raw_body.decode(\"utf-8\")\n        except UnicodeDecodeError:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid UTF-8\"}\n\n        try:\n            payload = json.loads(body_str)\n        except json.JSONDecodeError:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid JSON\"}\n\n        if not isinstance(payload, dict):\n            return {\"status\": \"rejected\", \"reason\": \"Payload must be object\"}\n\n        event_id = payload.get(\"event_id\")\n        if not isinstance(event_id, str) or not event_id or len(event_id) > 64:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid event_id\"}\n\n        event_type = payload.get(\"type\")\n        if event_type not in (\"payment.captured\", \"refund.processed\"):\n            return {\"status\": \"rejected\", \"reason\": \"Invalid type\"}\n\n        payment_id = payload.get(\"payment_id\")\n        if not isinstance(payment_id, str) or not payment_id or len(payment_id) > 64:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid payment_id\"}\n\n        amount_paise = payload.get(\"amount_paise\")\n        if isinstance(amount_paise, bool) or not isinstance(amount_paise, int):\n            return {\"status\": \"rejected\", \"reason\": \"amount_paise must be integer\"}\n        if amount_paise < 1 or amount_paise > 10**12:\n            return {\"status\": \"rejected\", \"reason\": \"amount_paise out of bounds\"}\n\n        if event_type == \"refund.processed\":\n            refund_id = payload.get(\"refund_id\")\n            if not isinstance(refund_id, str) or not refund_id:\n                return {\"status\": \"rejected\", \"reason\": \"Missing refund_id\"}\n\n        with get_db(db_path) as conn:\n            init_aux(conn)\n            cursor = conn.cursor()\n            \n            cursor.execute(\"SELECT status FROM processed_events WHERE event_id = ?\", (event_id,))\n            row = cursor.fetchone()\n            if row:\n                existing_status = row[0]\n                if existing_status == \"applied\":\n                    return {\"status\": \"duplicate\", \"reason\": \"Event already processed\"}\n                # If previously rejected, do NOT treat as duplicate/consumed; allow re-processing per Rule R8.\n\n            if event_type == \"payment.captured\":\n                cursor.execute(\"SELECT captured_paise FROM payments WHERE payment_id = ?\", (payment_id,))\n                p_row = cursor.fetchone()\n                if p_row is not None:\n                    # Do not insert into processed_events for a business rejection (Rule R8: \"A 'rejected' event produces no state change and does NOT consume its event_id\")\n                    return {\"status\": \"rejected\", \"reason\": \"Payment already captured\"}\n\n                cursor.execute(\n                    \"INSERT INTO payments (payment_id, captured_paise, refunded_paise) VALUES (?, ?, 0)\",\n                    (payment_id, amount_paise)\n                )\n                cursor.execute(\n                    \"INSERT INTO ledger (payment_id, kind, amount_paise, event_id) VALUES (?, 'capture', ?, ?)\",\n                    (payment_id, amount_paise, event_id)\n                )\n                cursor.execute(\n                    \"INSERT OR REPLACE INTO processed_events (event_id, status) VALUES (?, ?)\",\n                    (event_id, \"applied\")\n                )\n                return {\"status\": \"applied\", \"reason\": \"Payment captured successfully\"}\n\n            elif event_type == \"refund.processed\":\n                cursor.execute(\"SELECT captured_paise, refunded_paise FROM payments WHERE payment_id = ?\", (payment_id,))\n                p_row = cursor.fetchone()\n                if p_row is None:\n                    return {\"status\": \"rejected\", \"reason\": \"Payment not found\"}\n\n                captured, refunded = p_row\n                if refunded + amount_paise > captured:\n                    return {\"status\": \"rejected\", \"reason\": \"Refund exceeds capture\"}\n\n                cursor.execute(\n                    \"UPDATE payments SET refunded_paise = refunded_paise + ? WHERE payment_id = ?\",\n                    (amount_paise, payment_id)\n                )\n                cursor.execute(\n                    \"INSERT INTO ledger (payment_id, kind, amount_paise, event_id) VALUES (?, 'refund', ?, ?)\",\n                    (payment_id, amount_paise, event_id)\n                )\n                cursor.execute(\n                    \"INSERT OR REPLACE INTO processed_events (event_id, status) VALUES (?, ?)\",\n                    (event_id, \"applied\")\n                )\n                return {\"status\": \"applied\", \"reason\": \"Refund processed successfully\"}\n\n        return {\"status\": \"rejected\", \"reason\": \"Unknown error\"}\n    except Exception as e:\n        return {\"status\": \"rejected\", \"reason\": f\"Internal error: {str(e)}\"}\n",
+  "original_code": "import sqlite3\nimport hmac\nimport hashlib\nimport json\nimport time\nfrom typing import Dict, Any\nfrom contextlib import contextmanager\n\n@contextmanager\ndef get_db(db_path: str):\n    conn = sqlite3.connect(db_path, timeout=5.0)\n    conn.execute(\"PRAGMA journal_mode=WAL;\")\n    conn.execute(\"PRAGMA busy_timeout=5000;\")\n    try:\n        yield conn\n        conn.commit()\n    except Exception:\n        conn.rollback()\n        raise\n    finally:\n        conn.close()\n\ndef init_aux(conn: sqlite3.Connection):\n    conn.execute(\"\"\"\n        CREATE TABLE IF NOT EXISTS processed_events (\n            event_id TEXT PRIMARY KEY,\n            status TEXT NOT NULL\n        )\n    \"\"\")\n\ndef handle_event(db_path: str, raw_body: bytes, signature: str, secret: str) -> dict:\n    try:\n        if not isinstance(signature, str):\n            return {\"status\": \"rejected\", \"reason\": \"Invalid signature type\"}\n        \n        expected_sig = hmac.new(\n            secret.encode(\"utf-8\"),\n            raw_body,\n            hashlib.sha256\n        ).hexdigest()\n        \n        if not hmac.compare_digest(expected_sig, signature):\n            return {\"status\": \"rejected\", \"reason\": \"Signature mismatch\"}\n\n        try:\n            body_str = raw_body.decode(\"utf-8\")\n        except UnicodeDecodeError:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid UTF-8\"}\n\n        try:\n            payload = json.loads(body_str)\n        except json.JSONDecodeError:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid JSON\"}\n\n        if not isinstance(payload, dict):\n            return {\"status\": \"rejected\", \"reason\": \"Payload must be object\"}\n\n        event_id = payload.get(\"event_id\")\n        if not isinstance(event_id, str) or not event_id or len(event_id) > 64:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid event_id\"}\n\n        event_type = payload.get(\"type\")\n        if event_type not in (\"payment.captured\", \"refund.processed\"):\n            return {\"status\": \"rejected\", \"reason\": \"Invalid type\"}\n\n        payment_id = payload.get(\"payment_id\")\n        if not isinstance(payment_id, str) or not payment_id or len(payment_id) > 64:\n            return {\"status\": \"rejected\", \"reason\": \"Invalid payment_id\"}\n\n        amount_paise = payload.get(\"amount_paise\")\n        if isinstance(amount_paise, bool) or not isinstance(amount_paise, int):\n            return {\"status\": \"rejected\", \"reason\": \"amount_paise must be integer\"}\n        if amount_paise < 1 or amount_paise > 10**12:\n            return {\"status\": \"rejected\", \"reason\": \"amount_paise out of bounds\"}\n\n        if event_type == \"refund.processed\":\n            refund_id = payload.get(\"refund_id\")\n            if not isinstance(refund_id, str) or not refund_id:\n                return {\"status\": \"rejected\", \"reason\": \"Missing refund_id\"}\n\n        with get_db(db_path) as conn:\n            init_aux(conn)\n            cursor = conn.cursor()\n            \n            cursor.execute(\"SELECT status FROM processed_events WHERE event_id = ?\", (event_id,))\n            row = cursor.fetchone()\n            if row:\n                return {\"status\": \"duplicate\", \"reason\": \"Event already processed\"}\n\n            if event_type == \"payment.captured\":\n                cursor.execute(\"SELECT captured_paise FROM payments WHERE payment_id = ?\", (payment_id,))\n                p_row = cursor.fetchone()\n                if p_row is not None:\n                    cursor.execute(\"INSERT INTO processed_events (event_id, status) VALUES (?, ?)\", (event_id, \"rejected\"))\n                    return {\"status\": \"rejected\", \"reason\": \"Payment already captured\"}\n\n                cursor.execute(\n                    \"INSERT INTO payments (payment_id, captured_paise, refunded_paise) VALUES (?, ?, 0)\",\n                    (payment_id, amount_paise)\n                )\n                cursor.execute(\n                    \"INSERT INTO ledger (payment_id, kind, amount_paise, event_id) VALUES (?, 'capture', ?, ?)\",\n                    (payment_id, amount_paise, event_id)\n                )\n                cursor.execute(\"INSERT INTO processed_events (event_id, status) VALUES (?, ?)\", (event_id, \"applied\"))\n                return {\"status\": \"applied\", \"reason\": \"Payment captured successfully\"}\n\n            elif event_type == \"refund.processed\":\n                cursor.execute(\"SELECT captured_paise, refunded_paise FROM payments WHERE payment_id = ?\", (payment_id,))\n                p_row = cursor.fetchone()\n                if p_row is None:\n                    cursor.execute(\"INSERT INTO processed_events (event_id, status) VALUES (?, ?)\", (event_id, \"rejected\"))\n                    return {\"status\": \"rejected\", \"reason\": \"Payment not found\"}\n\n                captured, refunded = p_row\n                if refunded + amount_paise > captured:\n                    cursor.execute(\"INSERT INTO processed_events (event_id, status) VALUES (?, ?)\", (event_id, \"rejected\"))\n                    return {\"status\": \"rejected\", \"reason\": \"Refund exceeds capture\"}\n\n                cursor.execute(\n                    \"UPDATE payments SET refunded_paise = refunded_paise + ? WHERE payment_id = ?\",\n                    (amount_paise, payment_id)\n                )\n                cursor.execute(\n                    \"INSERT INTO ledger (payment_id, kind, amount_paise, event_id) VALUES (?, 'refund', ?, ?)\",\n                    (payment_id, amount_paise, event_id)\n                )\n                cursor.execute(\"INSERT INTO processed_events (event_id, status) VALUES (?, ?)\", (event_id, \"applied\"))\n                return {\"status\": \"applied\", \"reason\": \"Refund processed successfully\"}\n\n        return {\"status\": \"rejected\", \"reason\": \"Unknown error\"}\n    except Exception as e:\n        return {\"status\": \"rejected\", \"reason\": f\"Internal error: {str(e)}\"}\n",
+  "invariants_before": {
+    "I1_signature": {
+      "normal": {
+        "passed": 90,
+        "failed": 10
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 90,
+        "failed": 10
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "invariants_after": {
+    "I1_signature": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "before_after": {
+    "I1_signature": {
+      "before_failed": 10,
+      "after_failed": 0,
+      "fixed": true,
+      "regressed": false
+    },
+    "I2_idempotency": {
+      "before_failed": 10,
+      "after_failed": 0,
+      "fixed": true,
+      "regressed": false
+    },
+    "I3_conservation": {
+      "before_failed": 0,
+      "after_failed": 0,
+      "fixed": false,
+      "regressed": false
+    },
+    "I4_bounds": {
+      "before_failed": 0,
+      "after_failed": 0,
+      "fixed": false,
+      "regressed": false
+    },
+    "I5_interface": {
+      "before_failed": 0,
+      "after_failed": 0,
+      "fixed": false,
+      "regressed": false
+    }
+  },
+  "fixed_rule": true,
+  "broke_other": false,
+  "grounding": {
+    "used": true,
+    "source_ids": [
+      "R8_s1",
+      "R8_s2",
+      "R8_s3",
+      "R8_s4",
+      "R8_s5",
+      "R8_s6",
+      "R8_s7",
+      "R8_s8",
+      "R8_s9"
+    ]
+  },
+  "suite": true
+}

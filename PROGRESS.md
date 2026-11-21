@@ -611,3 +611,32 @@
   - `pilot/packets/3__0.md` through `3__9.md`
   - `handoff/N7_PILOT_RAN`
   - `handoff/N7_PILOT_DONE`
+
+
+### Stage N8 Report (Real Repair on Demo Candidate strong_a/A/3)
+
+- **Timestamp:** 2026-11-21 22:52:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nehaa
+- **Demo Candidate:** `strong_a/A/3` (`gemini-3.5-flash-lite`, Condition A, Sample 3)
+- **Failing Rule:** `Rule R8: Rejection Non-Consumption` (Invariant `I2_idempotency`, severity: financial)
+- **Repair Model:** `gemini-3.5-flash-lite` (Google provider)
+- **Grounding Integration:** `grounding_used: true`
+  - 9 You.com verified source citations for Rule R8 loaded from `runs/grounding.json` (`R8_s1` through `R8_s9`) and bound into the prompt.
+- **Model Execution:** Succeeded on attempt 1 in 4.33s (AST gate intake: 100% compliant, 0 violations).
+- **Sandbox Evaluation:** Full test suite re-evaluated inside Docker sandbox (`paysift-sandbox:1`) across seeds 0–99 (100 total):
+  - `I1_signature`: 100/100 PASSED (before: 90 passed, 10 failed -> 0 failed, fixed: `true`)
+  - `I2_idempotency`: 100/100 PASSED (before: 90 passed, 10 failed -> 0 failed, fixed: `true`)
+  - `I3_conservation`: 100/100 PASSED (0 failed)
+  - `I4_bounds`: 100/100 PASSED (0 failed)
+  - `I5_interface`: 100/100 PASSED (0 failed)
+  - Total Failures Logged: 0
+- **Repair Delta & Invariant Verdict:**
+  - Violated Rule R8 (`I2_idempotency`) Fixed: `true`
+  - Invariant Regressions (`broke_other`): `false` (no other invariant broken or regressed)
+- **Artifacts Created & Validated:**
+  - `runs/run_repair_3_1795281671.json`: Validated against `contract/run_schema.json` with 0 errors.
+  - `repair/cache/3__0.json`: Labeled `"source": "live"`, never `"stub"`, includes full before/after code, invariant delta, and grounding source IDs.
+  - `repair/cache/strong_a_A_3__0.json`: Linked/cached for candidate label lookups.
+  - `handoff/N8_REPAIR_DONE`
+

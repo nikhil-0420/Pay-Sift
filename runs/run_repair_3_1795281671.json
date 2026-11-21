@@ -1,0 +1,125 @@
+{
+  "run_id": "run_repair_3_1795281671",
+  "contract_version": "1.0",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+  "created_at": "2026-11-21T17:21:11.261304+00:00",
+  "candidate": {
+    "id": "strong_a_A_3_repaired",
+    "model": "gemini-3.5-flash-lite",
+    "condition": "A",
+    "sample": 3,
+    "sha256": "2ab389826f3172bc02bd171934a5a76b9b6cf15177741de963b02dc9d9f7cc4b",
+    "source": "live",
+    "label": "Candidate strong_a_A_3 (repaired)"
+  },
+  "harness": {
+    "mode_set": [
+      "normal"
+    ],
+    "docker": true,
+    "cpus": 1
+  },
+  "seeds": [
+    0,
+    99
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [],
+  "noncompliant": null,
+  "repair_of": "run_3_1795260584",
+  "before_after": {
+    "I1_signature": {
+      "before_failed": 10,
+      "after_failed": 0,
+      "fixed": true,
+      "regressed": false
+    },
+    "I2_idempotency": {
+      "before_failed": 10,
+      "after_failed": 0,
+      "fixed": true,
+      "regressed": false
+    },
+    "I3_conservation": {
+      "before_failed": 0,
+      "after_failed": 0,
+      "fixed": false,
+      "regressed": false
+    },
+    "I4_bounds": {
+      "before_failed": 0,
+      "after_failed": 0,
+      "fixed": false,
+      "regressed": false
+    },
+    "I5_interface": {
+      "before_failed": 0,
+      "after_failed": 0,
+      "fixed": false,
+      "regressed": false
+    }
+  },
+  "grounding": {
+    "used": true,
+    "source_ids": [
+      "R8_s1",
+      "R8_s2",
+      "R8_s3",
+      "R8_s4",
+      "R8_s5",
+      "R8_s6",
+      "R8_s7",
+      "R8_s8",
+      "R8_s9"
+    ]
+  }
+}
