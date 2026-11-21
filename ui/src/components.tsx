@@ -666,32 +666,44 @@ export function PipelineDiagram({
   }>;
 }) {
   const reduced = useReducedMotion();
+  const stateTone = (state: string) => {
+    const value = String(state || "").toLowerCase();
+    if (/block|fail|unavailable|error/.test(value)) return "blocked";
+    if (/pending|ready|available|review/.test(value)) return "pending";
+    if (/pass|recorded|complete|^ok$|clean/.test(value)) return "complete";
+    return "idle";
+  };
   return (
-    <div className="pipeline" aria-label="Pipeline">
-      {stages.map((stage, index) => (
-        <motion.article
-          className="pipeline-stage"
-          key={stage.label}
-          initial={reduced ? false : { opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{
-            duration: reduced ? 0 : 0.3,
-            delay: reduced ? 0 : index * 0.05,
-          }}
-        >
-          <div className="pipeline-node">
-            {stage.icon || String(index + 1).padStart(2, "0")}
-          </div>
-          <div className="pipeline-copy">
-            <div className="row">
-              <b>{stage.label}</b>
-              <span className="state-pill">{stage.state}</span>
+    <div className={`pipeline pipeline-${stages.length}`} aria-label="Process flow">
+      {stages.map((stage, index) => {
+        const tone = stateTone(stage.state);
+        return (
+          <motion.article
+            className="pipeline-stage"
+            key={stage.label}
+            data-state={tone}
+            initial={reduced ? false : { opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{
+              duration: reduced ? 0 : 0.28,
+              delay: reduced ? 0 : index * 0.035,
+            }}
+          >
+            <div className="pipeline-node" aria-hidden="true">
+              {stage.icon || String(index + 1).padStart(2, "0")}
+              <span className="pipeline-index">{String(index + 1).padStart(2, "0")}</span>
             </div>
-            <p>{stage.detail}</p>
-          </div>
-        </motion.article>
-      ))}
+            <div className="pipeline-copy">
+              <div className="pipeline-topline">
+                <b>{stage.label}</b>
+                <span className={`state-pill state-${tone}`} title={stage.state}>{stage.state}</span>
+              </div>
+              <p>{stage.detail}</p>
+            </div>
+          </motion.article>
+        );
+      })}
     </div>
   );
 }

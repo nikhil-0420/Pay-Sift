@@ -283,7 +283,19 @@ function Shell() {
   useEffect(() => {
     setPalette(false);
     setMobileOpen(false);
-  }, [location.pathname]);
+
+    // React Router does not reset scroll position automatically. Without this,
+    // navigating from a scrolled page can leave the next page title clipped
+    // beneath the sticky navigation.
+    if (location.hash) {
+      const anchorId = decodeURIComponent(location.hash.slice(1));
+      window.requestAnimationFrame(() => {
+        document.getElementById(anchorId)?.scrollIntoView({ block: "start" });
+      });
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
+  }, [location.pathname, location.search, location.hash]);
   const value = useMemo(() => ({ ...ctx, setRaw }), [ctx]);
   const nav = [
     ["/runs", "Findings"],
@@ -444,6 +456,22 @@ function parseRules(spec: string) {
     );
     return match ? [{ id: match[1], title: match[2], body: match[3] }] : [];
   });
+}
+function ruleSummary(id: string, fallback: string) {
+  const summaries: Record<string, string> = {
+    R0: "Every event must return a valid status and reason without crashing or hanging.",
+    R1: "Reject missing or invalid signatures before changing payment state.",
+    R2: "Validate the event fields and amount before processing it.",
+    R3: "Apply an event ID only once. Redelivery must not change state.",
+    R4: "Capture a payment once; reject a second capture for the same payment.",
+    R5: "A refund is valid only after its payment has been captured.",
+    R6: "Refunds must never exceed the remaining captured balance.",
+    R7: "Payment balances and ledger entries must always agree.",
+    R8: "A rejected event must not block a later valid retry.",
+    R9: "Payment and deduplication state must survive process restarts.",
+    R10: "Concurrent requests must preserve duplicate protection and refund limits.",
+  };
+  return summaries[id] || fallback;
 }
 function Palette({ onClose }: { onClose: () => void }) {
   const nav = useNavigate();
@@ -901,20 +929,21 @@ function Home() {
           <Link
             id="featured"
             to={`/runs/${featured.r.run_id}/failures/${featured.r.failures.indexOf(featured.f)}`}
-            className="card paper featured-paper"
+            className="featured-paper"
           >
-            <div className="eyebrow">
-              {featured.f.invariant} / Rule {featured.f.rule}
+            <div className="featured-paper-topline">
+              <div>
+                <div className="eyebrow">RECORDED COUNTEREXAMPLE</div>
+                <span className="featured-rule">{featured.f.invariant} <span>/</span> Rule {featured.f.rule}</span>
+              </div>
+              <span className="featured-open">Inspect trace <ArrowRight size={15} /></span>
             </div>
             <h3>{featured.f.explanation}</h3>
-            <div className="row">
-              <span>
-                {featured.f.minimal_stream?.length ?? "—"} events in minimal
-                trace
-              </span>
+            <div className="featured-paper-footer">
+              <span className="featured-trace-count">{featured.f.minimal_stream?.length ?? "—"} events <span>in minimal trace</span></span>
               <ClassBadge value={featured.f.classification} />
+              <span className="featured-source"><Source candidate={featured.r.candidate} /></span>
             </div>
-            <Source candidate={featured.r.candidate} />
           </Link>
         ) : (
           <DesignedEmpty
@@ -1624,9 +1653,15 @@ function BreakPage() {
       />
       <div className="break-layout">
         <aside className="scenario-rail">
-          <h2>Scenario</h2>
-          <p className="rail-intro">Choose a recorded delivery stream.</p>
-          {scenarios.map(([id, x]: any) => (
+          <div className="scenario-rail-heading">
+            <div>
+              <div className="eyebrow">Test library</div>
+              <h2>Choose a scenario</h2>
+              <p className="rail-intro">Select a recorded payment case to replay.</p>
+            </div>
+            <span className="scenario-count">{scenarios.length.toString().padStart(2, "0")} CASES</span>
+          </div>
+          {scenarios.map(([id, x]: any, index: number) => (
             <button
               key={id}
               className={`scenario-option ${scenario === id ? "selected" : ""}`}
@@ -1636,9 +1671,12 @@ function BreakPage() {
               }}
               aria-pressed={scenario === id}
             >
+              <div className="scenario-option-kicker">
+                <span>CASE {String(index + 1).padStart(2, "0")}</span>
+                <span className="scenario-rule-badge" title={x.invariant}>{x.rule}</span>
+              </div>
               <b>{x.title}</b>
               <span>{x.explanation}</span>
-              <RuleBadge rule={x.rule} title={x.invariant} />
             </button>
           ))}
         </aside>
@@ -1686,12 +1724,13 @@ function BreakPage() {
             </button>
           </div>
           {mode !== "live" && (
-            <div className="unavailable-hint" role="note">
-              <CircleHelp size={16} />
-              <span>
-                <b>Live execution unavailable in static snapshot.</b> Connect
-                the configured API and sandbox gate to run this scenario.
+            <div className="unavailable-hint snapshot-notice" role="note">
+              <span className="notice-icon"><CircleHelp size={17} /></span>
+              <span className="notice-copy">
+                <b>Saved replay mode</b>
+                <span>Live execution is off. Connect the API and sandbox gate to run this scenario for real.</span>
               </span>
+              <span className="notice-tag">STATIC</span>
             </div>
           )}
           {err && (
@@ -1954,13 +1993,13 @@ function Repair() {
         )}
       </div>
       {mode !== "live" && (
-        <div className="unavailable-hint">
-          <CircleHelp size={16} />
-          <span>
-            <b>Model repair disabled in static snapshot.</b>{" "}
-            {blocker?.title ||
-              "Connect the live API and sandbox gate to enable it."}
+        <div className="unavailable-hint snapshot-notice repair-notice" role="note">
+          <span className="notice-icon"><CircleHelp size={17} /></span>
+          <span className="notice-copy">
+            <b>Model repair is unavailable in snapshot mode</b>
+            <span>Configure model IDs and API keys in <code>config/models.yaml</code>, then connect the live API and sandbox gate.</span>
           </span>
+          <span className="notice-tag">BLOCKED</span>
         </div>
       )}
       {loading && (
@@ -1971,13 +2010,20 @@ function Repair() {
       )}
       {error && <div className="error">{error}</div>}
       {selected && (
-        <div className="card selected-failure" style={{ marginTop: 18 }}>
-          <div className="eyebrow">Selected recorded failure</div>
-          <Source candidate={selected.r.candidate} />
-          <p>{selected.f.explanation}</p>
-          <RuleBadge rule={selected.f.rule} />
+        <section className="selected-failure" aria-labelledby="selected-failure-title">
+          <header className="selected-failure-head">
+            <div>
+              <div className="eyebrow">Selected recorded failure</div>
+              <h2 id="selected-failure-title">{selected.f.invariant || "Payment handler failure"}</h2>
+            </div>
+            <div className="selected-failure-meta">
+              <Source candidate={selected.r.candidate} />
+              <RuleBadge rule={selected.f.rule} title={`Open Rule ${selected.f.rule}`} />
+            </div>
+          </header>
+          <p className="selected-failure-summary">{selected.f.explanation}</p>
           <EvidencePanel data={grounding} rule={selected.f.rule} />
-        </div>
+        </section>
       )}
       {!result && (
         <DesignedEmpty
@@ -2113,26 +2159,22 @@ function Pilot() {
     {
       label: "Docker",
       state: blocked(/docker/i) ? "blocked" : "not run",
-      detail:
-        blockers.find((x: any) => /docker/i.test(x.title))?.title ||
-        "Host readiness from the status snapshot",
+      detail: blocked(/docker/i) ? "Container runtime needs attention." : "Check container runtime readiness.",
     },
     {
       label: "Keys",
       state: blocked(/model|key/i) ? "blocked" : "not run",
-      detail:
-        blockers.find((x: any) => /model|key/i.test(x.title))?.title ||
-        "Model credentials from the status snapshot",
+      detail: blocked(/model|key/i) ? "Model credentials are not ready." : "Check model API credentials.",
     },
     {
       label: "Generate",
       state: gate("G4")?.status?.includes("PASSED") ? "ok" : "blocked",
-      detail: gate("G4")?.status || "Sandbox status not supplied",
+      detail: gate("G4")?.status?.includes("PASSED") ? "Sandbox check passed." : "Sandbox gate needs to pass.",
     },
     {
       label: "Pilot",
       state: selected.length ? "ok" : blocked(/pilot/i) ? "blocked" : "not run",
-      detail: `${selected.length} sourced model run(s)`,
+      detail: selected.length ? `${selected.length} sourced run${selected.length === 1 ? "" : "s"} recorded.` : "No sourced model run yet.",
     },
   ];
   return (
@@ -2217,12 +2259,9 @@ function Pilot() {
         </>
       )}
       <Section title="Condition B">
-        <div className="card">
-          <Badge tone="amber">ILLUSTRATIVE</Badge>
-          <p>
-            {conditionB.length} illustrative run(s) are excluded from the
-            Condition A view.
-          </p>
+        <div className="pilot-note">
+          <Badge tone="amber">ILLUSTRATIVE ONLY</Badge>
+          <p>{conditionB.length} illustrative run(s) are kept separate and are not included in the Condition A summary.</p>
         </div>
       </Section>
     </main>
@@ -2324,17 +2363,22 @@ function Spec() {
                     key={rule.id}
                   >
                     <summary>
-                      <div className="eyebrow">
-                        {rule.id} · {rule.title}
+                      <div className="rule-card-heading">
+                        <span className="rule-id">{rule.id}</span>
+                        <span className="rule-title">{rule.title}</span>
+                        <span className="rule-expand" aria-hidden="true"><ChevronDown size={15} /></span>
                       </div>
-                      <span>{rule.body}</span>
-                      <small>
-                        <Link to={`/runs?rule=${rule.id}`}>
-                          Violated in {count} runs <ArrowRight size={12} />
+                      <p className="rule-summary">{ruleSummary(rule.id, rule.body)}</p>
+                      <div className="rule-card-footer">
+                        <Link className="rule-violations-link" to={`/runs?rule=${rule.id}`} onClick={(event) => event.stopPropagation()}>
+                          <span>Violated in {count} {count === 1 ? "run" : "runs"}</span>
+                          <ArrowRight size={14} aria-hidden="true" />
                         </Link>
-                      </small>
+                        <span className="rule-expand-label">{"Details"}</span>
+                      </div>
                     </summary>
                     <div className="rule-full">
+                      <div className="eyebrow">Full rule text</div>
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {rule.body}
                       </ReactMarkdown>
@@ -2420,55 +2464,49 @@ function Method() {
   const stages = [
     {
       label: "Contract",
-      detail: "The written rules define the financial behavior under test.",
+      detail: "Rules define the payment behavior being checked.",
       state: byId("G1")?.status || "not run",
       icon: <FileJson size={16} />,
     },
     {
       label: "Candidates",
-      detail:
-        "Reference and hand-written implementations; model handlers only when present.",
+      detail: "Compare the reference handler with supplied candidates.",
       state: byId("G3")?.status || "not run",
       icon: <Database size={16} />,
     },
     {
       label: "Isolated execution",
-      detail: "Untrusted handler code must run inside the configured sandbox.",
+      detail: "Run untrusted handler code inside the sandbox.",
       state: byId("G4")?.status || "not run",
       icon: <ShieldAlert size={16} />,
     },
     {
       label: "Event streams",
-      detail: "Recorded delivery scenarios probe payment edge cases.",
+      detail: "Replay webhook cases that expose payment edge cases.",
       state: byId("G6")?.status || "not run",
       icon: <Activity size={16} />,
     },
     {
       label: "Ledger oracle",
-      detail:
-        "Expected and observed payment state are compared after deliveries.",
+      detail: "Compare the actual ledger with the expected result.",
       state: byId("G8")?.status || "not run",
       icon: <Check size={16} />,
     },
     {
       label: "Shrink",
-      detail:
-        "The recorded failing stream is reduced without inventing intermediate events.",
+      detail: "Reduce a failure to the smallest recorded trace.",
       state: byId("G7")?.status || "not run",
       icon: <ArrowDownRight size={16} />,
     },
     {
       label: "Repair and re-run",
-      detail: "A repair needs the full suite to run again before a verdict.",
-      state:
-        status?.blockers?.find((x: any) => /repair/i.test(x.title))?.title ||
-        "not run",
+      detail: "Run the full suite before accepting a repair.",
+      state: status?.blockers?.some((x: any) => /repair/i.test(x.title)) ? "blocked" : "not run",
       icon: <RefreshCw size={16} />,
     },
     {
       label: "Matrix",
-      detail:
-        "Reference cleanliness and intended mutant failures remain visible.",
+      detail: "Keep reference failures and mutant results visible.",
       state: byId("G3")?.status || "not run",
       icon: <Filter size={16} />,
     },
@@ -2497,13 +2535,12 @@ function Method() {
         />
       </Section>
       <Section title="Honest limits">
-        <div className="card">
-          <p>
-            The mutant suite is hand-written; the matrix is partly circular and
-            self-attested. The specification remains DRAFT-FROZEN pending human
-            review. No model pilot finding is implied by mutant results. No
-            ranking is shown.
-          </p>
+        <div className="method-limit-panel">
+          <span className="method-limit-icon"><CircleHelp size={17} /></span>
+          <div>
+            <div className="eyebrow">Evidence boundary</div>
+            <p>The current mutant suite is hand-written, and parts of the kill matrix are self-attested. The contract still needs human review. Mutant results do not count as model-pilot findings, and candidates are not ranked.</p>
+          </div>
         </div>
       </Section>
     </main>
