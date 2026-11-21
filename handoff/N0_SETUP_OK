@@ -1,0 +1,11 @@
+﻿stage: N0
+owner: nehaa
+status: DONE
+completed_at: 2026-11-21T07:35:20Z
+work_commit: 704a8167e45a323b178851ab82aa2aefcda8478e
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Setup and baseline completed, .venv ready, check-env and selftest verified
+python_version: 3.14.3
+pytest_result: 104 passed, 7 skipped
+selftest_note: expected git-baseline failure (.agent/git_baseline.txt missing on fresh clone)
+docker_present: no
