@@ -1,0 +1,1081 @@
+{
+  "GET /health": {
+    "status": 200,
+    "body": {
+      "status": "ok",
+      "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+      "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16"
+    }
+  },
+  "GET /runs": {
+    "status": 200,
+    "body": [
+      {
+        "id": "run_m1_no_dedupe_1795216867",
+        "run_id": "run_m1_no_dedupe_1795216867",
+        "created_at": "2026-11-20T23:21:07.090402+00:00",
+        "candidate": {
+          "id": "m1_no_dedupe",
+          "model": "reference",
+          "condition": "-",
+          "sample": null,
+          "sha256": "dc2c16deef610589d358dd4636a85babe73f1c3d8b785bc13adc81b5cbc9ee65",
+          "source": "mutant",
+          "label": "hand-written mutant, not model output"
+        },
+        "candidate_id": "m1_no_dedupe",
+        "candidate_source": "mutant",
+        "candidate_model": "reference",
+        "candidate_condition": "-",
+        "failures_count": 1,
+        "failure_count": 1,
+        "financial_failures_count": 1,
+        "financial_failure_count": 1,
+        "interface_failures_count": 0,
+        "interface_failure_count": 0,
+        "repair_of": null,
+        "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+        "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+        "path": "runs/real_example.json"
+      },
+      {
+        "id": "run_handler_ref_1795205994",
+        "run_id": "run_handler_ref_1795205994",
+        "created_at": "2026-11-20T20:19:54.066215+00:00",
+        "candidate": {
+          "id": "handler_ref",
+          "model": "reference",
+          "condition": "-",
+          "sample": null,
+          "sha256": "1092a0201b512c6e8f94e1f8c909b73b9b9362b45b0c90a147f4b7003f9721d9",
+          "source": "reference",
+          "label": "Candidate handler_ref"
+        },
+        "candidate_id": "handler_ref",
+        "candidate_source": "reference",
+        "candidate_model": "reference",
+        "candidate_condition": "-",
+        "failures_count": 0,
+        "failure_count": 0,
+        "financial_failures_count": 0,
+        "financial_failure_count": 0,
+        "interface_failures_count": 0,
+        "interface_failure_count": 0,
+        "repair_of": null,
+        "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+        "oracle_sha": "a2212b2b5ab0dbdde5ef9773ef6b17a9fab9bd46cb99fa2bbcbbb2a554e1f857",
+        "path": "runs/run_handler_ref_1795205994.json"
+      },
+      {
+        "truncated": true,
+        "total_items": 280
+      }
+    ]
+  },
+  "GET /runs/{id} (reference)": {
+    "path": "/runs/run_handler_ref_1795205994",
+    "status": 200,
+    "body": {
+      "run_id": "run_handler_ref_1795205994",
+      "contract_version": "1.0",
+      "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+      "oracle_sha": "a2212b2b5ab0dbdde5ef9773ef6b17a9fab9bd46cb99fa2bbcbbb2a554e1f857",
+      "created_at": "2026-11-20T20:19:54.066215+00:00",
+      "candidate": {
+        "id": "handler_ref",
+        "model": "reference",
+        "condition": "-",
+        "sample": null,
+        "sha256": "1092a0201b512c6e8f94e1f8c909b73b9b9362b45b0c90a147f4b7003f9721d9",
+        "source": "reference",
+        "label": "Candidate handler_ref"
+      },
+      "harness": {
+        "mode_set": [
+          "normal"
+        ],
+        "docker": false,
+        "cpus": 1
+      },
+      "seeds": [
+        0,
+        99
+      ],
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 100,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {
+        "scenario_A": {
+          "trials": 0,
+          "failed": 0,
+          "warnings": 0
+        },
+        "scenario_B": {
+          "trials": 0,
+          "failed": 0,
+          "warnings": 0
+        }
+      },
+      "failures": [],
+      "noncompliant": null,
+      "repair_of": null
+    }
+  },
+  "GET /runs/{id} (mutant)": {
+    "path": "/runs/run_m1_no_dedupe_1795216867",
+    "status": 200,
+    "body": {
+      "run_id": "run_m1_no_dedupe_1795216867",
+      "contract_version": "1.0",
+      "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+      "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+      "created_at": "2026-11-20T23:21:07.090402+00:00",
+      "candidate": {
+        "id": "m1_no_dedupe",
+        "model": "reference",
+        "condition": "-",
+        "sample": null,
+        "sha256": "dc2c16deef610589d358dd4636a85babe73f1c3d8b785bc13adc81b5cbc9ee65",
+        "source": "reference",
+        "label": "Candidate m1_no_dedupe"
+      },
+      "harness": {
+        "mode_set": [
+          "normal"
+        ],
+        "docker": false,
+        "cpus": 1
+      },
+      "seeds": [
+        0,
+        0
+      ],
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 1,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 0,
+            "failed": 1
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 0,
+            "failed": 1
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 1,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 1,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {
+        "scenario_A": {
+          "trials": 0,
+          "failed": 0,
+          "warnings": 0
+        },
+        "scenario_B": {
+          "trials": 0,
+          "failed": 0,
+          "warnings": 0
+        }
+      },
+      "failures": [
+        {
+          "invariant": "I2_idempotency",
+          "severity": "financial",
+          "rule": "R3",
+          "mode": "normal",
+          "seed": 0,
+          "first_bad_step": 1,
+          "stream": [
+            {
+              "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+              "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+              "tag": "capture_s0_cap_0",
+              "amount_paise": 56125,
+              "event_id": "s0_cap_0",
+              "payment_id": "pay_0_0",
+              "type": "payment.captured",
+              "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+            },
+            {
+              "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+              "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+              "tag": "capture_s0_cap_0_duplicate",
+              "amount_paise": 56125,
+              "event_id": "s0_cap_0",
+              "payment_id": "pay_0_0",
+              "type": "payment.captured",
+              "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+            },
+            {
+              "truncated": true,
+              "total_items": 10
+            }
+          ],
+          "minimal_stream": [
+            {
+              "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+              "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+              "tag": "capture_s0_cap_0",
+              "amount_paise": 56125,
+              "event_id": "s0_cap_0",
+              "payment_id": "pay_0_0",
+              "type": "payment.captured",
+              "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+            },
+            {
+              "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+              "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+              "tag": "capture_s0_cap_0_duplicate",
+              "amount_paise": 56125,
+              "event_id": "s0_cap_0",
+              "payment_id": "pay_0_0",
+              "type": "payment.captured",
+              "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+            }
+          ],
+          "one_minimal": true,
+          "shrink_history": [
+            [
+              {
+                "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+                "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+                "tag": "capture_s0_cap_0",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0",
+                "payment_id": "pay_0_0",
+                "type": "payment.captured",
+                "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+              },
+              {
+                "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+                "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+                "tag": "capture_s0_cap_0_duplicate",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0",
+                "payment_id": "pay_0_0",
+                "type": "payment.captured",
+                "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+              },
+              {
+                "truncated": true,
+                "total_items": 10
+              }
+            ],
+            [
+              {
+                "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+                "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+                "tag": "capture_s0_cap_0",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0",
+                "payment_id": "pay_0_0",
+                "type": "payment.captured",
+                "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+              },
+              {
+                "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+                "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+                "tag": "capture_s0_cap_0_duplicate",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0",
+                "payment_id": "pay_0_0",
+                "type": "payment.captured",
+                "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+              },
+              {
+                "truncated": true,
+                "total_items": 5
+              }
+            ],
+            {
+              "truncated": true,
+              "total_items": 4
+            }
+          ],
+          "expected": {
+            "payments": [
+              {
+                "payment_id": "pay_0_0",
+                "captured_paise": 56125,
+                "refunded_paise": 0
+              }
+            ],
+            "ledger": [
+              {
+                "payment_id": "pay_0_0",
+                "kind": "capture",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0"
+              }
+            ],
+            "summary": {
+              "pay_0_0": {
+                "captures_count": 1,
+                "captures_sum": 56125,
+                "refunds_count": 0,
+                "refunds_sum": 0
+              }
+            }
+          },
+          "observed": {
+            "payments": [
+              {
+                "payment_id": "pay_0_0",
+                "captured_paise": 112250,
+                "refunded_paise": 0
+              }
+            ],
+            "ledger": [
+              {
+                "entry_id": 1,
+                "payment_id": "pay_0_0",
+                "kind": "capture",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0"
+              },
+              {
+                "entry_id": 2,
+                "payment_id": "pay_0_0",
+                "kind": "capture",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0"
+              }
+            ],
+            "summary": {
+              "pay_0_0": {
+                "captures_count": 2,
+                "captures_sum": 112250,
+                "refunds_count": 0,
+                "refunds_sum": 0
+              }
+            }
+          },
+          "explanation": "capture s0_cap_0 (Rs 561.25) delivered twice: the ledger shows 2 capture entries totaling Rs 1,122.50; the model expects 1 entry totaling Rs 561.25. Rule R3.",
+          "classification": {
+            "label": "unreviewed",
+            "by": "agent-proposed",
+            "note": "Seed 0 failed at step 1"
+          },
+          "repro": {
+            "runs": 10,
+            "reproduced": 10
+          }
+        }
+      ],
+      "noncompliant": null,
+      "repair_of": null
+    }
+  },
+  "GET /runs/{id} (run with failures)": {
+    "path": "/runs/run_m1_no_dedupe_1795216867",
+    "status": 200,
+    "body": {
+      "run_id": "run_m1_no_dedupe_1795216867",
+      "contract_version": "1.0",
+      "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+      "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+      "created_at": "2026-11-20T23:21:07.090402+00:00",
+      "candidate": {
+        "id": "m1_no_dedupe",
+        "model": "reference",
+        "condition": "-",
+        "sample": null,
+        "sha256": "dc2c16deef610589d358dd4636a85babe73f1c3d8b785bc13adc81b5cbc9ee65",
+        "source": "reference",
+        "label": "Candidate m1_no_dedupe"
+      },
+      "harness": {
+        "mode_set": [
+          "normal"
+        ],
+        "docker": false,
+        "cpus": 1
+      },
+      "seeds": [
+        0,
+        0
+      ],
+      "results": {
+        "I1_signature": {
+          "normal": {
+            "passed": 1,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I2_idempotency": {
+          "normal": {
+            "passed": 0,
+            "failed": 1
+          },
+          "restart": null
+        },
+        "I3_conservation": {
+          "normal": {
+            "passed": 0,
+            "failed": 1
+          },
+          "restart": null
+        },
+        "I4_bounds": {
+          "normal": {
+            "passed": 1,
+            "failed": 0
+          },
+          "restart": null
+        },
+        "I5_interface": {
+          "normal": {
+            "passed": 1,
+            "failed": 0
+          },
+          "restart": null
+        }
+      },
+      "concurrency": {
+        "scenario_A": {
+          "trials": 0,
+          "failed": 0,
+          "warnings": 0
+        },
+        "scenario_B": {
+          "trials": 0,
+          "failed": 0,
+          "warnings": 0
+        }
+      },
+      "failures": [
+        {
+          "invariant": "I2_idempotency",
+          "severity": "financial",
+          "rule": "R3",
+          "mode": "normal",
+          "seed": 0,
+          "first_bad_step": 1,
+          "stream": [
+            {
+              "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+              "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+              "tag": "capture_s0_cap_0",
+              "amount_paise": 56125,
+              "event_id": "s0_cap_0",
+              "payment_id": "pay_0_0",
+              "type": "payment.captured",
+              "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+            },
+            {
+              "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+              "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+              "tag": "capture_s0_cap_0_duplicate",
+              "amount_paise": 56125,
+              "event_id": "s0_cap_0",
+              "payment_id": "pay_0_0",
+              "type": "payment.captured",
+              "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+            },
+            {
+              "truncated": true,
+              "total_items": 10
+            }
+          ],
+          "minimal_stream": [
+            {
+              "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+              "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+              "tag": "capture_s0_cap_0",
+              "amount_paise": 56125,
+              "event_id": "s0_cap_0",
+              "payment_id": "pay_0_0",
+              "type": "payment.captured",
+              "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+            },
+            {
+              "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+              "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+              "tag": "capture_s0_cap_0_duplicate",
+              "amount_paise": 56125,
+              "event_id": "s0_cap_0",
+              "payment_id": "pay_0_0",
+              "type": "payment.captured",
+              "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+            }
+          ],
+          "one_minimal": true,
+          "shrink_history": [
+            [
+              {
+                "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+                "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+                "tag": "capture_s0_cap_0",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0",
+                "payment_id": "pay_0_0",
+                "type": "payment.captured",
+                "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+              },
+              {
+                "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+                "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+                "tag": "capture_s0_cap_0_duplicate",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0",
+                "payment_id": "pay_0_0",
+                "type": "payment.captured",
+                "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+              },
+              {
+                "truncated": true,
+                "total_items": 10
+              }
+            ],
+            [
+              {
+                "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+                "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+                "tag": "capture_s0_cap_0",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0",
+                "payment_id": "pay_0_0",
+                "type": "payment.captured",
+                "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+              },
+              {
+                "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjU2MTI1LCJldmVudF9pZCI6InMwX2NhcF8wIiwicGF5bWVudF9pZCI6InBheV8wXzAiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+                "signature": "ffef44ae9f39665d601cc8ba66bb562c03f3a7a14b2326a4b1ba0c3c7c9f8d26",
+                "tag": "capture_s0_cap_0_duplicate",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0",
+                "payment_id": "pay_0_0",
+                "type": "payment.captured",
+                "summary": "payment.captured s0_cap_0 (Rs 561.25)"
+              },
+              {
+                "truncated": true,
+                "total_items": 5
+              }
+            ],
+            {
+              "truncated": true,
+              "total_items": 4
+            }
+          ],
+          "expected": {
+            "payments": [
+              {
+                "payment_id": "pay_0_0",
+                "captured_paise": 56125,
+                "refunded_paise": 0
+              }
+            ],
+            "ledger": [
+              {
+                "payment_id": "pay_0_0",
+                "kind": "capture",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0"
+              }
+            ],
+            "summary": {
+              "pay_0_0": {
+                "captures_count": 1,
+                "captures_sum": 56125,
+                "refunds_count": 0,
+                "refunds_sum": 0
+              }
+            }
+          },
+          "observed": {
+            "payments": [
+              {
+                "payment_id": "pay_0_0",
+                "captured_paise": 112250,
+                "refunded_paise": 0
+              }
+            ],
+            "ledger": [
+              {
+                "entry_id": 1,
+                "payment_id": "pay_0_0",
+                "kind": "capture",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0"
+              },
+              {
+                "entry_id": 2,
+                "payment_id": "pay_0_0",
+                "kind": "capture",
+                "amount_paise": 56125,
+                "event_id": "s0_cap_0"
+              }
+            ],
+            "summary": {
+              "pay_0_0": {
+                "captures_count": 2,
+                "captures_sum": 112250,
+                "refunds_count": 0,
+                "refunds_sum": 0
+              }
+            }
+          },
+          "explanation": "capture s0_cap_0 (Rs 561.25) delivered twice: the ledger shows 2 capture entries totaling Rs 1,122.50; the model expects 1 entry totaling Rs 561.25. Rule R3.",
+          "classification": {
+            "label": "unreviewed",
+            "by": "agent-proposed",
+            "note": "Seed 0 failed at step 1"
+          },
+          "repro": {
+            "runs": 10,
+            "reproduced": 10
+          }
+        }
+      ],
+      "noncompliant": null,
+      "repair_of": null
+    }
+  },
+  "GET /kill-matrix": {
+    "status": 200,
+    "body": {
+      "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+      "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+      "created_at": "2026-11-20T22:16:31.131849+00:00",
+      "rows": [
+        {
+          "id": "ref",
+          "label": "handler_ref.py",
+          "source": "reference",
+          "expected_rule": "none",
+          "expected_invariant": "none",
+          "results": {
+            "I1_signature": {
+              "normal": {
+                "passed": 100,
+                "failed": 0
+              },
+              "restart": null
+            },
+            "I2_idempotency": {
+              "normal": {
+                "passed": 100,
+                "failed": 0
+              },
+              "restart": null
+            },
+            "I3_conservation": {
+              "normal": {
+                "passed": 100,
+                "failed": 0
+              },
+              "restart": null
+            },
+            "I4_bounds": {
+              "normal": {
+                "passed": 100,
+                "failed": 0
+              },
+              "restart": null
+            },
+            "I5_interface": {
+              "normal": {
+                "passed": 100,
+                "failed": 0
+              },
+              "restart": null
+            }
+          },
+          "concurrency": {
+            "scenario_A": {
+              "trials": 50,
+              "failed": 0,
+              "warnings": 0,
+              "evidence": null
+            },
+            "scenario_B": {
+              "trials": 50,
+              "failed": 0,
+              "warnings": 0,
+              "evidence": null
+            }
+          },
+          "killed": false,
+          "rules_hit": [],
+          "notes": "Reference implementation clean across all invariants and concurrency trials"
+        },
+        {
+          "id": "m1",
+          "label": "no dedupe",
+          "source": "mutant",
+          "expected_rule": "R3",
+          "expected_invariant": "I2_idempotency",
+          "results": {
+            "I1_signature": {
+              "normal": {
+                "passed": 90,
+                "failed": 10
+              },
+              "restart": null
+            },
+            "I2_idempotency": {
+              "normal": {
+                "passed": 70,
+                "failed": 30
+              },
+              "restart": null
+            },
+            "I3_conservation": {
+              "normal": {
+                "passed": 71,
+                "failed": 29
+              },
+              "restart": null
+            },
+            "I4_bounds": {
+              "normal": {
+                "passed": 80,
+                "failed": 20
+              },
+              "restart": null
+            },
+            "I5_interface": {
+              "normal": {
+                "passed": 100,
+                "failed": 0
+              },
+              "restart": null
+            }
+          },
+          "concurrency": {},
+          "killed": true,
+          "rules_hit": [
+            "R3",
+            "R4"
+          ],
+          "notes": "self-attested by the agent; omits deduplication check and applies duplicate captures"
+        },
+        {
+          "truncated": true,
+          "total_items": 14
+        }
+      ]
+    }
+  },
+  "POST /break (reference)": {
+    "request_body": {
+      "candidate_id": "reference",
+      "scenario": "duplicate_capture"
+    },
+    "status": 200,
+    "body": {
+      "scenario": "duplicate_capture",
+      "title": "Duplicate Capture (Event Idempotency)",
+      "mode": "normal",
+      "target_rule": "R3",
+      "target_invariant": "I2_idempotency",
+      "candidate_id": "reference",
+      "candidate_path": "C:\\Users\\Admin\\Downloads\\PaySift\\ref\\handler_ref.py",
+      "verdict": "pass",
+      "failure": null,
+      "ledger_diff": {
+        "expected_count": 1,
+        "observed_count": 1,
+        "expected_balance_paise": 50000,
+        "observed_balance_paise": 50000,
+        "balance_diff_paise": 0,
+        "diff_summary": "Ledger matches expected state exactly."
+      },
+      "observed_ledger": [
+        {
+          "entry_id": 1,
+          "payment_id": "pay_break_dup",
+          "kind": "capture",
+          "amount_paise": 50000,
+          "event_id": "evt_break_dup_1"
+        }
+      ],
+      "expected_ledger": [
+        {
+          "payment_id": "pay_break_dup",
+          "kind": "capture",
+          "amount_paise": 50000,
+          "event_id": "evt_break_dup_1"
+        }
+      ],
+      "observed_payments": [
+        {
+          "payment_id": "pay_break_dup",
+          "captured_paise": 50000,
+          "refunded_paise": 0
+        }
+      ],
+      "expected_payments": [
+        {
+          "payment_id": "pay_break_dup",
+          "captured_paise": 50000,
+          "refunded_paise": 0
+        }
+      ],
+      "steps": [
+        {
+          "step_index": 0,
+          "tag": "capture_initial",
+          "expected_status": "applied",
+          "observed_status": "applied",
+          "has_violation": false,
+          "explanation": ""
+        },
+        {
+          "step_index": 1,
+          "tag": "capture_duplicate",
+          "expected_status": "duplicate",
+          "observed_status": "duplicate",
+          "has_violation": false,
+          "explanation": ""
+        }
+      ]
+    }
+  },
+  "POST /break (mutant)": {
+    "request_body": {
+      "candidate_id": "m1_no_dedupe",
+      "scenario": "duplicate_capture"
+    },
+    "status": 200,
+    "body": {
+      "scenario": "duplicate_capture",
+      "title": "Duplicate Capture (Event Idempotency)",
+      "mode": "normal",
+      "target_rule": "R3",
+      "target_invariant": "I2_idempotency",
+      "candidate_id": "m1_no_dedupe",
+      "candidate_path": "C:\\Users\\Admin\\Downloads\\PaySift\\mutants\\m1_no_dedupe.py",
+      "verdict": "fail",
+      "failure": {
+        "step_index": 1,
+        "rule": "R3",
+        "invariant": "I2_idempotency",
+        "severity": "financial",
+        "explanation": "Step 1: balance mismatch for 'pay_break_dup'. Expected captured=50000, refunded=0; Observed captured=100000, refunded=0 (R3).",
+        "expected_state": {
+          "payments": [
+            {
+              "payment_id": "pay_break_dup",
+              "captured_paise": 50000,
+              "refunded_paise": 0
+            }
+          ],
+          "ledger": [
+            {
+              "payment_id": "pay_break_dup",
+              "kind": "capture",
+              "amount_paise": 50000,
+              "event_id": "evt_break_dup_1"
+            }
+          ],
+          "summary": {
+            "pay_break_dup": {
+              "captures_count": 1,
+              "captures_sum": 50000,
+              "refunds_count": 0,
+              "refunds_sum": 0
+            }
+          }
+        },
+        "observed_state": {
+          "payments": [
+            {
+              "payment_id": "pay_break_dup",
+              "captured_paise": 100000,
+              "refunded_paise": 0
+            }
+          ],
+          "ledger": [
+            {
+              "entry_id": 1,
+              "payment_id": "pay_break_dup",
+              "kind": "capture",
+              "amount_paise": 50000,
+              "event_id": "evt_break_dup_1"
+            },
+            {
+              "entry_id": 2,
+              "payment_id": "pay_break_dup",
+              "kind": "capture",
+              "amount_paise": 50000,
+              "event_id": "evt_break_dup_1"
+            }
+          ],
+          "summary": {
+            "pay_break_dup": {
+              "captures_count": 2,
+              "captures_sum": 100000,
+              "refunds_count": 0,
+              "refunds_sum": 0
+            }
+          }
+        }
+      },
+      "ledger_diff": {
+        "expected_count": 1,
+        "observed_count": 2,
+        "expected_balance_paise": 50000,
+        "observed_balance_paise": 100000,
+        "balance_diff_paise": 50000,
+        "diff_summary": "+1 extra entries; Rs 500.00 created from nothing"
+      },
+      "observed_ledger": [
+        {
+          "entry_id": 1,
+          "payment_id": "pay_break_dup",
+          "kind": "capture",
+          "amount_paise": 50000,
+          "event_id": "evt_break_dup_1"
+        },
+        {
+          "entry_id": 2,
+          "payment_id": "pay_break_dup",
+          "kind": "capture",
+          "amount_paise": 50000,
+          "event_id": "evt_break_dup_1"
+        }
+      ],
+      "expected_ledger": [
+        {
+          "payment_id": "pay_break_dup",
+          "kind": "capture",
+          "amount_paise": 50000,
+          "event_id": "evt_break_dup_1"
+        }
+      ],
+      "observed_payments": [
+        {
+          "payment_id": "pay_break_dup",
+          "captured_paise": 100000,
+          "refunded_paise": 0
+        }
+      ],
+      "expected_payments": [
+        {
+          "payment_id": "pay_break_dup",
+          "captured_paise": 50000,
+          "refunded_paise": 0
+        }
+      ],
+      "steps": [
+        {
+          "step_index": 0,
+          "tag": "capture_initial",
+          "expected_status": "applied",
+          "observed_status": "applied",
+          "has_violation": false,
+          "explanation": ""
+        },
+        {
+          "step_index": 1,
+          "tag": "capture_duplicate",
+          "expected_status": "duplicate",
+          "observed_status": "applied",
+          "has_violation": true,
+          "explanation": "Step 1: balance mismatch for 'pay_break_dup'. Expected captured=50000, refunded=0; Observed captured=100000, refunded=0 (R3)."
+        }
+      ]
+    }
+  },
+  "POST /repair (stub/cached or blocked)": {
+    "request_body": {
+      "candidate_id": "m1_no_dedupe",
+      "failure_id": 0
+    },
+    "status": 403,
+    "body": {
+      "detail": "No cached pre-run repair found for 'm1_no_dedupe__0', and live model repair is blocked (Docker sandbox gate not passed: Docker image ID mismatch: recorded 'GATE4_PASSED=2026-11-21T09:42:48.351428+00:00' != current 'sha256:2b7a2cd0df986e37ef4239a25817e4346189a0b02a9bc664a3b6e913eac35708')."
+    }
+  },
+  "POST /repair (error path)": {
+    "request_body": {
+      "candidate_id": "nonexistent_cand",
+      "failure_id": 0
+    },
+    "status": 403,
+    "body": {
+      "detail": "No cached pre-run repair found for 'nonexistent_cand__0', and live model repair is blocked (Docker sandbox gate not passed: Docker image ID mismatch: recorded 'GATE4_PASSED=2026-11-21T09:42:48.351428+00:00' != current 'sha256:2b7a2cd0df986e37ef4239a25817e4346189a0b02a9bc664a3b6e913eac35708')."
+    }
+  },
+  "GET /runs/{id} (unknown id)": {
+    "status": 404,
+    "body": {
+      "detail": "Run 'unknown_run_id_999999' not found."
+    }
+  },
+  "GET /runs/{id} (path traversal)": {
+    "status": 404,
+    "body": {
+      "detail": "Not Found"
+    }
+  },
+  "POST /break (untrusted without Gate 4)": {
+    "request_body": {
+      "candidate_id": "candidates/cand_1.py",
+      "scenario": "duplicate_capture"
+    },
+    "status": 400,
+    "body": {
+      "detail": "Invalid candidate_id format (path traversal characters forbidden)."
+    }
+  }
+}

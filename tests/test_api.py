@@ -111,3 +111,40 @@ def test_api_post_repair_blocked():
     assert resp.status_code in (403, 503)
     data = resp.json()
     assert "detail" in data
+
+
+def test_api_runs_field_contract():
+    """Verify GET /runs entries expose all required fields for frontend integration."""
+    resp = client.get("/runs")
+    assert resp.status_code == 200
+    runs = resp.json()
+    assert len(runs) > 0
+    item = runs[0]
+    required_fields = [
+        "id",
+        "created_at",
+        "spec_sha",
+        "candidate_id",
+        "candidate_source",
+        "candidate_model",
+        "candidate_condition",
+        "failure_count",
+        "financial_failure_count",
+        "interface_failure_count",
+    ]
+    for rf in required_fields:
+        assert rf in item, f"Missing field '{rf}' in /runs response"
+
+
+@pytest.mark.parametrize("origin", ["http://localhost:5173", "http://127.0.0.1:5173"])
+def test_api_cors_preflight(origin: str):
+    """Verify CORS preflight OPTIONS request returns 200 with allowed headers."""
+    headers = {
+        "Origin": origin,
+        "Access-Control-Request-Method": "POST",
+        "Access-Control-Request-Headers": "content-type",
+    }
+    resp = client.options("/break", headers=headers)
+    assert resp.status_code == 200
+    assert resp.headers.get("access-control-allow-origin") == origin
+
