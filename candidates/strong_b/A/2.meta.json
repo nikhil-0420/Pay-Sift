@@ -1,0 +1,32 @@
+{
+  "model": "qwen/qwen3.8-27b",
+  "provider": "openai_compatible",
+  "condition": "A",
+  "sample": 2,
+  "attempt_log": [
+    {
+      "attempt": 1,
+      "timestamp": "2026-11-21T11:02:59.348226+00:00",
+      "status": 200,
+      "latency": 3.032367300002079,
+      "token_usage": {
+        "prompt_tokens": 3567,
+        "completion_tokens": 1132,
+        "total_tokens": 4699
+      }
+    }
+  ],
+  "sha256": "82d2c684378ea4bf488e8ca6a0498f5537cf5557a767d13ee794f01b88dbf67e",
+  "timestamp": "2026-11-21T11:03:02.389962+00:00",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "prompt_hash": "506e62dd47a86233f24235b0bce38b1e85ae956ebc7eee664a8c6599ee3a0c60",
+  "temperature": null,
+  "token_usage": {
+    "prompt_tokens": 3567,
+    "completion_tokens": 1132,
+    "total_tokens": 4699
+  },
+  "compliant": true,
+  "violations": [],
+  "regeneration_count": 0
+}

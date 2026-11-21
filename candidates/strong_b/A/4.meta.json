@@ -1,0 +1,46 @@
+{
+  "model": "qwen/qwen3.8-27b",
+  "provider": "openai_compatible",
+  "condition": "A",
+  "sample": 4,
+  "attempt_log": [
+    {
+      "attempt": 1,
+      "timestamp": "2026-11-21T10:52:05.462265+00:00",
+      "status": 429,
+      "latency": 0.17569180000282358,
+      "error": "{\"error\":{\"message\":\"Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m7yhaxvcejft7tv3wdqm0088` service tier `on_demand` on output tokens per minute (OTPM): Limit 1000, Used 879, Requested 126. Please try again in 300ms. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+    },
+    {
+      "attempt": 2,
+      "timestamp": "2026-11-21T10:52:06.639227+00:00",
+      "status": 429,
+      "latency": 0.17364870000164956,
+      "error": "{\"error\":{\"message\":\"Request too large for model `qwen/qwen3.8-27b` in organization `org_01m7yhaxvcejft7tv3wdqm0088` service tier `on_demand` on output tokens per minute (OTPM): Limit 1000, Requested 1384. The request's expected output tokens exceed the enforced limit; reduce max_tokens (or the request's expected output) and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+    },
+    {
+      "attempt": 3,
+      "timestamp": "2026-11-21T10:52:08.814425+00:00",
+      "status": 200,
+      "latency": 4.457882199996675,
+      "token_usage": {
+        "prompt_tokens": 3567,
+        "completion_tokens": 2001,
+        "total_tokens": 5568
+      }
+    }
+  ],
+  "sha256": "11f4e4d3227a0d6311fc915891b6ebd2e1c73da0fa2b7f7d48367dc2c3a122de",
+  "timestamp": "2026-11-21T10:52:13.291476+00:00",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "prompt_hash": "506e62dd47a86233f24235b0bce38b1e85ae956ebc7eee664a8c6599ee3a0c60",
+  "temperature": null,
+  "token_usage": {
+    "prompt_tokens": 3567,
+    "completion_tokens": 2001,
+    "total_tokens": 5568
+  },
+  "compliant": true,
+  "violations": [],
+  "regeneration_count": 0
+}

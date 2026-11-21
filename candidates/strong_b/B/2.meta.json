@@ -1,0 +1,39 @@
+{
+  "model": "qwen/qwen3.8-27b",
+  "provider": "openai_compatible",
+  "condition": "B",
+  "sample": 2,
+  "attempt_log": [
+    {
+      "attempt": 1,
+      "timestamp": "2026-11-21T11:03:13.002835+00:00",
+      "status": 429,
+      "latency": 0.19943809999676887,
+      "error": "{\"error\":{\"message\":\"Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m7yhaxvcejft7tv3wdqm0088` service tier `on_demand` on output tokens per minute (OTPM): Limit 1000, Used 819, Requested 185. Please try again in 240ms. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+    },
+    {
+      "attempt": 2,
+      "timestamp": "2026-11-21T11:03:14.203423+00:00",
+      "status": 200,
+      "latency": 2.2109741999956896,
+      "token_usage": {
+        "prompt_tokens": 334,
+        "completion_tokens": 817,
+        "total_tokens": 1151
+      }
+    }
+  ],
+  "sha256": "b2ec5ee74ebcadd346c81e829205ee05a206eb0ee20c87bf11035218af857db2",
+  "timestamp": "2026-11-21T11:03:16.428205+00:00",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "prompt_hash": "d6ce5141b00992a1b230ff1f4839e8dd9676e970af68dfaf0041619c5d861371",
+  "temperature": null,
+  "token_usage": {
+    "prompt_tokens": 334,
+    "completion_tokens": 817,
+    "total_tokens": 1151
+  },
+  "compliant": true,
+  "violations": [],
+  "regeneration_count": 0
+}

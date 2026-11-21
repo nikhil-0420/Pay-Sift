@@ -1,0 +1,144 @@
+```python
+import sqlite3
+import hmac
+import hashlib
+import json
+import contextlib
+from typing import Dict, Any
+
+
+@contextlib.contextmanager
+def _connect(db_path: str):
+    conn = sqlite3.connect(db_path, timeout=10.0)
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("BEGIN EXCLUSIVE")
+    try:
+        yield conn
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def handle_event(db_path: str, raw_body: bytes, signature: str, secret: str) -> Dict[str, str]:
+    def _rejected(reason: str) -> Dict[str, str]:
+        return {"status": "rejected", "reason": reason}
+
+    def _duplicate() -> Dict[str, str]:
+        return {"status": "duplicate", "reason": "event_id already applied"}
+
+    def _applied() -> Dict[str, str]:
+        return {"status": "applied", "reason": "ok"}
+
+    # R1: Signature Verification
+    expected_sig = hmac.new(
+        secret.encode("utf-8"),
+        raw_body,
+        hashlib.sha256
+    ).hexdigest()
+    if not hmac.compare_digest(signature.lower(), expected_sig):
+        return _rejected("invalid signature")
+
+    # R2: Payload Validation
+    try:
+        obj = json.loads(raw_body.decode("utf-8"))
+    except Exception:
+        return _rejected("invalid JSON or UTF-8")
+
+    if not isinstance(obj, dict):
+        return _rejected("payload must be a JSON object")
+
+    event_id = obj.get("event_id")
+    event_type = obj.get("type")
+    payment_id = obj.get("payment_id")
+    amount = obj.get("amount_paise")
+    refund_id = obj.get("refund_id")
+
+    if not isinstance(event_id, str) or not event_id or len(event_id) > 64:
+        return _rejected("invalid event_id")
+
+    if event_type not in ("payment.captured", "refund.processed"):
+        return _rejected("invalid type")
+
+    if not isinstance(payment_id, str) or not payment_id or len(payment_id) > 64:
+        return _rejected("invalid payment_id")
+
+    if isinstance(amount, bool) or not isinstance(amount, int):
+        return _rejected("invalid amount_paise")
+    if amount < 1 or amount > 10**12:
+        return _rejected("amount_paise out of bounds")
+
+    if event_type == "refund.processed":
+        if not isinstance(refund_id, str) or not refund_id:
+            return _rejected("invalide refund_id")
+
+    if event_type == "payment.captured":
+        try:
+            with _connect(db_path) as conn:
+                # Check idempotency (R3)
+                row = conn.execute(
+                    "SELECT 1 FROM ledger WHERE event_id = ? AND kind = 'capture'",
+                    (event_id,)
+                ).fetchone()
+                if row:
+                    conn.rollback()
+                    return _duplicate()
+
+                # R4: Payment Capture
+                existing = conn.execute(
+                    "SELECT 1 FROM payments WHERE payment_id = ?",
+                    (payment_id,)
+                ).fetchone()
+                if existing:
+                    return _rejected("payment already captured")
+
+                conn.execute(
+                    "INSERT INTO payments (payment_id, captured_paise, refunded_paise) VALUES (?, ?, 0)",
+                    (payment_id, amount)
+                )
+                conn.execute(
+                    "INSERT INTO ledger (payment_id, kind, amount_paise, event_id) VALUES (?, 'capture', ?, ?)",
+                    (payment_id, amount, event_id)
+                )
+                conn.commit()
+            return _applied()
+        except Exception:
+            return _rejected("internal error")
+
+    else:
+        try:
+            with _connect(db_path) as conn:
+                # Check idempotency (R3)
+                row = conn.execute(
+                    "SELECT 1 FROM ledger WHERE event_id = ? AND kind = 'refund'",
+                    (event_id,)
+                ).fetchone()
+                if row:
+                    conn.rollback()
+                    return _duplicate()
+
+                pay = conn.execute(
+                    "SELECT captured_paise, refunded_paise FROM payments WHERE payment_id = ?",
+                    (payment_id,)
+                ).fetchone()
+                if not pay:
+                    return _rejected("payment not found")
+
+                captured, refunded = pay
+                if refunded + amount > captured:
+                    return _rejected("refund exceeds balance")
+
+                conn.execute(
+                    "UPDATE payments SET refunded_paise = refunded_paise + ? WHERE payment_id = ?",
+                    (amount, payment_id)
+                )
+                conn.execute(
+                    "INSERT INTO ledger (payment_id, kind, amount_paise, event_id) VALUES (?, 'refund', ?, ?)",
+                    (payment_id, amount, event_id)
+                )
+                conn.commit()
+            return _applied()
+        except Exception:
+            return _rejected("internal error")
+```

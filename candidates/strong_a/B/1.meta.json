@@ -1,0 +1,32 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "provider": "google",
+  "condition": "B",
+  "sample": 1,
+  "attempt_log": [
+    {
+      "attempt": 1,
+      "timestamp": "2026-11-21T10:51:42.833884+00:00",
+      "status": 200,
+      "latency": 2.4798388999988674,
+      "token_usage": {
+        "prompt_tokens": 343,
+        "completion_tokens": 895,
+        "total_tokens": 1238
+      }
+    }
+  ],
+  "sha256": "e340e8ab5c6cdd86c1dcb90abee353811fb43ec30cabb51069c9f98399a2f0e2",
+  "timestamp": "2026-11-21T10:51:45.324795+00:00",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "prompt_hash": "d6ce5141b00992a1b230ff1f4839e8dd9676e970af68dfaf0041619c5d861371",
+  "temperature": null,
+  "token_usage": {
+    "prompt_tokens": 343,
+    "completion_tokens": 895,
+    "total_tokens": 1238
+  },
+  "compliant": true,
+  "violations": [],
+  "regeneration_count": 0
+}

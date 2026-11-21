@@ -1,0 +1,121 @@
+def handle_event(db_path, raw_body, signature, secret):
+    import sqlite3
+    import hmac
+    import hashlib
+    import json
+    import time
+    import typing
+    import contextlib
+
+    # Verify signature
+    if not isinstance(secret, bytes):
+        secret = str(secret).encode('utf-8')
+    if not isinstance(raw_body, bytes):
+        raw_body = str(raw_body).encode('utf-8')
+    if not isinstance(signature, str):
+        signature = str(signature)
+
+    expected_sig = hmac.new(secret, raw_body, hashlib.sha256).hexdigest()
+    if not hmac.compare_digest(expected_sig, signature):
+        return {"status": "error", "reason": "invalid_signature"}
+
+    # Parse JSON
+    try:
+        event = json.loads(raw_body.decode('utf-8') if isinstance(raw_body, bytes) else raw_body)
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        return {"status": "error", "reason": "invalid_json"}
+
+    event_type = event.get("type")
+    event_id = event.get("event_id")
+    payment_id = event.get("payment_id")
+
+    if not event_id or not payment_id:
+        return {"status": "error", "reason": "missing_fields"}
+
+    conn = sqlite3.connect(db_path)
+    try:
+        conn.execute("PRAGMA journal_mode=WAL")
+        if event_type == "payment.captured":
+            amount = event.get("amount_paise")
+            if not isinstance(amount, int) or amount <= 0:
+                return {"status": "error", "reason": "invalid_amount"}
+            
+            try:
+                conn.execute("BEGIN IMMEDIATE TRANSACTION")
+                # Upsert payment
+                conn.execute("""
+                    INSERT INTO payments (payment_id, captured_paise, refunded_paise)
+                    VALUES (?, ?, 0)
+                    ON CONFLICT(payment_id) DO UPDATE SET
+                    captured_paise = excluded.captured_paise
+                """, (payment_id, amount))
+                
+                # Idempotency check for ledger
+                cursor = conn.execute("SELECT 1 FROM ledger WHERE payment_id = ? AND kind = 'capture' AND event_id = ?", (payment_id, event_id))
+                if cursor.fetchone():
+                    conn.execute("COMMIT")
+                    return {"status": "success", "reason": "already_processed"}
+                    
+                conn.execute("""
+                    INSERT INTO ledger (payment_id, kind, amount_paise, event_id)
+                    VALUES (?, 'capture', ?, ?)
+                """, (payment_id, amount, event_id))
+                
+                conn.execute("COMMIT")
+                return {"status": "success", "reason": "recorded"}
+            except sqlite3.IntegrityError:
+                conn.execute("ROLLBACK")
+                return {"status": "error", "reason": "integrity_error"}
+            except Exception:
+                conn.execute("ROLLBACK")
+                raise
+
+        elif event_type == "refund.processed":
+            amount = event.get("amount_paise")
+            if not isinstance(amount, int) or amount <= 0:
+                return {"status": "error", "reason": "invalid_amount"}
+            
+            try:
+                conn.execute("BEGIN IMMEDIATE TRANSACTION")
+                # Check if payment exists
+                cursor = conn.execute("SELECT captured_paise, refunded_paise FROM payments WHERE payment_id = ?", (payment_id,))
+                row = cursor.fetchone()
+                if not row:
+                    conn.execute("ROLLBACK")
+                    return {"status": "error", "reason": "payment_not_found"}
+                
+                captured_pf, current_refunded_pf = row
+                if current_refunded_pf + amount > captured_pf:
+                    conn.execute("ROLLBACK")
+                    return {"status": "error", "reason": "exceeds_captured_amount"}
+                    
+                # Idempotency check for ledger
+                cursor = conn.execute("SELECT 1 FROM ledger WHERE payment_id = ? AND kind = 'refund' AND event_id = ?", (payment_id, event_id))
+                if cursor.fetchone():
+                    conn.execute("COMMIT")
+                    return {"status": "success", "reason": "already_processed"}
+
+                # Update payments table
+                conn.execute("""
+                    UPDATE payments 
+                    SET refunded_paise = refunded_paise + ? 
+                    WHERE payment_id = ?
+                """, (amount, payment_id))
+                
+                # Insert into ledger
+                conn.execute("""
+                    INSERT INTO ledger (payment_id, kind, amount_paise, event_id)
+                    VALUES (?, 'refund', ?, ?)
+                """, (payment_id, amount, event_id))
+                
+                conn.execute("COMMIT")
+                return {"status": "success", "reason": "recorded"}
+            except Exception:
+                conn.execute("ROLLBACK")
+                raise
+
+        else:
+            return {"status": "error", "reason": "unknown_event_type"}
+            
+    finally:
+        conn.close()

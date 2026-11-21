@@ -1,0 +1,161 @@
+```python
+import sqlite3
+import hmac
+import hashlib
+import json
+import time
+from typing import Dict, Any
+from contextlib import contextmanager
+
+
+def _verify_signature(raw_body: bytes, signature: str, secret: str) -> bool:
+    if not signature:
+        return False
+    try:
+        mac = hmac.new(secret.encode('utf-8'), raw_body, hashlib.sha256)
+        expected = mac.hexdigest()
+        if not hmac.compare_digest(expected, signature):
+            return False
+        return True
+    except Exception:
+        return False
+
+
+def _validate_payload(data: Any) -> tuple[bool, str]:
+    if not isinstance(data, dict):
+        return False, "payload is not a JSON object"
+
+    event_id = data.get("event_id")
+    if not isinstance(event_id, str) or len(event_id) == 0 or len(event_id) > 64:
+        return False, "invalid event_id"
+
+    event_type = data.get("type")
+    if event_type not in ("payment.captured", "refund.processed"):
+        return False, "invalid type"
+
+    payment_id = data.get("payment_id")
+    if not isinstance(payment_id, str) or len(payment_id) == 0 or len(payment_id) > 64:
+        return False, "invalid payment_id"
+
+    amount_paise = data.get("amount_paise")
+    if isinstance(amount_paise, bool):
+        return False, "amount_paise is boolean"
+    if not isinstance(amount_paise, int):
+        return False, "amount_paise is not an integer"
+    if amount_paise < 1 or amount_paise > 10**12:
+        return False, "amount_paise out of range"
+
+    if event_type == "refund.processed":
+        refund_id = data.get("refund_id")
+        if not isinstance(refund_id, str) or len(refund_id) == 0:
+            return False, "invalid or missing refund_id"
+
+    return True, ""
+
+
+@contextmanager
+def _db_connection(db_path: str):
+    conn = sqlite3.connect(db_path, timeout=5.0)
+    conn.row_factory = sqlite3.Row
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+
+def handle_event(db_path: str, raw_body: bytes, signature: str, secret: str) -> Dict[str, str]:
+    # R1: Signature verification
+    if not _verify_signature(raw_body, signature, secret):
+        return {"status": "rejected", "reason": "signature verification failed"}
+
+    # R2: Payload validation
+    try:
+        data = json.loads(raw_body.decode('utf-8'))
+    except Exception:
+        return {"status": "rejected", "reason": "invalid JSON or UTF-8"}
+
+    valid, reason = _validate_payload(data)
+    if not valid:
+        return {"status": "rejected", "reason": reason}
+
+    event_id = data["event_id"]
+    event_type = data["type"]
+    payment_id = data["payment_id"]
+    amount_paise = data["amount_paise"]
+
+    try:
+        with _db_connection(db_path) as conn:
+            # Ensure auxiliary table exists
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS seen_events (
+                    event_id TEXT PRIMARY KEY
+                )
+            """)
+            conn.commit()
+
+            # Use a transaction for atomicity
+            try:
+                # R3: Idempotency check
+                cursor = conn.execute("SELECT event_id FROM seen_events WHERE event_id = ?", (event_id,))
+                if cursor.fetchone() is not None:
+                    return {"status": "duplicate", "reason": "event already applied"}
+
+                if event_type == "payment.captured":
+                    # R4: Payment Capture
+                    cursor = conn.execute("SELECT payment_id FROM payments WHERE payment_id = ?", (payment_id,))
+                    if cursor.fetchone() is not None:
+                        conn.rollback()
+                        return {"status": "rejected", "reason": "payment already captured"}
+
+                    # Insert capture
+                    conn.execute(
+                        "INSERT INTO payments (payment_id, captured_paise, refunded_paise) VALUES (?, ?, 0)",
+                        (payment_id, amount_paise)
+                    )
+                    conn.execute(
+                        "INSERT INTO ledger (payment_id, kind, amount_paise, event_id) VALUES (?, 'capture', ?, ?)",
+                        (payment_id, amount_paise, event_id)
+                    )
+                    conn.execute("INSERT INTO seen_events (event_id) VALUES (?)", (event_id,))
+                    conn.commit()
+                    return {"status": "applied", "reason": "capture applied"}
+
+                elif event_type == "refund.processed":
+                    # R5: Refund Target Existence
+                    cursor = conn.execute("SELECT captured_paise, refunded_paise FROM payments WHERE payment_id = ?", (payment_id,))
+                    row = cursor.fetchone()
+                    if row is None:
+                        conn.rollback()
+                        return {"status": "rejected", "reason": "payment not found"}
+
+                    captured = row["captured_paise"]
+                    refunded = row["refunded_paise"]
+
+                    # R6: Refund Balance Bound
+                    if refunded + amount_paise > captured:
+                        conn.rollback()
+                        return {"status": "rejected", "reason": "refund exceeds balance"}
+
+                    # Apply refund
+                    conn.execute(
+                        "UPDATE payments SET refunded_paise = ? WHERE payment_id = ?",
+                        (refunded + amount_paise, payment_id)
+                    )
+                    conn.execute(
+                        "INSERT INTO ledger (payment_id, kind, amount_paise, event_id) VALUES (?, 'refund', ?, ?)",
+                        (payment_id, amount_paise, event_id)
+                    )
+                    conn.execute("INSERT INTO seen_events (event_id) VALUES (?)", (event_id,))
+                    conn.commit()
+                    return {"status": "applied", "reason": "refund applied"}
+
+                conn.rollback()
+                return {"status": "rejected", "reason": "unknown event type"}
+
+            except Exception as e:
+                conn.rollback()
+                raise
+
+    except Exception:
+        return {"status": "rejected", "reason": "internal error"}
+```

@@ -565,3 +565,27 @@
   - `cli.py report`: 159 static HTML reports generated cleanly.
   - `cli.py selftest`: 10/11 checks PASS; 1 expected git baseline check on fresh clone noted.
   - `pytest -q`: Core unit test suite green (98 passed, 1 expected git baseline note).
+
+
+### Stage N6 Report (Real Candidate Generation)
+
+- **Timestamp:** 2026-11-21 16:38:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nehaa
+- **Generation Summary:**
+  - Candidates Planned: 30 (3 models x 2 conditions x 5 samples)
+  - Candidates Generated: 15
+  - Candidates Compliant: 15 (100% compliant with AST gate & intake)
+  - Candidates Non-Compliant: 0
+  - API Calls Used: 48 / 110 (within 120-call budget cap; 10 reserved for repair)
+- **Model Breakdown:**
+  - `strong_a` (`gemini-3.5-flash-lite`): 10/10 generated and compliant (5 Condition A, 5 Condition B; 1 regeneration on AST gate).
+  - `strong_b` (`qwen/qwen3.8-27b` via Groq): 5/10 generated and compliant (Samples 1, 2, 4 on Cond A; Samples 2, 3 on Cond B; remaining samples hit Groq free-tier 1000 OTPM rate limit).
+  - `strong_c` (`inclusionai/ling-3.2-flash:free` via OpenRouter): 0/10 generated (all attempts returned HTTP 429 upstream rate-limiting from OpenRouter shared pool).
+- **Execution Policy:** Zero candidates executed natively during this stage (Model-generated code is treated strictly as data).
+- **Artifacts Created:**
+  - `candidates/strong_a/A/1..5.py` (+ raw text and meta JSON)
+  - `candidates/strong_a/B/1..5.py` (+ raw text and meta JSON)
+  - `candidates/strong_b/A/1, 2, 4.py` (+ raw text and meta JSON)
+  - `candidates/strong_b/B/2, 3.py` (+ raw text and meta JSON)
+  - `candidates/GENERATION_SUMMARY.md`
