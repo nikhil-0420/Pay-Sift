@@ -1,0 +1,132 @@
+[
+  {
+    "id": "m1",
+    "file": "mutants/m1_no_dedupe.py",
+    "bug": "no dedupe",
+    "must_fail_rule": "R3",
+    "must_fail_invariant": "I2_idempotency",
+    "modes_needed": ["normal"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; omits deduplication check and applies duplicate captures"
+  },
+  {
+    "id": "m2",
+    "file": "mutants/m2_nonatomic.py",
+    "bug": "ledger written, payments not updated",
+    "must_fail_rule": "R7",
+    "must_fail_invariant": "I3_conservation",
+    "modes_needed": ["normal"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; writes ledger entries but leaves payments balance out of sync"
+  },
+  {
+    "id": "m3",
+    "file": "mutants/m3_no_bound.py",
+    "bug": "no refund bound",
+    "must_fail_rule": "R6",
+    "must_fail_invariant": "I4_bounds",
+    "modes_needed": ["normal"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; omits refunded + amount <= captured check, permitting over-refunds"
+  },
+  {
+    "id": "m4",
+    "file": "mutants/m4_neg_amount.py",
+    "bug": "accepts negative amount",
+    "must_fail_rule": "R2",
+    "must_fail_invariant": "I4_bounds",
+    "modes_needed": ["normal"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; relaxes lower bound check on amount_paise"
+  },
+  {
+    "id": "m5",
+    "file": "mutants/m5_reject_consumes_id.py",
+    "bug": "rejected events consume event_id",
+    "must_fail_rule": "R8",
+    "must_fail_invariant": "I2_idempotency",
+    "modes_needed": ["normal"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; records rejected event_id into dedupe table so redelivery is marked duplicate"
+  },
+  {
+    "id": "m6",
+    "file": "mutants/m6_sig_reserialized.py",
+    "bug": "verifies signature over json.dumps(parsed)",
+    "must_fail_rule": "R1",
+    "must_fail_invariant": "I1_integrity",
+    "modes_needed": ["normal"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; checks HMAC against default-spaced serialized JSON rather than raw bytes"
+  },
+  {
+    "id": "m7",
+    "file": "mutants/m7_inmemory_dedupe.py",
+    "bug": "state stored in memory, lost on restart",
+    "must_fail_rule": "R9",
+    "must_fail_invariant": "I2_idempotency",
+    "modes_needed": ["restart"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; module-level set() dedupe lost across fresh processes"
+  },
+  {
+    "id": "m8",
+    "file": "mutants/m8_check_then_insert.py",
+    "bug": "check-then-insert without transaction",
+    "must_fail_rule": "R10",
+    "must_fail_invariant": "I2_idempotency",
+    "modes_needed": ["concurrency"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; autocommit statements allow duplicate capture race (window widened)"
+  },
+  {
+    "id": "m9",
+    "file": "mutants/m9_bound_race.py",
+    "bug": "refund bound checked in separate statement",
+    "must_fail_rule": "R10",
+    "must_fail_invariant": "I4_bounds",
+    "modes_needed": ["concurrency"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; autocommit statements allow over-refund race (window widened)"
+  },
+  {
+    "id": "x1",
+    "file": "mutants/x1_bool_amount.py",
+    "bug": "accepts bool as amount",
+    "must_fail_rule": "R2",
+    "must_fail_invariant": "I4_bounds",
+    "modes_needed": ["normal"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; accepts boolean true as integer 1"
+  },
+  {
+    "id": "x2",
+    "file": "mutants/x2_float_amount.py",
+    "bug": "accepts float amount",
+    "must_fail_rule": "R2",
+    "must_fail_invariant": "I4_bounds",
+    "modes_needed": ["normal"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; accepts float values like 5.0"
+  },
+  {
+    "id": "x3",
+    "file": "mutants/x3_nonascii_sig_crash.py",
+    "bug": "crashes on non-ASCII signature",
+    "must_fail_rule": "R0",
+    "must_fail_invariant": "I5_totality",
+    "modes_needed": ["normal"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; unhandled UnicodeEncodeError on non-ASCII signature"
+  },
+  {
+    "id": "x4",
+    "file": "mutants/x4_sig_canonical_reserialized.py",
+    "bug": "verifies signature over canonical serialized JSON",
+    "must_fail_rule": "R1",
+    "must_fail_invariant": "I1_integrity",
+    "modes_needed": ["normal"],
+    "written_blind": "partial",
+    "notes": "self-attested by the agent; re-serializes payload canonically; caught only by non-canonical bodies"
+  }
+]
