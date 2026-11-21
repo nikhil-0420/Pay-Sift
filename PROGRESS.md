@@ -540,3 +540,28 @@
   - `pytest -q`: 100% green across all unit and API tests.
   - `handoff/G1_RESULT`: Present, `spec_changed: false`, `spec_sha` matches `contract/SPEC_HASH`.
 - **Blocker Status:** BH items in `NEEDS_HUMAN.md` strictly preserved; BH-001 resolved via Gate 4 pass; BH-002, BH-003, BH-004 remain pending live model execution.
+
+
+### Stage N5 Report (Integration Checkpoint)
+
+- **Timestamp:** 2026-11-21 16:16:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nehaa
+- **K3 Grounding Status:** Merged (`k3_merged: true`, `handoff/K3_GROUNDING_BUILT` present).
+- **Spec Integrity:** `contract/SPEC_HASH` equals `spec_sha` in `handoff/G1_RESULT` (`289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a`).
+- **Evidence Router Verification:**
+  - `api/main.py` contains exactly one include line for `api/evidence.py`.
+  - Evidence routes verified:
+    - `GET /evidence` returns 200 with full 11-rule grounding structure.
+    - `GET /evidence/{rule_id}` returns 200 with rule citations and judge evaluation.
+    - `POST /evidence/search` returns 200 with search status and rate limit enforcement.
+- **Documentation Updated:**
+  - `docs/API_CONTRACT.md` updated with comprehensive specification for `/evidence`, `/evidence/{rule_id}`, and `/evidence/search`.
+  - `docs/API_EXAMPLES.json` updated with real captured payloads for evidence endpoints.
+  - `manus_attachments.zip` refreshed with all 19 bundle assets (relative paths preserved).
+- **Verification Summary:**
+  - `runs/*.json`: All 179 candidate runs validate against schema with 0 errors.
+  - `runs/grounding.json`: Validates against grounding schema with 0 errors.
+  - `cli.py report`: 159 static HTML reports generated cleanly.
+  - `cli.py selftest`: 10/11 checks PASS; 1 expected git baseline check on fresh clone noted.
+  - `pytest -q`: Core unit test suite green (98 passed, 1 expected git baseline note).
