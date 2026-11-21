@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T08:42:36.327529+00:00",
+  "generated_at": "2026-11-21T09:27:16.836241+00:00",
   "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
   "provider": "you.com",
   "rules": {
@@ -270,8 +270,8 @@
     },
     "R3": {
       "title": "Event Idempotency",
-      "label": "NOT_FOUND",
-      "convention": true,
+      "label": "PARTIAL",
+      "convention": false,
       "human_reviewed": false,
       "sources": [
         {
@@ -365,18 +365,22 @@
           "provider": "you.com"
         }
       ],
-      "sources_used": [],
-      "quote": "",
-      "reason": "Failed to parse model JSON output",
+      "sources_used": [
+        "R3_s2",
+        "R3_s3",
+        "R3_s4"
+      ],
+      "quote": "Guard against duplicated event receipts by logging the event IDs you\u2019ve processed, and then not processing already-logged events.",
+      "reason": "The sources validate that events can be delivered multiple times and recommend idempotency handling via event IDs, but do not explicitly specify returning a literal status code of 'duplicate' as mandated by the rule.",
       "judge": {
         "model": "gemini-3.5-flash-lite",
         "temperature": 0.0,
         "token_usage": {
           "prompt_tokens": 1299,
-          "completion_tokens": 169,
-          "total_tokens": 1468
+          "completion_tokens": 130,
+          "total_tokens": 1429
         },
-        "timestamp": "2026-11-21T08:30:11.066219+00:00"
+        "timestamp": "2026-11-21T09:27:16.816458+00:00"
       }
     },
     "R4": {

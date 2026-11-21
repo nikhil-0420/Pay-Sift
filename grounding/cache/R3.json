@@ -276,20 +276,24 @@
     }
   ],
   "judge_verdict": {
-    "label": "NOT_FOUND",
-    "sources_used": [],
-    "quote": "",
-    "reason": "Failed to parse model JSON output",
-    "convention": true
+    "label": "PARTIAL",
+    "sources_used": [
+      "R3_s2",
+      "R3_s3",
+      "R3_s4"
+    ],
+    "quote": "Guard against duplicated event receipts by logging the event IDs you\u2019ve processed, and then not processing already-logged events.",
+    "reason": "The sources validate that events can be delivered multiple times and recommend idempotency handling via event IDs, but do not explicitly specify returning a literal status code of 'duplicate' as mandated by the rule.",
+    "convention": false
   },
   "judge_meta": {
     "model": "gemini-3.5-flash-lite",
     "temperature": 0.0,
     "token_usage": {
       "prompt_tokens": 1299,
-      "completion_tokens": 169,
-      "total_tokens": 1468
+      "completion_tokens": 130,
+      "total_tokens": 1429
     },
-    "timestamp": "2026-11-21T08:30:11.066219+00:00"
+    "timestamp": "2026-11-21T09:27:16.816458+00:00"
   }
 }
