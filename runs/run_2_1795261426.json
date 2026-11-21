@@ -1,0 +1,1478 @@
+{
+  "run_id": "run_2_1795261426",
+  "contract_version": "1.0",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+  "created_at": "2026-11-21T11:43:46.442505+00:00",
+  "candidate": {
+    "id": "2",
+    "model": "qwen/qwen3.8-27b",
+    "condition": "A",
+    "sample": 2,
+    "sha256": "c30f98805b0260a91244caca9e7be0067ce8f23e32b24ac39e0c1cbec598a2ca",
+    "source": "live",
+    "label": "Candidate strong_b_A_2"
+  },
+  "harness": {
+    "mode_set": [
+      "normal"
+    ],
+    "docker": true,
+    "cpus": 1
+  },
+  "seeds": [
+    0,
+    99
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 90,
+        "failed": 10
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 90,
+        "failed": 10
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 5,
+      "first_bad_step": 0,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "",
+          "tag": "empty_signature",
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s5_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "5b1422806e95b702ad5319b160594daaa983a89458bcbf742e1d9610ced040ae",
+          "tag": "wrong_secret_signature",
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s5_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "01ae057d721b9ce2e6d1dea4a631b5ed98aee9314d2fe6f4124171e7b20a64e3",
+          "tag": "flipped_byte_signature",
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s5_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "C1AE057D721B9CE2E6D1DEA4A631B5ED98AEE9314D2FE6F4124171E7B20A64E3",
+          "tag": "uppercase_hex_signature",
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s5_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "\u00f11ae057d721b9ce2e6d1dea4a631b5ed98aee9314d2fe6f4124171e7b20a64e3",
+          "tag": "non_ascii_signature",
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s5_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJldmVudF9pZCI6ICJzNV9zaWdfdGVzdCIsICJ0eXBlIjogInBheW1lbnQuY2FwdHVyZWQiLCAicGF5bWVudF9pZCI6ICJwYXlfc2lnIiwgImFtb3VudF9wYWlzZSI6IDMwMDAwfQ==",
+          "signature": "55971debdf89cc5897b27327c83c7e43de36d264ec6189e018aeee79bd053aa3",
+          "tag": "reserialized_signature_mismatch",
+          "event_id": "s5_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000,
+          "summary": "payment.captured s5_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "c1ae057d721b9ce2e6d1dea4a631b5ed98aee9314d2fe6f4124171e7b20a64e3",
+          "tag": "valid_signature_capture",
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s5_sig_test (Rs 300)"
+        }
+      ],
+      "minimal_stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "C1AE057D721B9CE2E6D1DEA4A631B5ED98AEE9314D2FE6F4124171E7B20A64E3",
+          "tag": "uppercase_hex_signature",
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s5_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "\u00f11ae057d721b9ce2e6d1dea4a631b5ed98aee9314d2fe6f4124171e7b20a64e3",
+          "tag": "non_ascii_signature",
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s5_sig_test (Rs 300)"
+        }
+      ],
+      "one_minimal": false,
+      "shrink_history": [
+        [
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "",
+            "tag": "empty_signature",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test",
+            "payment_id": "pay_sig",
+            "type": "payment.captured",
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "5b1422806e95b702ad5319b160594daaa983a89458bcbf742e1d9610ced040ae",
+            "tag": "wrong_secret_signature",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test",
+            "payment_id": "pay_sig",
+            "type": "payment.captured",
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "01ae057d721b9ce2e6d1dea4a631b5ed98aee9314d2fe6f4124171e7b20a64e3",
+            "tag": "flipped_byte_signature",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test",
+            "payment_id": "pay_sig",
+            "type": "payment.captured",
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "C1AE057D721B9CE2E6D1DEA4A631B5ED98AEE9314D2FE6F4124171E7B20A64E3",
+            "tag": "uppercase_hex_signature",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test",
+            "payment_id": "pay_sig",
+            "type": "payment.captured",
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "\u00f11ae057d721b9ce2e6d1dea4a631b5ed98aee9314d2fe6f4124171e7b20a64e3",
+            "tag": "non_ascii_signature",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test",
+            "payment_id": "pay_sig",
+            "type": "payment.captured",
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          },
+          {
+            "raw_body_b64": "eyJldmVudF9pZCI6ICJzNV9zaWdfdGVzdCIsICJ0eXBlIjogInBheW1lbnQuY2FwdHVyZWQiLCAicGF5bWVudF9pZCI6ICJwYXlfc2lnIiwgImFtb3VudF9wYWlzZSI6IDMwMDAwfQ==",
+            "signature": "55971debdf89cc5897b27327c83c7e43de36d264ec6189e018aeee79bd053aa3",
+            "tag": "reserialized_signature_mismatch",
+            "event_id": "s5_sig_test",
+            "type": "payment.captured",
+            "payment_id": "pay_sig",
+            "amount_paise": 30000,
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "c1ae057d721b9ce2e6d1dea4a631b5ed98aee9314d2fe6f4124171e7b20a64e3",
+            "tag": "valid_signature_capture",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test",
+            "payment_id": "pay_sig",
+            "type": "payment.captured",
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          }
+        ],
+        [
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "C1AE057D721B9CE2E6D1DEA4A631B5ED98AEE9314D2FE6F4124171E7B20A64E3",
+            "tag": "uppercase_hex_signature",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test",
+            "payment_id": "pay_sig",
+            "type": "payment.captured",
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "\u00f11ae057d721b9ce2e6d1dea4a631b5ed98aee9314d2fe6f4124171e7b20a64e3",
+            "tag": "non_ascii_signature",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test",
+            "payment_id": "pay_sig",
+            "type": "payment.captured",
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          },
+          {
+            "raw_body_b64": "eyJldmVudF9pZCI6ICJzNV9zaWdfdGVzdCIsICJ0eXBlIjogInBheW1lbnQuY2FwdHVyZWQiLCAicGF5bWVudF9pZCI6ICJwYXlfc2lnIiwgImFtb3VudF9wYWlzZSI6IDMwMDAwfQ==",
+            "signature": "55971debdf89cc5897b27327c83c7e43de36d264ec6189e018aeee79bd053aa3",
+            "tag": "reserialized_signature_mismatch",
+            "event_id": "s5_sig_test",
+            "type": "payment.captured",
+            "payment_id": "pay_sig",
+            "amount_paise": 30000,
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "c1ae057d721b9ce2e6d1dea4a631b5ed98aee9314d2fe6f4124171e7b20a64e3",
+            "tag": "valid_signature_capture",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test",
+            "payment_id": "pay_sig",
+            "type": "payment.captured",
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          }
+        ],
+        [
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "C1AE057D721B9CE2E6D1DEA4A631B5ED98AEE9314D2FE6F4124171E7B20A64E3",
+            "tag": "uppercase_hex_signature",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test",
+            "payment_id": "pay_sig",
+            "type": "payment.captured",
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1X3NpZ190ZXN0IiwicGF5bWVudF9pZCI6InBheV9zaWciLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "\u00f11ae057d721b9ce2e6d1dea4a631b5ed98aee9314d2fe6f4124171e7b20a64e3",
+            "tag": "non_ascii_signature",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test",
+            "payment_id": "pay_sig",
+            "type": "payment.captured",
+            "summary": "payment.captured s5_sig_test (Rs 300)"
+          }
+        ]
+      ],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "HMAC signature verification failure for event 's5_sig_test': signature was invalid, but handler accepted the event (observed status 'unknown'). Expected 'rejected'. Rule R1.",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 5 failed at step 3"
+      },
+      "repro": {
+        "runs": 10,
+        "reproduced": 10
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 15,
+      "first_bad_step": 3,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMxNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "",
+          "tag": "empty_signature",
+          "amount_paise": 30000,
+          "event_id": "s15_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s15_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMxNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "def0472ae06029a915c83179a4d42ba1f26b644b03e97c1932982a58aecc3d76",
+          "tag": "wrong_secret_signature",
+          "amount_paise": 30000,
+          "event_id": "s15_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s15_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMxNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "0183525d2eb75e9b3f2094fa583c75935df543a4b9a3a9b94a8b9c7dc38e0b8c",
+          "tag": "flipped_byte_signature",
+          "amount_paise": 30000,
+          "event_id": "s15_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s15_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMxNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "A183525D2EB75E9B3F2094FA583C75935DF543A4B9A3A9B94A8B9C7DC38E0B8C",
+          "tag": "uppercase_hex_signature",
+          "amount_paise": 30000,
+          "event_id": "s15_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s15_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMxNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "\u00f1183525d2eb75e9b3f2094fa583c75935df543a4b9a3a9b94a8b9c7dc38e0b8c",
+          "tag": "non_ascii_signature",
+          "amount_paise": 30000,
+          "event_id": "s15_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s15_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJldmVudF9pZCI6ICJzMTVfc2lnX3Rlc3QiLCAidHlwZSI6ICJwYXltZW50LmNhcHR1cmVkIiwgInBheW1lbnRfaWQiOiAicGF5X3NpZyIsICJhbW91bnRfcGFpc2UiOiAzMDAwMH0=",
+          "signature": "bbfa88aff2fc3089b2f17fb0cefd34ac54cc1b1b0ecf5bad3dd21c4c7e703ed7",
+          "tag": "reserialized_signature_mismatch",
+          "event_id": "s15_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000,
+          "summary": "payment.captured s15_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMxNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "a183525d2eb75e9b3f2094fa583c75935df543a4b9a3a9b94a8b9c7dc38e0b8c",
+          "tag": "valid_signature_capture",
+          "amount_paise": 30000,
+          "event_id": "s15_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s15_sig_test (Rs 300)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s15_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 3: payment IDs mismatch. Expected [], observed ['pay_sig'] (R1).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 15 failed at step 3"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 25,
+      "first_bad_step": 3,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMyNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "",
+          "tag": "empty_signature",
+          "amount_paise": 30000,
+          "event_id": "s25_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s25_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMyNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "7ef227b5ed9e3ffcb56763f0c93bfd32599b87219ea345303f5e360787c4f506",
+          "tag": "wrong_secret_signature",
+          "amount_paise": 30000,
+          "event_id": "s25_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s25_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMyNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "0ad7ad85ffbd17f354cc350133859a0ddcf1f2a839202fd9cc9bbca01da073ed",
+          "tag": "flipped_byte_signature",
+          "amount_paise": 30000,
+          "event_id": "s25_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s25_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMyNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "2AD7AD85FFBD17F354CC350133859A0DDCF1F2A839202FD9CC9BBCA01DA073ED",
+          "tag": "uppercase_hex_signature",
+          "amount_paise": 30000,
+          "event_id": "s25_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s25_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMyNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "\u00f1ad7ad85ffbd17f354cc350133859a0ddcf1f2a839202fd9cc9bbca01da073ed",
+          "tag": "non_ascii_signature",
+          "amount_paise": 30000,
+          "event_id": "s25_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s25_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJldmVudF9pZCI6ICJzMjVfc2lnX3Rlc3QiLCAidHlwZSI6ICJwYXltZW50LmNhcHR1cmVkIiwgInBheW1lbnRfaWQiOiAicGF5X3NpZyIsICJhbW91bnRfcGFpc2UiOiAzMDAwMH0=",
+          "signature": "3f10e407daaa6887214417435d43ef4acd778f02e5f06c2816f699cda2a6c225",
+          "tag": "reserialized_signature_mismatch",
+          "event_id": "s25_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000,
+          "summary": "payment.captured s25_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMyNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "2ad7ad85ffbd17f354cc350133859a0ddcf1f2a839202fd9cc9bbca01da073ed",
+          "tag": "valid_signature_capture",
+          "amount_paise": 30000,
+          "event_id": "s25_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s25_sig_test (Rs 300)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s25_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 3: payment IDs mismatch. Expected [], observed ['pay_sig'] (R1).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 25 failed at step 3"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 35,
+      "first_bad_step": 3,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMzNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "",
+          "tag": "empty_signature",
+          "amount_paise": 30000,
+          "event_id": "s35_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s35_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMzNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "50469c9cb7797e8e90728422dd71cd590fc06d152dbba0657e9cdd8b2a5a61af",
+          "tag": "wrong_secret_signature",
+          "amount_paise": 30000,
+          "event_id": "s35_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s35_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMzNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "05d3630f30052271331010092193e8ab1521d510086b13443f0530486961ca3b",
+          "tag": "flipped_byte_signature",
+          "amount_paise": 30000,
+          "event_id": "s35_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s35_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMzNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "B5D3630F30052271331010092193E8AB1521D510086B13443F0530486961CA3B",
+          "tag": "uppercase_hex_signature",
+          "amount_paise": 30000,
+          "event_id": "s35_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s35_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMzNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "\u00f15d3630f30052271331010092193e8ab1521d510086b13443f0530486961ca3b",
+          "tag": "non_ascii_signature",
+          "amount_paise": 30000,
+          "event_id": "s35_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s35_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJldmVudF9pZCI6ICJzMzVfc2lnX3Rlc3QiLCAidHlwZSI6ICJwYXltZW50LmNhcHR1cmVkIiwgInBheW1lbnRfaWQiOiAicGF5X3NpZyIsICJhbW91bnRfcGFpc2UiOiAzMDAwMH0=",
+          "signature": "ff47a814e12d413aca7cded6f1e030cef1fca40a344bb8f8bc29956ce43cd629",
+          "tag": "reserialized_signature_mismatch",
+          "event_id": "s35_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000,
+          "summary": "payment.captured s35_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InMzNV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "b5d3630f30052271331010092193e8ab1521d510086b13443f0530486961ca3b",
+          "tag": "valid_signature_capture",
+          "amount_paise": 30000,
+          "event_id": "s35_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s35_sig_test (Rs 300)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s35_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 3: payment IDs mismatch. Expected [], observed ['pay_sig'] (R1).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 35 failed at step 3"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 45,
+      "first_bad_step": 3,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM0NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "",
+          "tag": "empty_signature",
+          "amount_paise": 30000,
+          "event_id": "s45_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s45_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM0NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "de0ab354abf3421ed920ad1387b24b32829e521a0f3be9c86e407c3884cb7ff2",
+          "tag": "wrong_secret_signature",
+          "amount_paise": 30000,
+          "event_id": "s45_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s45_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM0NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "08ee3cfe7c52a5b7a9c7b1e68b42afca8f7a33bd2a5edb8eb44f7c92757e45d6",
+          "tag": "flipped_byte_signature",
+          "amount_paise": 30000,
+          "event_id": "s45_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s45_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM0NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "88EE3CFE7C52A5B7A9C7B1E68B42AFCA8F7A33BD2A5EDB8EB44F7C92757E45D6",
+          "tag": "uppercase_hex_signature",
+          "amount_paise": 30000,
+          "event_id": "s45_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s45_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM0NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "\u00f18ee3cfe7c52a5b7a9c7b1e68b42afca8f7a33bd2a5edb8eb44f7c92757e45d6",
+          "tag": "non_ascii_signature",
+          "amount_paise": 30000,
+          "event_id": "s45_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s45_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJldmVudF9pZCI6ICJzNDVfc2lnX3Rlc3QiLCAidHlwZSI6ICJwYXltZW50LmNhcHR1cmVkIiwgInBheW1lbnRfaWQiOiAicGF5X3NpZyIsICJhbW91bnRfcGFpc2UiOiAzMDAwMH0=",
+          "signature": "de3bcfd1aee209617f9b023cdf38f19e5c277702209f98d17aa435e40d2f644f",
+          "tag": "reserialized_signature_mismatch",
+          "event_id": "s45_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000,
+          "summary": "payment.captured s45_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM0NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "88ee3cfe7c52a5b7a9c7b1e68b42afca8f7a33bd2a5edb8eb44f7c92757e45d6",
+          "tag": "valid_signature_capture",
+          "amount_paise": 30000,
+          "event_id": "s45_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s45_sig_test (Rs 300)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s45_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 3: payment IDs mismatch. Expected [], observed ['pay_sig'] (R1).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 45 failed at step 3"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 55,
+      "first_bad_step": 3,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "",
+          "tag": "empty_signature",
+          "amount_paise": 30000,
+          "event_id": "s55_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s55_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "27b7ec47d81b398fa299bc79f6ee0a2f650099b7a3877e6c3f74f0251440b730",
+          "tag": "wrong_secret_signature",
+          "amount_paise": 30000,
+          "event_id": "s55_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s55_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "0378a390c107c459e2fa741f1e5520f7a3517463e1f9edebc7cc7bc941405120",
+          "tag": "flipped_byte_signature",
+          "amount_paise": 30000,
+          "event_id": "s55_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s55_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "A378A390C107C459E2FA741F1E5520F7A3517463E1F9EDEBC7CC7BC941405120",
+          "tag": "uppercase_hex_signature",
+          "amount_paise": 30000,
+          "event_id": "s55_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s55_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "\u00f1378a390c107c459e2fa741f1e5520f7a3517463e1f9edebc7cc7bc941405120",
+          "tag": "non_ascii_signature",
+          "amount_paise": 30000,
+          "event_id": "s55_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s55_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJldmVudF9pZCI6ICJzNTVfc2lnX3Rlc3QiLCAidHlwZSI6ICJwYXltZW50LmNhcHR1cmVkIiwgInBheW1lbnRfaWQiOiAicGF5X3NpZyIsICJhbW91bnRfcGFpc2UiOiAzMDAwMH0=",
+          "signature": "372c1e02a012d9f785bed40b3dde5062c1607a15be30c2aa244c96e0f31c3fde",
+          "tag": "reserialized_signature_mismatch",
+          "event_id": "s55_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000,
+          "summary": "payment.captured s55_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM1NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "a378a390c107c459e2fa741f1e5520f7a3517463e1f9edebc7cc7bc941405120",
+          "tag": "valid_signature_capture",
+          "amount_paise": 30000,
+          "event_id": "s55_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s55_sig_test (Rs 300)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s55_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 3: payment IDs mismatch. Expected [], observed ['pay_sig'] (R1).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 55 failed at step 3"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 65,
+      "first_bad_step": 3,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM2NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "",
+          "tag": "empty_signature",
+          "amount_paise": 30000,
+          "event_id": "s65_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s65_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM2NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "387c05981648b2dee2812deeba5f7881a566f9433b9362445bcc143e4294ebfa",
+          "tag": "wrong_secret_signature",
+          "amount_paise": 30000,
+          "event_id": "s65_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s65_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM2NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "0903579c377fdecaf2233f6ac44aa4e502232099f21890334cdded65f3cb6378",
+          "tag": "flipped_byte_signature",
+          "amount_paise": 30000,
+          "event_id": "s65_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s65_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM2NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "3903579C377FDECAF2233F6AC44AA4E502232099F21890334CDDED65F3CB6378",
+          "tag": "uppercase_hex_signature",
+          "amount_paise": 30000,
+          "event_id": "s65_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s65_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM2NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "\u00f1903579c377fdecaf2233f6ac44aa4e502232099f21890334cdded65f3cb6378",
+          "tag": "non_ascii_signature",
+          "amount_paise": 30000,
+          "event_id": "s65_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s65_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJldmVudF9pZCI6ICJzNjVfc2lnX3Rlc3QiLCAidHlwZSI6ICJwYXltZW50LmNhcHR1cmVkIiwgInBheW1lbnRfaWQiOiAicGF5X3NpZyIsICJhbW91bnRfcGFpc2UiOiAzMDAwMH0=",
+          "signature": "56fd511bb102a79e17507a1e2dee8bd2b3df94467cea151a9bc64ab7107cb178",
+          "tag": "reserialized_signature_mismatch",
+          "event_id": "s65_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000,
+          "summary": "payment.captured s65_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM2NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "3903579c377fdecaf2233f6ac44aa4e502232099f21890334cdded65f3cb6378",
+          "tag": "valid_signature_capture",
+          "amount_paise": 30000,
+          "event_id": "s65_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s65_sig_test (Rs 300)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s65_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 3: payment IDs mismatch. Expected [], observed ['pay_sig'] (R1).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 65 failed at step 3"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 75,
+      "first_bad_step": 3,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM3NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "",
+          "tag": "empty_signature",
+          "amount_paise": 30000,
+          "event_id": "s75_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s75_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM3NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "3df43a6d1b7a2eb05f9499f53bd3223a70ed0d71193b858a7e85dcc1d012c71c",
+          "tag": "wrong_secret_signature",
+          "amount_paise": 30000,
+          "event_id": "s75_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s75_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM3NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "08f0baeed831035356a54fca67f3dfc41d1b6ea58de2f947a03cf35aa259b1ee",
+          "tag": "flipped_byte_signature",
+          "amount_paise": 30000,
+          "event_id": "s75_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s75_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM3NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "78F0BAEED831035356A54FCA67F3DFC41D1B6EA58DE2F947A03CF35AA259B1EE",
+          "tag": "uppercase_hex_signature",
+          "amount_paise": 30000,
+          "event_id": "s75_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s75_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM3NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "\u00f18f0baeed831035356a54fca67f3dfc41d1b6ea58de2f947a03cf35aa259b1ee",
+          "tag": "non_ascii_signature",
+          "amount_paise": 30000,
+          "event_id": "s75_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s75_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJldmVudF9pZCI6ICJzNzVfc2lnX3Rlc3QiLCAidHlwZSI6ICJwYXltZW50LmNhcHR1cmVkIiwgInBheW1lbnRfaWQiOiAicGF5X3NpZyIsICJhbW91bnRfcGFpc2UiOiAzMDAwMH0=",
+          "signature": "8247e29da046be8a48a9100337523ca89ada2891be78fcca847c52c728a377f8",
+          "tag": "reserialized_signature_mismatch",
+          "event_id": "s75_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000,
+          "summary": "payment.captured s75_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM3NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "78f0baeed831035356a54fca67f3dfc41d1b6ea58de2f947a03cf35aa259b1ee",
+          "tag": "valid_signature_capture",
+          "amount_paise": 30000,
+          "event_id": "s75_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s75_sig_test (Rs 300)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s75_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 3: payment IDs mismatch. Expected [], observed ['pay_sig'] (R1).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 75 failed at step 3"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 85,
+      "first_bad_step": 3,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM4NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "",
+          "tag": "empty_signature",
+          "amount_paise": 30000,
+          "event_id": "s85_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s85_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM4NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "5e7f2f486ec35970010010105f553f8a4b29c0dbdfbd031591ec626b1da22a0d",
+          "tag": "wrong_secret_signature",
+          "amount_paise": 30000,
+          "event_id": "s85_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s85_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM4NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "0b098f6629bb731a2d5ea1d4fdcbb068b9849560beaaebe5c4cc37aa92bd496e",
+          "tag": "flipped_byte_signature",
+          "amount_paise": 30000,
+          "event_id": "s85_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s85_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM4NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "2B098F6629BB731A2D5EA1D4FDCBB068B9849560BEAAEBE5C4CC37AA92BD496E",
+          "tag": "uppercase_hex_signature",
+          "amount_paise": 30000,
+          "event_id": "s85_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s85_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM4NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "\u00f1b098f6629bb731a2d5ea1d4fdcbb068b9849560beaaebe5c4cc37aa92bd496e",
+          "tag": "non_ascii_signature",
+          "amount_paise": 30000,
+          "event_id": "s85_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s85_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJldmVudF9pZCI6ICJzODVfc2lnX3Rlc3QiLCAidHlwZSI6ICJwYXltZW50LmNhcHR1cmVkIiwgInBheW1lbnRfaWQiOiAicGF5X3NpZyIsICJhbW91bnRfcGFpc2UiOiAzMDAwMH0=",
+          "signature": "ca95eb342cb3a3208c570cfc238e4ce6742f170bc661ea1a2e0e79a1bc4f3f88",
+          "tag": "reserialized_signature_mismatch",
+          "event_id": "s85_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000,
+          "summary": "payment.captured s85_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM4NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "2b098f6629bb731a2d5ea1d4fdcbb068b9849560beaaebe5c4cc37aa92bd496e",
+          "tag": "valid_signature_capture",
+          "amount_paise": 30000,
+          "event_id": "s85_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s85_sig_test (Rs 300)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s85_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 3: payment IDs mismatch. Expected [], observed ['pay_sig'] (R1).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 85 failed at step 3"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 95,
+      "first_bad_step": 3,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM5NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "",
+          "tag": "empty_signature",
+          "amount_paise": 30000,
+          "event_id": "s95_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s95_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM5NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "bb1271eb011f57fed18142021c4e8190ebc7b1ef8cce3e660f28250414b6a909",
+          "tag": "wrong_secret_signature",
+          "amount_paise": 30000,
+          "event_id": "s95_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s95_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM5NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "0247cdcba171834e62dd40981bfd7a550d3d8ae38ee60e02525493b50886559c",
+          "tag": "flipped_byte_signature",
+          "amount_paise": 30000,
+          "event_id": "s95_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s95_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM5NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "4247CDCBA171834E62DD40981BFD7A550D3D8AE38EE60E02525493B50886559C",
+          "tag": "uppercase_hex_signature",
+          "amount_paise": 30000,
+          "event_id": "s95_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s95_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM5NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "\u00f1247cdcba171834e62dd40981bfd7a550d3d8ae38ee60e02525493b50886559c",
+          "tag": "non_ascii_signature",
+          "amount_paise": 30000,
+          "event_id": "s95_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s95_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJldmVudF9pZCI6ICJzOTVfc2lnX3Rlc3QiLCAidHlwZSI6ICJwYXltZW50LmNhcHR1cmVkIiwgInBheW1lbnRfaWQiOiAicGF5X3NpZyIsICJhbW91bnRfcGFpc2UiOiAzMDAwMH0=",
+          "signature": "9aa7e443f2ada26b060d575307bfc938845c8d4df7766d4c3ceb3e8d37b7d9e7",
+          "tag": "reserialized_signature_mismatch",
+          "event_id": "s95_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000,
+          "summary": "payment.captured s95_sig_test (Rs 300)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjMwMDAwLCJldmVudF9pZCI6InM5NV9zaWdfdGVzdCIsInBheW1lbnRfaWQiOiJwYXlfc2lnIiwidHlwZSI6InBheW1lbnQuY2FwdHVyZWQifQ==",
+          "signature": "4247cdcba171834e62dd40981bfd7a550d3d8ae38ee60e02525493b50886559c",
+          "tag": "valid_signature_capture",
+          "amount_paise": 30000,
+          "event_id": "s95_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured",
+          "summary": "payment.captured s95_sig_test (Rs 300)"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s95_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 3: payment IDs mismatch. Expected [], observed ['pay_sig'] (R1).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 95 failed at step 3"
+      },
+      "repro": {
+        "runs": 0,
+        "reproduced": 0
+      }
+    }
+  ],
+  "noncompliant": null,
+  "repair_of": null
+}
