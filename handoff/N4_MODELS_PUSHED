@@ -1,0 +1,11 @@
+﻿stage: N4
+owner: nehaa
+status: DONE
+completed_at: 2026-11-21T08:13:12Z
+work_commit: 9582a194c737c7796757b7d3092a0ce55ccdd98f
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Configured models.yaml with Gemini, Groq, and OpenRouter endpoints
+judge_model: gemini-3.5-flash-lite
+env_var_names: GEMINI_API_KEY, GROQ_API_KEY, OPENROUTER_API_KEY
+planned_generation_calls: 30
+cap: 120
