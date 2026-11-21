@@ -8,7 +8,7 @@
 | P1 | Contract (spec, schema, cases, prompts, sample.json) | DONE | 2026-11-21 01:05 | 2026-11-21 01:31 | Contract spine, schema, 56 cases, prompts, run schema, sample runs, G1 packet. |
 | P2 | Oracle, reference handler, streams, runner normal, m1-m3 | DONE | 2026-11-21 01:35 | 2026-11-21 02:15 | Oracle, reference handler (100/100 passes), streams 0-99, native runner, mutants m1-m3, Gate 2 passed. |
 | P3 | Mutants m4-m6, x1-x4, kill matrix | DONE | 2026-11-21 02:18 | 2026-11-21 03:07 | Mutants m4-m6, x1-x4, kill matrix CLI, Gate 3 passed. |
-| P4 | Sandbox, AST gate, hostile tests, parity | PARTIAL (blocked: Docker) | 2026-11-21 03:13 | 2026-11-21 03:24 | Dockerfile, AST gate, sandbox harness, 7 hostile handlers. G4 evaluated: BLOCKED (Docker missing). |
+| P4 | Sandbox, AST gate, hostile tests, parity | DONE | 2026-11-21 03:13 | 2026-11-21 15:18 | Dockerfile, AST gate, sandbox harness, 7 hostile handlers contained, native vs sandbox parity verified. Gate 4 passed. |
 | P5 | Restart & concurrency, m7-m9 | DONE | 2026-11-21 03:30 | 2026-11-21 04:10 | Restart mode (R9), concurrency harness (R10), mutants m7-m9, Gate 5 and Gate 6 passed. |
 | P6 | Shrinker, explanations | DONE | 2026-11-21 04:15 | 2026-11-21 04:45 | ddmin delta debugging, predicate memoization, template explanations (R0-R10), cli shrink, Gate 7 passed. |
 | P7 | Model generation & intake | PARTIAL (no model keys) | 2026-11-21 04:50 | 2026-11-21 05:15 | Provider adapters, AST intake, spec binding, generation CLI, fake provider tests. BH-002 logged (missing API keys). |
@@ -21,10 +21,10 @@
 
 | Gate | Description | Status | Started | Finished | Notes |
 |---|---|---|---|---|---|
-| G1 | Independent spec prediction & freeze | PENDING HUMAN | - | - | Human-only gate (packet prepared) |
+| G1 | Independent spec prediction & freeze | PASSED | 2026-11-21 15:10 | 2026-11-21 15:15 | PASSED with partner Nikhil. Disagreements: NONE. Spec unchanged (hash 289fa48f). SQ-001 confirmed. |
 | G2 | Reference handler passes 100/100 invariants | PASSED | 2026-11-21 01:50 | 2026-11-21 02:15 | Reference handler 100/100 pass across seeds 0-99; repeatable across runs; m1-m3 killed with intended rules. |
 | G3 | Reference clean; m1-m6 & x1-x4 fail intended rule | PASSED | 2026-11-21 02:40 | 2026-11-21 03:07 | Reference clean (0 failures across all invariants); all 10 mutants killed with intended rules; x4 sensitive only to family 8. |
-| G4 | Hostile tests contained; sandbox parity | BLOCKED / FAILED | 2026-11-21 03:20 | 2026-11-21 03:24 | Docker unavailable on host. runs/GATE4_FAILED.md generated; BH-001 logged; untrusted execution blocked. |
+| G4 | Hostile tests contained; sandbox parity | PASSED | 2026-11-21 14:30 | 2026-11-21 15:18 | All 7 hostile handlers contained. Seeds 0-19 parity matched (11/11). Ref seeds 0-99 parity matched. runs/GATE4_PASSED generated. |
 | G5 | m7 fails restart, passes normal; ref passes restart | PASSED | 2026-11-21 03:45 | 2026-11-21 03:50 | m7 passes normal mode (100/100) and fails restart mode (R9, 15 failures); reference handler passes restart mode (20/20). |
 | G6 | Ref 50/50 on A & B (3x); m8/m9 caught >=9/10 | PASSED | 2026-11-21 03:55 | 2026-11-21 04:05 | Ref clean 3/3 consecutive full runs (0/50 failures on A & B); m8 caught 10/10 runs on Scenario A; m9 caught 10/10 runs on Scenario B. |
 | G7 | Sequential failures shrink <=4 events (10/10) | PASSED | 2026-11-21 04:30 | 2026-11-21 04:45 | Sequential failure shrinking <= 4 events (10/10 reproducible) verified across all mutants (m1..m6, x1..x4 normal, m7 restart); m3 accumulation analysis documented. |
@@ -462,3 +462,58 @@
 - **Artifacts:**
   - `grounding/cache/R0.json` ... `R10.json`: updated with `judge_verdict` and `judge_meta`.
   - `runs/grounding.json`: rebuilt and verified against `contract/grounding_schema.json` with 0 errors; `spec_sha` matches `contract/SPEC_HASH`.
+
+
+### Stage K3C Report (Judge Parse Fix)
+
+- **Timestamp:** 2026-11-21 15:05:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nikhil
+- **Summary:**
+  - Implemented robust JSON output parsing for the model judge in `grounding/judge.py`:
+    - Strips markdown code fences (` ```json ` / ` ``` `).
+    - Extracts the first balanced `{...}` JSON structure, safely accounting for string literals and escapes.
+    - Validates required keys (`label`, `sources_used`, `quote`, `reason`) and allowable label values.
+    - Added single-retry fallback on parse failure with strict instructions ("reply with only the JSON object, no prose, no code fences").
+    - If retry also fails, assigns `NOT_FOUND` with reason `"Judge output unparseable after retry"`.
+  - Maintained all hard code-level constraints (verbatim substring check <= 25 words, source ID existence).
+  - Added unit tests in `tests/test_grounding.py` with mock adapter covering: fenced JSON, prose before/after, truncated JSON with recovery on retry, unparseable output after retry, and verbatim-quote violations.
+  - Re-judged rule R2: parsed cleanly into `NOT_FOUND` with reason `"None of the retrieved documentation snippets contain the specific payload validation rules, field constraints, or error handling behavior described in rule R2."` (no longer failing on JSON parsing).
+  - Validated `runs/grounding.json` against `contract/grounding_schema.json` (0 errors, `spec_sha` matches).
+
+
+### Stage N3 Report (Gate G1 Recorded)
+
+- **Timestamp:** 2026-11-21 15:15:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nehaa (executed by Nikhil under project owner override)
+- **Gate G1 Outcome:** `PASSED`
+- **Partner:** Nikhil
+- **Disagreements Summary:** `NONE`
+- **SQ-001 Resolution:** `CONFIRMED` (Scenario A attributes to I2_idempotency, Scenario B attributes to I4_bounds)
+- **Specification Status:** Unchanged (`SPEC_HASH` is `289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a`)
+- **Regen Required:** `false` (spec unchanged)
+
+
+### Stage K4 Report (Evidence Review & Spec Gap List)
+
+- **Timestamp:** 2026-11-21 15:40:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nikhil
+- **Mode:** APPLY
+- **Review Status:** DONE
+- **Overrides Applied:**
+  - `R8`: Overridden from `SUPPORTED` to `PARTIAL` (Note: "Quote is about API idempotency keys, not webhook event ids; supports the concept only.")
+  - `R9`: Overridden from `SUPPORTED` to `PARTIAL` (Note: "Source only says SQLite survives crashes; it does not cover idempotency across restarts.")
+  - `R10`: Overridden from `SUPPORTED` to `PARTIAL` (Note: "Only source is a blog post, not official provider docs.")
+- **Offline Rebuild:**
+  - `grounding/overrides.yaml` created with exact reviewer inputs.
+  - `runs/grounding.json` rebuilt offline via `python cli.py ground --rebuild` (0 model calls, 0 You.com calls).
+  - Validation: 0 errors against `contract/grounding_schema.json`; `spec_sha` matches `contract/SPEC_HASH`.
+- **Post-Override Label Distribution:**
+  - `SUPPORTED`: 1 rule (`R1`)
+  - `PARTIAL`: 5 rules (`R3`, `R6`, `R8`, `R9`, `R10`)
+  - `NOT_FOUND`: 5 rules (`R0`, `R2`, `R4`, `R5`, `R7`)
+  - `CONFLICT`: 0 rules
+- **Gap Rules & Questions for Review:**
+  - Generated `docs/SPEC_GAP_LIST.md` detailing all 10 gap rules (`R0`, `R2`, `R3`, `R4`, `R5`, `R6`, `R7`, `R8`, `R9`, `R10`) with framed review questions and "PaySift convention" classifications.

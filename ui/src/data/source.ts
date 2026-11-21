@@ -1,3 +1,5 @@
+import { normalizeGrounding, type GroundingData } from "./grounding";
+
 export type AnyRecord = Record<string, any>;
 export interface DataSource {
   health(signal?: AbortSignal): Promise<AnyRecord>;
@@ -19,6 +21,12 @@ export interface DataSource {
   getSpecHash(): Promise<string>;
   getStatus(): Promise<AnyRecord>;
   getPilotReport(): Promise<string>;
+  getEvidence(signal?: AbortSignal): Promise<GroundingData | null>;
+  searchEvidence(
+    ruleId: string,
+    extraTerms?: string,
+    signal?: AbortSignal,
+  ): Promise<AnyRecord>;
 }
 const base = (import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000").replace(
   /\/$/,
@@ -85,6 +93,21 @@ export const staticSource: DataSource = {
       .then((s) => s.trim()),
   getStatus: () => staticJson<AnyRecord>("status.json"),
   getPilotReport: () => fetch("/data/PILOT_REPORT.md").then((r) => r.text()),
+  getEvidence: async () => {
+    try {
+      const raw = await staticJson<AnyRecord>("grounding.json").catch(() =>
+        staticJson<AnyRecord>("runs/grounding.json"),
+      );
+      return normalizeGrounding(raw);
+    } catch {
+      return null;
+    }
+  },
+  searchEvidence: async () => {
+    throw new Error(
+      "Live evidence search is available only in LIVE API mode.",
+    );
+  },
 };
 export const liveSource: DataSource = {
   health: () => json(`${base}/health`),
@@ -114,6 +137,28 @@ export const liveSource: DataSource = {
   getSpecHash: staticSource.getSpecHash,
   getStatus: staticSource.getStatus,
   getPilotReport: staticSource.getPilotReport,
+  getEvidence: async (signal) => {
+    try {
+      const raw = await json<AnyRecord>(`${base}/evidence`, { signal });
+      return normalizeGrounding(raw);
+    } catch {
+      return staticSource.getEvidence(signal);
+    }
+  },
+  searchEvidence: (ruleId, extraTerms, signal) =>
+    json(
+      `${base}/evidence/search`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          rule_id: ruleId,
+          extra_terms: extraTerms || null,
+        }),
+        signal,
+      },
+      15000,
+    ),
 };
 export type Mode = "live" | "static" | "down";
 export async function chooseSource(): Promise<{

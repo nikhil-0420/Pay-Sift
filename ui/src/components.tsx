@@ -20,6 +20,7 @@ import {
 import {
   citedRuleCount,
   type GroundingData,
+  type GroundingSource,
   type EvidenceLabel,
 } from "./data/grounding";
 
@@ -346,7 +347,7 @@ export function LedgerReceipt({
       </div>
       {rows.length ? (
         <div className="ledger-scroll">
-          <table className="ledger-table">
+          <table className="ledger-table" aria-label="Ledger transactions">
             <thead>
               <tr>
                 <th>Entry</th>
@@ -391,15 +392,65 @@ function ledgerKey(row: any) {
   return `${row?.payment_id || ""}|${row?.kind || row?.type || ""}|${row?.amount_paise ?? ""}|${row?.event_id || ""}`;
 }
 
+export function EvidenceChip({
+  live = false,
+  date,
+}: {
+  live?: boolean;
+  date?: string;
+}) {
+  return (
+    <span className={`evidence-chip ${live ? "chip-live" : "chip-cached"}`}>
+      {live ? "LIVE" : "CACHED"}{date ? ` · ${date}` : ""}
+    </span>
+  );
+}
+
+export function SourceCard({
+  source,
+  live = false,
+}: {
+  source: GroundingSource;
+  live?: boolean;
+}) {
+  const date = source.retrieved_at
+    ? new Date(source.retrieved_at).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : undefined;
+  return (
+    <a
+      className="evidence-source"
+      key={source.id}
+      href={source.url}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={`${source.title} (${source.domain})`}
+    >
+      <div className="source-meta-row">
+        <span className="eyebrow">{source.domain}</span>
+        <EvidenceChip live={live} date={date} />
+      </div>
+      <b>{source.title}</b>
+      {source.snippet && <span className="source-snippet">{source.snippet}</span>}
+      <span className="outbound">Open source ↗</span>
+    </a>
+  );
+}
+
 export function EvidencePanel({
   data,
   rule,
+  defaultOpen = false,
 }: {
   data: GroundingData | null;
   rule: string;
+  defaultOpen?: boolean;
 }) {
   const item = data?.rules[rule];
-  if (!item)
+  if (!data || !item)
     return <div className="evidence-empty">Evidence not retrieved yet</div>;
   const sourceDate =
     item.sources
@@ -414,21 +465,22 @@ export function EvidencePanel({
         year: "numeric",
       })
     : "date not supplied";
+  const topSources = item.sources.slice(0, 3);
   return (
-    <details className="evidence-panel">
+    <details className="evidence-panel" open={defaultOpen}>
       <summary>
         <span>Evidence for {rule}</span>
         <b className={`evidence-label label-${item.label.toLowerCase()}`}>
           {item.label}
         </b>
-        <span className="evidence-cache">CACHED · {date}</span>
+        <EvidenceChip live={false} date={date} />
       </summary>
       <div className="evidence-meta">
         {item.convention && (
           <span className="convention-tag">PaySift convention</span>
         )}
         <span className="review-state">
-          {item.human_reviewed ? "human-reviewed" : "LLM-judged · unreviewed"}
+          {item.human_reviewed ? "human-reviewed" : "LLM-judged, unreviewed"}
         </span>
       </div>
       <p className="evidence-wording">supporting sources, retrieved {date}.</p>
@@ -440,42 +492,64 @@ export function EvidencePanel({
           <b>Reason:</b> {item.reason}
         </p>
       )}
-      {item.sources.length ? (
+      {topSources.length ? (
         <div className="evidence-sources">
-          {item.sources.map((source) => (
-            <a
-              className="evidence-source"
-              key={source.id}
-              href={source.url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span className="eyebrow">{source.domain}</span>
-              <b>{source.title}</b>
-              {source.snippet && <span>{source.snippet}</span>}
-              <span className="outbound">Open source ↗</span>
-            </a>
+          {topSources.map((source) => (
+            <SourceCard key={source.id} source={source} />
           ))}
         </div>
       ) : (
-        <p className="muted">No supporting source records are attached.</p>
+        <p className="evidence-empty muted">No source found</p>
       )}
     </details>
   );
 }
 
-export function EvidenceLanding({ data }: { data: GroundingData | null }) {
-  if (!data) return null;
-  return (
-    <div className="evidence-landing">
-      <div>
-        <div className="eyebrow">Live, cited evidence</div>
-        <h3>Evidence connected to the rules</h3>
+export function EvidenceLanding({
+  data,
+  featuredRule,
+}: {
+  data: GroundingData | null;
+  featuredRule?: string;
+}) {
+  if (!data)
+    return (
+      <div className="evidence-landing card">
+        <div className="evidence-empty">Evidence not retrieved yet</div>
       </div>
-      <strong>
-        {citedRuleCount(data)} of 11 rules backed by cited sources
-      </strong>
-    </div>
+    );
+  const count = citedRuleCount(data);
+  const total = Object.keys(data.rules || {}).length || 11;
+  const targetRule =
+    featuredRule ||
+    Object.keys(data.rules).find((r) => data.rules[r].sources.length > 0) ||
+    "R1";
+
+  return (
+    <section className="evidence-landing-section">
+      <div className="section-head">
+        <div>
+          <div className="eyebrow">Official documentation grounding</div>
+          <h2>Live, cited evidence</h2>
+        </div>
+        <Link className="text-link" to="/gaps">
+          View spec gaps <ArrowRight size={13} />
+        </Link>
+      </div>
+      <div className="evidence-landing card">
+        <div className="evidence-landing-stat">
+          <strong>
+            {count} of {total} rules backed by cited sources
+          </strong>
+          <p className="lead">
+            Every quote is verified as a verbatim substring from provider documentation or SQLite core guarantees.
+          </p>
+        </div>
+        <div className="evidence-landing-preview">
+          <EvidencePanel data={data} rule={targetRule} defaultOpen={true} />
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -501,7 +575,7 @@ export function EvidenceGaps({ data }: { data: GroundingData | null }) {
     );
   return (
     <div className="tablewrap">
-      <table>
+      <table aria-label="Specification gap questions">
         <thead>
           <tr>
             <th>Rule</th>
@@ -636,7 +710,7 @@ export function KillMatrixHeatmap({ rows }: { rows: any[] }) {
     row?.results?.[invariant]?.normal;
   return (
     <div className="heatmap-scroll">
-      <table className="heatmap-table">
+      <table className="heatmap-table" aria-label="Mutant kill matrix heatmap">
         <thead>
           <tr>
             <th className="sticky-first">Candidate</th>

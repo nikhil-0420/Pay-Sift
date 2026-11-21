@@ -34,12 +34,13 @@ ID | Phase | Severity (BLOCKER | IMPORTANT | FYI) | What is needed | What was do
 - **Question:** Plan section 7 lists rule R10 under `I4_bounds`, but Scenario A tests concurrent delivery of the identical capture event (an idempotency/R3 property), while Scenario B tests concurrent refund events competing against a balance (a bounds/R6 property).
 - **Adopted Resolution:** In `SPEC.md` and the oracle, Scenario A failures cite R10 under `I2_idempotency`, and Scenario B failures cite R10 under `I4_bounds`. Both count toward the financial headline.
 - **Action for Gate 1 Reviewers:** Confirm during Gate 1 review whether this attribution aligns with team expectations.
+- **Gate 1 Resolution:** CONFIRMED by Nikhil on 2026-11-21. Scenario A attribute under I2_idempotency and Scenario B under I4_bounds adopted as final.
 
 ### BH-001: Docker Unavailable on Host (Gate 4 Hard Blocker)
 - **Logged:** 2026-11-20T21:52:33.947575+00:00
-- **Status:** BLOCKER
-- **Impact:** Gate 4 FAILED. No model-generated code can execute tonight without Docker sandbox (Rule 3).
-- **Action:** Install Docker, run daemon, build `paysift-sandbox:1`, and run `python cli.py sandbox-test`.
+- **Status:** RESOLVED (2026-11-21)
+- **Resolution:** Docker sandbox `paysift-sandbox:1` built and verified. Gate 4 PASSED (`runs/GATE4_PASSED` generated). All 7 hostile handlers contained, native vs sandbox parity confirmed across seeds 0-19 for all 11 mutants and seeds 0-99 for reference handler.
+- **Action:** None. Gate 4 is unblocked.
 
 ### BH-002: No Usable Model Config (P7 Blocker)
 - **Logged:** 2026-11-20T23:20:00+00:00

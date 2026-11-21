@@ -29,3 +29,19 @@ During K5 integration against the live repo data and FastAPI backend (`api/main.
 1. `ui/scripts/sync-data.mjs`: Added `"grounding.json"` to the excluded list when syncing individual run files so it is preserved at `public/data/runs/grounding.json` as a grounding artifact rather than indexed as an ordinary candidate run.
 2. `ui/tests/data.test.ts`: Excluded `"grounding.json"` from the run normalization test loop since `grounding.json` conforms to `contract/grounding_schema.json` rather than `contract/run_schema.json`.
 3. `ui/scripts/check-api.mjs`: Updated `POST /repair` check to accept HTTP 403 and 503 as valid, documented responses when live model execution / Docker sandbox is unavailable on the host environment (Gate 4 blocked / keys unconfigured).
+
+## Stage K6 Evidence UI and UX Polish
+
+Audited and updated existing frontend components against B1-B4 specifications:
+1. `ui/src/data/source.ts`: Added `getEvidence` and `searchEvidence` methods to `DataSource` interface, `staticSource`, and `liveSource`. Live mode targets `GET /evidence` and `POST /evidence/search` with fallback to static grounding data.
+2. `ui/src/data/grounding.ts`: Added `joinEvidenceToFailures` and tolerant normalization to map contract rules and citations directly into failure cards.
+3. `ui/src/components.tsx`: Implemented `EvidenceChip` (`LIVE` vs `CACHED` with date) and `SourceCard` (domain eyebrow, title, snippet, external link). Polished `EvidencePanel` to support up to 3 sources, verbatim quotes, reasons, label chips, convention tags, and human review notes.
+4. `ui/src/main.tsx`:
+   - Landing proof strip: displays dynamic "N of M rules backed by cited sources" stat computed from data.
+   - Spec page: added sub-tabs for "Contract Rules" (rendering `EvidencePanel` on every rule card) and "Spec Gaps".
+   - Failure cards: added "Why is this a bug?" action (disabled with informative tooltip in static mode, live search in live mode).
+   - Repair view: embedded cited sources via `SourceCard` list.
+   - Demo flow: inserted "Evidence grounding" beat between Finding and Repair.
+   - Command palette: registered "Evidence and spec gaps" route.
+5. `ui/src/styles.css` & Accessibility: Added `aria-label` to table elements, enhanced `:focus-visible` rings for keyboard navigation, and added styled containers for evidence chips and cards.
+6. `ui/tests/grounding.test.ts`: Added unit tests verifying real `grounding.json` schema, override parsing, joining failures to evidence, and static source methods.

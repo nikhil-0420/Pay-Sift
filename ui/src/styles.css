@@ -690,7 +690,12 @@ tr:hover td {
 .btn:focus-visible,
 .keyhint:focus-visible,
 .mobile-sheet a:focus-visible,
-.copy-chip:focus-visible {
+.copy-chip:focus-visible,
+summary:focus-visible,
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
 }
@@ -1395,6 +1400,67 @@ tr:hover td {
 .label-conflict {
   color: #ff8b82;
   border-color: #ff554b;
+}
+.evidence-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  font: 10px var(--mono);
+  font-weight: 600;
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+}
+.chip-cached {
+  background: #24292f;
+  color: #adb5bd;
+  border: 1px solid #373e47;
+}
+.chip-live {
+  background: #00875a22;
+  color: #36b37e;
+  border: 1px solid #36b37e66;
+}
+.source-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.source-title {
+  color: #f0f2f5;
+  font-size: 13px;
+  line-height: 1.35;
+}
+.source-snippet {
+  color: #8c959f;
+  font-size: 11px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.evidence-landing-section {
+  margin: 32px 0;
+}
+.evidence-landing-stat {
+  margin-bottom: 16px;
+}
+.evidence-landing-stat strong {
+  font-size: 18px;
+  color: #f0f2f5;
+  display: block;
+  margin-bottom: 4px;
+}
+.evidence-landing-preview {
+  margin-top: 12px;
+}
+.evidence-no-source {
+  padding: 12px;
+  font: 11px var(--mono);
+  color: #8c959f;
+  border: 1px dashed #30363d;
+  background: #111417;
 }
 .evidence-cache,
 .evidence-wording {

@@ -1,6 +1,6 @@
 # PaySift Pilot Verification Report
 
-- **Generated:** `2026-11-21 08:34:22 UTC`
+- **Generated:** `2026-11-21 03:17:59 UTC`
 - **Specification SHA:** `289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a` (STATUS: `DRAFT-FROZEN`)
 
 > [!CAUTION]
@@ -60,7 +60,7 @@ Because live model execution is blocked pending Docker sandbox installation, the
 
 2. **Proposal 2: `m3_over_refund` (Hand-written Mutant Fallback)**
    - **Rule Violated:** `Rule R6: Refund Balance Bound` (printed in prompt)
-   - **Trace:** 2 events (capture Rs 500.00 -> refund Rs 600.00 accepted)
+   - **Trace:** 2 events (capture Rs 500.00 -> refund Rs 600.00 accepted; note: on seed 2, partial refund accumulation requires 6 events under deletion-only ddmin before triggering over-refund)
    - **Financial Impact:** Refund exceeds capture; net negative merchant balance
    - **Reproduction:** 10/10 reproducible, 1-minimal
    - **Status:** `HUMAN DECISION (MUTANT FALLBACK)`

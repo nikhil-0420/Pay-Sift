@@ -41,6 +41,7 @@ for (const [options, dest] of [
   ],
 ])
   copyAny(options, dest);
+copyAny(["runs/grounding.json", "grounding.json"], "grounding.json");
 copyAny(["runs/grounding.json", "grounding.json"], "runs/grounding.json");
 copyAny(["contract/grounding_schema.json"], "contract/grounding_schema.json");
 const runsDir = path.join(src, "runs");

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T08:42:36.327529+00:00",
+  "generated_at": "2026-11-21T10:06:59.485606+00:00",
   "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
   "provider": "you.com",
   "rules": {
@@ -256,22 +256,22 @@
       ],
       "sources_used": [],
       "quote": "",
-      "reason": "Failed to parse model JSON output",
+      "reason": "None of the retrieved documentation snippets contain the specific payload validation rules, field constraints, or error handling behavior described in rule R2.",
       "judge": {
         "model": "gemini-3.5-flash-lite",
         "temperature": 0.0,
         "token_usage": {
           "prompt_tokens": 1366,
-          "completion_tokens": 80,
-          "total_tokens": 1446
+          "completion_tokens": 64,
+          "total_tokens": 1430
         },
-        "timestamp": "2026-11-21T08:29:50.956460+00:00"
+        "timestamp": "2026-11-21T09:35:05.943992+00:00"
       }
     },
     "R3": {
       "title": "Event Idempotency",
-      "label": "NOT_FOUND",
-      "convention": true,
+      "label": "PARTIAL",
+      "convention": false,
       "human_reviewed": false,
       "sources": [
         {
@@ -365,18 +365,22 @@
           "provider": "you.com"
         }
       ],
-      "sources_used": [],
-      "quote": "",
-      "reason": "Failed to parse model JSON output",
+      "sources_used": [
+        "R3_s2",
+        "R3_s3",
+        "R3_s4"
+      ],
+      "quote": "Guard against duplicated event receipts by logging the event IDs you\u2019ve processed, and then not processing already-logged events.",
+      "reason": "The sources validate that events can be delivered multiple times and recommend idempotency handling via event IDs, but do not explicitly specify returning a literal status code of 'duplicate' as mandated by the rule.",
       "judge": {
         "model": "gemini-3.5-flash-lite",
         "temperature": 0.0,
         "token_usage": {
           "prompt_tokens": 1299,
-          "completion_tokens": 169,
-          "total_tokens": 1468
+          "completion_tokens": 130,
+          "total_tokens": 1429
         },
-        "timestamp": "2026-11-21T08:30:11.066219+00:00"
+        "timestamp": "2026-11-21T09:27:16.816458+00:00"
       }
     },
     "R4": {
@@ -808,9 +812,9 @@
     },
     "R8": {
       "title": "Rejection Non-Consumption",
-      "label": "SUPPORTED",
+      "label": "PARTIAL",
       "convention": false,
-      "human_reviewed": false,
+      "human_reviewed": true,
       "sources": [
         {
           "id": "R8_s1",
@@ -904,26 +908,20 @@
         }
       ],
       "sources_used": [
-        "R8_s5"
+        "R8_s1"
       ],
-      "quote": "Errors that occur before execution begins, such as invalid parameters, an invalid API key, or rate limiting, don\u2019t cache a result.",
-      "reason": "Source R8_s5 explicitly supports the rule that rejected requests/errors occurring before execution (such as due to invalid parameters) do not cache a result, meaning the identifier/key is not consumed and retries can be processed normally.",
+      "quote": "",
+      "reason": "Quote is about API idempotency keys, not webhook event ids; supports the concept only.",
       "judge": {
-        "model": "gemini-3.5-flash-lite",
-        "temperature": 0.0,
-        "token_usage": {
-          "prompt_tokens": 1328,
-          "completion_tokens": 125,
-          "total_tokens": 1453
-        },
-        "timestamp": "2026-11-21T08:30:52.448075+00:00"
+        "model": "human_override",
+        "temperature": null
       }
     },
     "R9": {
       "title": "Durability Across Restarts",
-      "label": "SUPPORTED",
+      "label": "PARTIAL",
       "convention": false,
-      "human_reviewed": false,
+      "human_reviewed": true,
       "sources": [
         {
           "id": "R9_s1",
@@ -1007,26 +1005,20 @@
         }
       ],
       "sources_used": [
-        "R9_s5"
+        "R9_s1"
       ],
-      "quote": "SQLite guarantees all transactions are ACID-compliant even if the transaction is interrupted by a program crash",
-      "reason": "Source R9_s5 supports the rule by confirming that SQLite maintains transactional integrity across program crashes and interruptions, ensuring durability.",
+      "quote": "",
+      "reason": "Source only says SQLite survives crashes; it does not cover idempotency across restarts.",
       "judge": {
-        "model": "gemini-3.5-flash-lite",
-        "temperature": 0.0,
-        "token_usage": {
-          "prompt_tokens": 1228,
-          "completion_tokens": 93,
-          "total_tokens": 1321
-        },
-        "timestamp": "2026-11-21T08:30:59.249893+00:00"
+        "model": "human_override",
+        "temperature": null
       }
     },
     "R10": {
       "title": "Concurrency Safety",
-      "label": "SUPPORTED",
+      "label": "PARTIAL",
       "convention": false,
-      "human_reviewed": false,
+      "human_reviewed": true,
       "sources": [
         {
           "id": "R10_s1",
@@ -1120,21 +1112,13 @@
         }
       ],
       "sources_used": [
-        "R10_s1",
-        "R10_s7",
-        "R10_s8"
+        "R10_s1"
       ],
-      "quote": "To guarantee true idempotency under concurrency, systems must enforce atomic database-level constraints",
-      "reason": "The retrieved sources discuss handling concurrency, database locks, busy-handlers, and the necessity of enforcing idempotency under concurrent execution, directly supporting Rule R10.",
+      "quote": "",
+      "reason": "Only source is a blog post, not official provider docs.",
       "judge": {
-        "model": "gemini-3.5-flash-lite",
-        "temperature": 0.0,
-        "token_usage": {
-          "prompt_tokens": 1298,
-          "completion_tokens": 119,
-          "total_tokens": 1417
-        },
-        "timestamp": "2026-11-21T08:31:06.426652+00:00"
+        "model": "human_override",
+        "temperature": null
       }
     }
   }

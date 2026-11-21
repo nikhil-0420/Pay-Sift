@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-21T09:22:47.743Z",
-  "run_count": 216,
+  "generated_at": "2026-11-21T10:33:50.678Z",
+  "run_count": 177,
   "phases": [
     {
       "id": "P0",
@@ -25,7 +25,7 @@
     {
       "id": "P4",
       "title": "Sandbox, AST gate, hostile tests, parity",
-      "status": "PARTIAL (blocked: Docker)"
+      "status": "DONE"
     },
     {
       "id": "P5",
@@ -62,7 +62,7 @@
     {
       "id": "G1",
       "title": "Independent spec prediction & freeze",
-      "status": "PENDING HUMAN"
+      "status": "PASSED"
     },
     {
       "id": "G2",
@@ -77,7 +77,7 @@
     {
       "id": "G4",
       "title": "Hostile tests contained; sandbox parity",
-      "status": "BLOCKED / FAILED"
+      "status": "PASSED"
     },
     {
       "id": "G5",

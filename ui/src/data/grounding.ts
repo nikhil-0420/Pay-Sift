@@ -147,12 +147,27 @@ export async function readGrounding(): Promise<GroundingData | null> {
     });
   }
   try {
-    const response = await fetch("/data/runs/grounding.json");
-    if (!response.ok) return null;
+    let response = await fetch("/data/grounding.json").catch(() => null);
+    if (!response || !response.ok) {
+      response = await fetch("/data/runs/grounding.json").catch(() => null);
+    }
+    if (!response || !response.ok) return null;
     return normalizeGrounding(await response.json());
   } catch {
     return null;
   }
+}
+
+export function joinEvidenceToFailures<T extends { rule?: string }>(
+  failures: T[],
+  grounding: GroundingData | null,
+): (T & { evidence?: RuleGrounding })[] {
+  if (!Array.isArray(failures)) return [];
+  return failures.map((f) => ({
+    ...f,
+    evidence:
+      f.rule && grounding?.rules?.[f.rule] ? grounding.rules[f.rule] : undefined,
+  }));
 }
 
 export function citedRuleCount(data: GroundingData | null | undefined): number {

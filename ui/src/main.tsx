@@ -53,7 +53,12 @@ import {
   type DataSource,
   type Mode,
 } from "./data/source";
-import { readGrounding, WHY_BUG_ENDPOINT } from "./data/grounding";
+import {
+  readGrounding,
+  citedRuleCount,
+  type GroundingData,
+  WHY_BUG_ENDPOINT,
+} from "./data/grounding";
 import {
   CopyChip,
   DesignedEmpty,
@@ -69,6 +74,8 @@ import {
   DiffViewer,
   SkeletonBlock,
   EvidenceGaps,
+  EvidenceChip,
+  SourceCard,
 } from "./components";
 import {
   alignSubsequence,
@@ -116,6 +123,13 @@ function query<T = any>(key: string, fn: () => Promise<T>) {
     queryFn: fn,
   });
 }
+const useGrounding = () => {
+  const { source } = useApp();
+  return useQuery<GroundingData | null>({
+    queryKey: ["grounding", source === liveSource ? "live" : "static"],
+    queryFn: () => source.getEvidence(),
+  });
+};
 function Badge({
   children,
   tone = "muted",
@@ -453,7 +467,7 @@ function Palette({ onClose }: { onClose: () => void }) {
     ["Pilot", "/pilot"],
     ["Specification", "/spec"],
     ["Method", "/method"],
-    ["Questions for review", "/gaps"],
+    ["Evidence and spec gaps", "/gaps"],
     ["Status", "/status"],
     ["Guided demo", "/demo"],
   ];
@@ -595,10 +609,7 @@ function Home() {
       .then((r) => (r.ok ? r.json() : null))
       .catch(() => null),
   );
-  const { data: grounding = null } = useQuery({
-    queryKey: ["grounding"],
-    queryFn: readGrounding,
-  });
+  const { data: grounding = null } = useGrounding();
   const modelRuns = runs.filter((r) =>
     ["live", "pre-run"].includes(r.candidate?.source),
   );
@@ -794,6 +805,11 @@ function Home() {
       </section>
       <div className="proof proof-data">
         {[
+          [
+            `${citedRuleCount(grounding)}/${Object.keys(grounding?.rules || {}).length || 11}`,
+            "rules backed by cited sources",
+            "Retrieved empirical evidence from You.com API",
+          ],
           [
             `${killed}/${mutants.length}`,
             "mutants killed",
@@ -1000,7 +1016,7 @@ function Runs() {
         <div className="skeleton" />
       ) : shown.length ? (
         <div className="tablewrap">
-          <table className="findings-table">
+          <table className="findings-table" aria-label="Runs and findings table">
             <thead>
               <tr>
                 <th>Candidate</th>
@@ -1262,7 +1278,7 @@ function RunDetail() {
   );
 }
 function EvidenceSearch({ rule, data }: { rule: string; data: any }) {
-  const { mode } = useApp();
+  const { source, mode } = useApp();
   const [loading, setLoading] = useState(false),
     [error, setError] = useState(""),
     [results, setResults] = useState<any[]>([]);
@@ -1271,20 +1287,7 @@ function EvidenceSearch({ rule, data }: { rule: string; data: any }) {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch(WHY_BUG_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rule_id: rule, extra_terms: [] }),
-      });
-      if (response.status === 429)
-        throw new Error(
-          "Evidence search is rate-limited. Showing cached evidence below.",
-        );
-      if (!response.ok)
-        throw new Error(
-          "Evidence search is unavailable. Showing cached evidence below.",
-        );
-      const payload = await response.json();
+      const payload = await source.searchEvidence(rule);
       const list = Array.isArray(payload?.sources)
         ? payload.sources
         : Array.isArray(payload)
@@ -1303,31 +1306,36 @@ function EvidenceSearch({ rule, data }: { rule: string; data: any }) {
       setLoading(false);
     }
   };
+
+  if (mode !== "live") {
+    return (
+      <div className="evidence-search" style={{ margin: "0.5rem 0 1rem" }}>
+        <button
+          className="btn"
+          disabled
+          title="Why is this a bug? search is available only in LIVE API mode. Cached evidence is shown below."
+          aria-label="Why is this a bug? (Disabled in static mode)"
+        >
+          Why is this a bug?
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="evidence-search">
+    <div className="evidence-search" style={{ margin: "0.5rem 0 1rem" }}>
       <button className="btn" onClick={search} disabled={loading}>
-        {loading ? "Searching evidence…" : "Why is this a bug?"}
+        {loading ? "Searching live evidence…" : "Why is this a bug?"}
       </button>
       {error && (
-        <p className="muted" role="status">
+        <p className="muted" role="status" style={{ marginTop: "0.5rem" }}>
           {error}
         </p>
       )}
       {results.length > 0 && (
-        <div className="evidence-sources">
-          {results.map((source: any, index: number) => (
-            <a
-              className="evidence-source"
-              key={source.id || source.url || index}
-              href={source.url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span className="evidence-cache">LIVE</span>
-              <b>{source.title || source.url}</b>
-              <span>{source.snippet || ""}</span>
-              <span className="outbound">Open source ↗</span>
-            </a>
+        <div className="evidence-sources" style={{ marginTop: "1rem" }}>
+          {results.map((src: any, index: number) => (
+            <SourceCard key={src.id || src.url || index} source={src} live={true} />
           ))}
         </div>
       )}
@@ -1341,10 +1349,7 @@ function Failure() {
   const { data: r } = query("failure-" + runId, () => source.getRun(runId));
   const n = Number(index),
     f = r?.failures?.[n];
-  const { data: grounding = null } = useQuery({
-    queryKey: ["grounding"],
-    queryFn: readGrounding,
-  });
+  const { data: grounding = null } = useGrounding();
   if (!f)
     return (
       <main className="page">
@@ -1425,8 +1430,8 @@ function Failure() {
         <LedgerDiff failure={f} />
       </Section>
       <Section title="Why is this a bug?">
-        <EvidencePanel data={grounding} rule={f.rule} />
-        {mode === "live" && <EvidenceSearch data={grounding} rule={f.rule} />}
+        <EvidenceSearch data={grounding} rule={f.rule} />
+        <EvidencePanel data={grounding} rule={f.rule} defaultOpen={true} />
       </Section>
       <div className="card">
         <div className="void">VOID</div>
@@ -1706,7 +1711,7 @@ function BreakPage() {
       </div>
       <Section title="Scenario × candidate replay">
         <div className="tablewrap">
-          <table>
+          <table aria-label="Scenario candidate replay table">
             <thead>
               <tr>
                 <th>Scenario</th>
@@ -1818,10 +1823,7 @@ function Repair() {
   const { source, mode } = useApp();
   const { data: runs = [] } = useData();
   const { data: status } = query("repair-status", () => source.getStatus());
-  const { data: grounding = null } = useQuery({
-    queryKey: ["grounding"],
-    queryFn: readGrounding,
-  });
+  const { data: grounding = null } = useGrounding();
   const failures = runs.flatMap((r) =>
     r.failures.map((f: any, index: number) => ({ r, f, index })),
   );
@@ -1997,15 +1999,20 @@ function RepairResult({ data }: any) {
   const usedIds = Array.isArray(data.grounding?.source_ids)
     ? data.grounding.source_ids
     : [];
-  const sourceList = usedIds.length
-    ? grounding
-      ? Object.values(grounding.rules)
-          .flatMap((rule: any) => rule.sources)
-          .filter((source: any) => usedIds.includes(source.id))
-      : []
-    : Array.isArray(data.sources_given_to_model)
-      ? data.sources_given_to_model
-      : [];
+  const directSources = Array.isArray(data.grounding?.sources)
+    ? data.grounding.sources
+    : [];
+  const sourceList = directSources.length
+    ? directSources
+    : usedIds.length
+      ? grounding
+        ? Object.values(grounding.rules)
+            .flatMap((rule: any) => rule.sources)
+            .filter((source: any) => usedIds.includes(source.id))
+        : []
+      : Array.isArray(data.sources_given_to_model)
+        ? data.sources_given_to_model
+        : [];
   const beforeInv = data.invariants_before || data.before?.invariants;
   const afterInv = data.invariants_after || data.after?.invariants;
   const broke =
@@ -2027,7 +2034,7 @@ function RepairResult({ data }: any) {
         <DiffViewer before={before} after={after} />
         {beforeInv && afterInv && (
           <div className="tablewrap">
-            <table>
+            <table aria-label="Invariants before and after repair">
               <thead>
                 <tr>
                   <th>Invariant</th>
@@ -2058,15 +2065,22 @@ function RepairResult({ data }: any) {
         )}
         <h3>Sources given to the model</h3>
         {data.grounding?.used === false ? (
-          <p>Repair ran ungrounded</p>
+          <p className="muted">Repair ran ungrounded</p>
         ) : sourceList.length ? (
-          <ul>
-            {sourceList.map((item: any, i: number) => (
-              <li key={i}>{item.title || item.url || String(item)}</li>
-            ))}
-          </ul>
+          <div className="evidence-sources" style={{ marginTop: "0.5rem" }}>
+            {sourceList.map((item: any, i: number) => {
+              if (item && typeof item === "object" && item.url) {
+                return <SourceCard key={item.id || item.url || i} source={item} />;
+              }
+              return (
+                <div key={i} className="card" style={{ padding: "0.5rem 0.75rem" }}>
+                  <span>{item?.title || item?.url || String(item)}</span>
+                </div>
+              );
+            })}
+          </div>
         ) : (
-          <p>No source list was supplied with this repair result.</p>
+          <p className="muted">No source list was supplied with this repair result.</p>
         )}
       </div>
     </Section>
@@ -2223,8 +2237,13 @@ function Markdown({ text }: { text: string }) {
 }
 function Spec() {
   const { source } = useApp();
+  const [specTab, setSpecTab] = useState<"contract" | "gaps">("contract");
   const { data: spec } = query("full-spec", () => source.getSpec());
   const { data: hash } = query("hash", () => source.getSpecHash());
+  const { data: grounding = null } = useQuery({
+    queryKey: ["grounding"],
+    queryFn: () => source.getEvidence(),
+  });
   specText = spec || "";
   specHash = hash || "";
   const rules = useMemo(() => parseRules(spec || ""), [spec]);
@@ -2234,6 +2253,12 @@ function Spec() {
       {rule.id} · {rule.title}
     </a>
   ));
+  const gapCount = grounding
+    ? Object.values(grounding.rules).filter((r) =>
+        ["PARTIAL", "NOT_FOUND", "CONFLICT"].includes(r.label),
+      ).length
+    : 0;
+
   return (
     <main className="page">
       <Title
@@ -2251,48 +2276,78 @@ function Spec() {
         </Badge>
         <Hash value={hash || ""} />
       </div>
-      <div className="spec-layout">
-        <aside className="spec-toc">
-          <b>On this page</b>
-          {toc}
-        </aside>
-        <div className="spec-content">
-          <div className="rule-grid">
-            {rules.map((rule: any) => {
-              const count = runs.reduce(
-                (n: any, run: any) =>
-                  n +
-                  run.failures.filter((f: any) => f.rule === rule.id).length,
-                0,
-              );
-              return (
-                <details
-                  id={rule.id.toLowerCase()}
-                  className="rule-card"
-                  key={rule.id}
-                >
-                  <summary>
-                    <div className="eyebrow">
-                      {rule.id} · {rule.title}
+      <div className="tabs" role="tablist" aria-label="Specification views" style={{ margin: "1.5rem 0 1rem" }}>
+        <button
+          className={`btn ${specTab === "contract" ? "primary" : ""}`}
+          onClick={() => setSpecTab("contract")}
+          role="tab"
+          aria-selected={specTab === "contract"}
+        >
+          Contract Rules
+        </button>
+        <button
+          className={`btn ${specTab === "gaps" ? "primary" : ""}`}
+          onClick={() => setSpecTab("gaps")}
+          role="tab"
+          aria-selected={specTab === "gaps"}
+          style={{ marginLeft: "0.5rem" }}
+        >
+          Spec Gaps ({gapCount})
+        </button>
+      </div>
+      {specTab === "gaps" ? (
+        <Section title="Specification gaps & questions for review">
+          <p className="lead" style={{ marginBottom: "1rem" }}>
+            Rules where public provider documentation is silent or partial. These represent questions for spec review rather than invalidating the contract.
+          </p>
+          <EvidenceGaps data={grounding} />
+        </Section>
+      ) : (
+        <div className="spec-layout">
+          <aside className="spec-toc">
+            <b>On this page</b>
+            {toc}
+          </aside>
+          <div className="spec-content">
+            <div className="rule-grid">
+              {rules.map((rule: any) => {
+                const count = runs.reduce(
+                  (n: any, run: any) =>
+                    n +
+                    run.failures.filter((f: any) => f.rule === rule.id).length,
+                  0,
+                );
+                return (
+                  <details
+                    id={rule.id.toLowerCase()}
+                    className="rule-card"
+                    key={rule.id}
+                  >
+                    <summary>
+                      <div className="eyebrow">
+                        {rule.id} · {rule.title}
+                      </div>
+                      <span>{rule.body}</span>
+                      <small>
+                        <Link to={`/runs?rule=${rule.id}`}>
+                          Violated in {count} runs <ArrowRight size={12} />
+                        </Link>
+                      </small>
+                    </summary>
+                    <div className="rule-full">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {rule.body}
+                      </ReactMarkdown>
+                      <div style={{ marginTop: "1.25rem" }}>
+                        <EvidencePanel data={grounding} rule={rule.id} />
+                      </div>
                     </div>
-                    <span>{rule.body}</span>
-                    <small>
-                      <Link to={`/runs?rule=${rule.id}`}>
-                        Violated in {count} runs <ArrowRight size={12} />
-                      </Link>
-                    </small>
-                  </summary>
-                  <div className="rule-full">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {rule.body}
-                    </ReactMarkdown>
-                  </div>
-                </details>
-              );
-            })}
-          </div>
-          <Section title="Full supplied contract">
-            <div className="markdown full-contract">
+                  </details>
+                );
+              })}
+            </div>
+            <Section title="Full supplied contract">
+              <div className="markdown full-contract">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
@@ -2337,6 +2392,7 @@ function Spec() {
           </Section>
         </div>
       </div>
+      )}
     </main>
   );
 }
@@ -2454,26 +2510,39 @@ function Method() {
   );
 }
 function Demo() {
+  const { source } = useApp();
   const [beat, setBeat] = useState(0);
   const [notes, setNotes] = useState(false);
-  const beats = [
-    "The claim",
-    "Harness trust",
-    "The finding",
-    "Shrink",
-    "Break it",
-    "Repair",
-    "Honest limits",
-  ];
+  const { data: grounding = null } = useQuery({
+    queryKey: ["grounding"],
+    queryFn: () => source.getEvidence(),
+  });
+  const hasGrounding = !!(grounding && Object.keys(grounding.rules || {}).length > 0);
+  const beats = useMemo(() => {
+    const list = [
+      "The claim",
+      "Harness trust",
+      "The finding",
+      "Shrink",
+      "Break it",
+    ];
+    if (hasGrounding) {
+      list.push("Evidence grounding");
+    }
+    list.push("Repair", "Honest limits");
+    return list;
+  }, [hasGrounding]);
+
   useEffect(() => {
     const f = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") setBeat((x) => Math.min(6, x + 1));
+      if (e.key === "ArrowRight") setBeat((x) => Math.min(beats.length - 1, x + 1));
       if (e.key === "ArrowLeft") setBeat((x) => Math.max(0, x - 1));
       if (e.key.toLowerCase() === "n") setNotes((v) => !v);
     };
     window.addEventListener("keydown", f);
     return () => window.removeEventListener("keydown", f);
-  }, []);
+  }, [beats.length]);
+
   return (
     <main className="page">
       <div className="row">
@@ -2485,7 +2554,7 @@ function Demo() {
       </div>
       <h1 style={{ minHeight: 150 }}>{beats[beat]}</h1>
       <div className="card">
-        <DemoBeat index={beat} />
+        <DemoBeat name={beats[beat]} grounding={grounding} />
       </div>
       <div className="actions">
         <button className="btn" onClick={() => setBeat(Math.max(0, beat - 1))}>
@@ -2493,7 +2562,7 @@ function Demo() {
         </button>
         <button
           className="btn primary"
-          onClick={() => setBeat(Math.min(6, beat + 1))}
+          onClick={() => setBeat(Math.min(beats.length - 1, beat + 1))}
         >
           Next <ArrowRight size={14} />
         </button>
@@ -2508,29 +2577,38 @@ function Demo() {
         <div className="card">
           <b>Speaker notes</b>
           <p>
-            {
-              [
-                "PaySift tests webhook handlers against a written financial contract.",
-                "Reference and mutant checks are not independent proof; state that limitation.",
-                "Only sourced findings are eligible; no model pilot exists in this snapshot.",
-                "The shrink trace is derived from recorded failure data.",
-                "Static replay is not the same as a live sandbox execution.",
-                "No cached model repair is bundled.",
-                "Spec is draft-frozen; model outcomes are not ranked.",
-              ][beat]
-            }
+            {(() => {
+              const current = beats[beat];
+              if (current === "The claim") return "PaySift tests webhook handlers against a written financial contract.";
+              if (current === "Harness trust") return "Reference and mutant checks are not independent proof; state that limitation.";
+              if (current === "The finding") return "Only sourced findings are eligible; no model pilot exists in this snapshot.";
+              if (current === "Shrink") return "The shrink trace is derived from recorded failure data.";
+              if (current === "Break it") return "Static replay is not the same as a live sandbox execution.";
+              if (current === "Evidence grounding") return "Provider documentation grounds the rule: empirical evidence shows where industry standards require idempotency, and where PaySift internal conventions apply.";
+              if (current === "Repair") return "No cached model repair is bundled.";
+              return "Spec is draft-frozen; model outcomes are not ranked.";
+            })()}
           </p>
         </div>
       )}
     </main>
   );
 }
-function DemoBeat({ index }: { index: number }) {
-  if (index === 1) return <KillMatrix />;
-  if (index === 2 || index === 3) return <Runs />;
-  if (index === 4) return <BreakPage />;
-  if (index === 5) return <Repair />;
-  if (index === 6) return <Status />;
+function DemoBeat({ name, grounding }: { name: string; grounding: any }) {
+  if (name === "Harness trust") return <KillMatrix />;
+  if (name === "The finding" || name === "Shrink") return <Runs />;
+  if (name === "Break it") return <BreakPage />;
+  if (name === "Evidence grounding")
+    return (
+      <div className="demo-evidence">
+        <p className="lead" style={{ marginBottom: "1rem" }}>
+          Empirical documentation from payment gateways grounds the contract rules. Quotes are verified verbatim substrings.
+        </p>
+        <EvidencePanel data={grounding} rule="R3" defaultOpen={true} />
+      </div>
+    );
+  if (name === "Repair") return <Repair />;
+  if (name === "Honest limits") return <Status />;
   return (
     <p>
       Contract → event stream → deterministic ledger oracle → minimized
