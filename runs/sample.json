@@ -1,0 +1,1237 @@
+{
+  "run_id": "run_sample_v1_1_demo",
+  "contract_version": "1.0",
+  "spec_sha": "mock_spec_sha_v1_0_sample",
+  "oracle_sha": "mock_oracle_sha_v1_0_sample",
+  "created_at": "2026-11-21T01:00:00Z",
+  "candidate": {
+    "id": "cand_stub_hero_double_credit",
+    "model": "mock-model-preview",
+    "condition": "A",
+    "sample": 1,
+    "sha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+    "source": "stub",
+    "label": "FAKE SAMPLE FOR UI DEVELOPMENT"
+  },
+  "harness": {
+    "mode_set": [
+      "normal",
+      "restart",
+      "concurrency"
+    ],
+    "docker": true,
+    "cpus": 1
+  },
+  "seeds": [
+    0,
+    99
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 97,
+        "failed": 3
+      },
+      "restart": {
+        "passed": 20,
+        "failed": 0
+      }
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 50,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 50,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R3",
+      "mode": "normal",
+      "seed": 17,
+      "first_bad_step": 1,
+      "stream": [
+        {
+          "event_id": "evt_hero_1",
+          "type": "payment.captured",
+          "payment_id": "pay_hero_1",
+          "amount_paise": 50000
+        },
+        {
+          "event_id": "evt_hero_1",
+          "type": "payment.captured",
+          "payment_id": "pay_hero_1",
+          "amount_paise": 50000
+        },
+        {
+          "event_id": "evt_sample_2",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_2",
+          "amount_paise": 10200
+        },
+        {
+          "event_id": "evt_sample_3",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_2",
+          "refund_id": "rfd_sample_3",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_4",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_4",
+          "amount_paise": 10400
+        },
+        {
+          "event_id": "evt_sample_5",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_4",
+          "refund_id": "rfd_sample_5",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_6",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_6",
+          "amount_paise": 10600
+        },
+        {
+          "event_id": "evt_sample_7",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_6",
+          "refund_id": "rfd_sample_7",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_8",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_8",
+          "amount_paise": 10800
+        },
+        {
+          "event_id": "evt_sample_9",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_8",
+          "refund_id": "rfd_sample_9",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_10",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_10",
+          "amount_paise": 11000
+        },
+        {
+          "event_id": "evt_sample_11",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_10",
+          "refund_id": "rfd_sample_11",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_12",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_12",
+          "amount_paise": 11200
+        },
+        {
+          "event_id": "evt_sample_13",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_12",
+          "refund_id": "rfd_sample_13",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_14",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_14",
+          "amount_paise": 11400
+        },
+        {
+          "event_id": "evt_sample_15",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_14",
+          "refund_id": "rfd_sample_15",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_16",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_16",
+          "amount_paise": 11600
+        },
+        {
+          "event_id": "evt_sample_17",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_16",
+          "refund_id": "rfd_sample_17",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_18",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_18",
+          "amount_paise": 11800
+        },
+        {
+          "event_id": "evt_sample_19",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_18",
+          "refund_id": "rfd_sample_19",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_20",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_20",
+          "amount_paise": 12000
+        },
+        {
+          "event_id": "evt_sample_21",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_20",
+          "refund_id": "rfd_sample_21",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_22",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_22",
+          "amount_paise": 12200
+        },
+        {
+          "event_id": "evt_sample_23",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_22",
+          "refund_id": "rfd_sample_23",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_24",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_24",
+          "amount_paise": 12400
+        },
+        {
+          "event_id": "evt_sample_25",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_24",
+          "refund_id": "rfd_sample_25",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_26",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_26",
+          "amount_paise": 12600
+        },
+        {
+          "event_id": "evt_sample_27",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_26",
+          "refund_id": "rfd_sample_27",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_28",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_28",
+          "amount_paise": 12800
+        },
+        {
+          "event_id": "evt_sample_29",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_28",
+          "refund_id": "rfd_sample_29",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_30",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_30",
+          "amount_paise": 13000
+        },
+        {
+          "event_id": "evt_sample_31",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_30",
+          "refund_id": "rfd_sample_31",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_32",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_32",
+          "amount_paise": 13200
+        },
+        {
+          "event_id": "evt_sample_33",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_32",
+          "refund_id": "rfd_sample_33",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_34",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_34",
+          "amount_paise": 13400
+        },
+        {
+          "event_id": "evt_sample_35",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_34",
+          "refund_id": "rfd_sample_35",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_36",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_36",
+          "amount_paise": 13600
+        },
+        {
+          "event_id": "evt_sample_37",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_36",
+          "refund_id": "rfd_sample_37",
+          "amount_paise": 5000
+        },
+        {
+          "event_id": "evt_sample_38",
+          "type": "payment.captured",
+          "payment_id": "pay_sample_38",
+          "amount_paise": 13800
+        },
+        {
+          "event_id": "evt_sample_39",
+          "type": "refund.processed",
+          "payment_id": "pay_sample_38",
+          "refund_id": "rfd_sample_39",
+          "amount_paise": 5000
+        }
+      ],
+      "minimal_stream": [
+        {
+          "event_id": "evt_hero_1",
+          "type": "payment.captured",
+          "payment_id": "pay_hero_1",
+          "amount_paise": 50000
+        },
+        {
+          "event_id": "evt_hero_1",
+          "type": "payment.captured",
+          "payment_id": "pay_hero_1",
+          "amount_paise": 50000
+        }
+      ],
+      "one_minimal": true,
+      "shrink_history": [
+        [
+          {
+            "event_id": "evt_hero_1",
+            "type": "payment.captured",
+            "payment_id": "pay_hero_1",
+            "amount_paise": 50000
+          },
+          {
+            "event_id": "evt_hero_1",
+            "type": "payment.captured",
+            "payment_id": "pay_hero_1",
+            "amount_paise": 50000
+          },
+          {
+            "event_id": "evt_sample_2",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_2",
+            "amount_paise": 10200
+          },
+          {
+            "event_id": "evt_sample_3",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_2",
+            "refund_id": "rfd_sample_3",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_4",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_4",
+            "amount_paise": 10400
+          },
+          {
+            "event_id": "evt_sample_5",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_4",
+            "refund_id": "rfd_sample_5",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_6",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_6",
+            "amount_paise": 10600
+          },
+          {
+            "event_id": "evt_sample_7",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_6",
+            "refund_id": "rfd_sample_7",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_8",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_8",
+            "amount_paise": 10800
+          },
+          {
+            "event_id": "evt_sample_9",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_8",
+            "refund_id": "rfd_sample_9",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_10",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_10",
+            "amount_paise": 11000
+          },
+          {
+            "event_id": "evt_sample_11",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_10",
+            "refund_id": "rfd_sample_11",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_12",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_12",
+            "amount_paise": 11200
+          },
+          {
+            "event_id": "evt_sample_13",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_12",
+            "refund_id": "rfd_sample_13",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_14",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_14",
+            "amount_paise": 11400
+          },
+          {
+            "event_id": "evt_sample_15",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_14",
+            "refund_id": "rfd_sample_15",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_16",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_16",
+            "amount_paise": 11600
+          },
+          {
+            "event_id": "evt_sample_17",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_16",
+            "refund_id": "rfd_sample_17",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_18",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_18",
+            "amount_paise": 11800
+          },
+          {
+            "event_id": "evt_sample_19",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_18",
+            "refund_id": "rfd_sample_19",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_20",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_20",
+            "amount_paise": 12000
+          },
+          {
+            "event_id": "evt_sample_21",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_20",
+            "refund_id": "rfd_sample_21",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_22",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_22",
+            "amount_paise": 12200
+          },
+          {
+            "event_id": "evt_sample_23",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_22",
+            "refund_id": "rfd_sample_23",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_24",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_24",
+            "amount_paise": 12400
+          },
+          {
+            "event_id": "evt_sample_25",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_24",
+            "refund_id": "rfd_sample_25",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_26",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_26",
+            "amount_paise": 12600
+          },
+          {
+            "event_id": "evt_sample_27",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_26",
+            "refund_id": "rfd_sample_27",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_28",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_28",
+            "amount_paise": 12800
+          },
+          {
+            "event_id": "evt_sample_29",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_28",
+            "refund_id": "rfd_sample_29",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_30",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_30",
+            "amount_paise": 13000
+          },
+          {
+            "event_id": "evt_sample_31",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_30",
+            "refund_id": "rfd_sample_31",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_32",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_32",
+            "amount_paise": 13200
+          },
+          {
+            "event_id": "evt_sample_33",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_32",
+            "refund_id": "rfd_sample_33",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_34",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_34",
+            "amount_paise": 13400
+          },
+          {
+            "event_id": "evt_sample_35",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_34",
+            "refund_id": "rfd_sample_35",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_36",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_36",
+            "amount_paise": 13600
+          },
+          {
+            "event_id": "evt_sample_37",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_36",
+            "refund_id": "rfd_sample_37",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_38",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_38",
+            "amount_paise": 13800
+          },
+          {
+            "event_id": "evt_sample_39",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_38",
+            "refund_id": "rfd_sample_39",
+            "amount_paise": 5000
+          }
+        ],
+        [
+          {
+            "event_id": "evt_hero_1",
+            "type": "payment.captured",
+            "payment_id": "pay_hero_1",
+            "amount_paise": 50000
+          },
+          {
+            "event_id": "evt_hero_1",
+            "type": "payment.captured",
+            "payment_id": "pay_hero_1",
+            "amount_paise": 50000
+          },
+          {
+            "event_id": "evt_sample_2",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_2",
+            "amount_paise": 10200
+          },
+          {
+            "event_id": "evt_sample_3",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_2",
+            "refund_id": "rfd_sample_3",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_4",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_4",
+            "amount_paise": 10400
+          },
+          {
+            "event_id": "evt_sample_5",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_4",
+            "refund_id": "rfd_sample_5",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_6",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_6",
+            "amount_paise": 10600
+          },
+          {
+            "event_id": "evt_sample_7",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_6",
+            "refund_id": "rfd_sample_7",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_8",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_8",
+            "amount_paise": 10800
+          },
+          {
+            "event_id": "evt_sample_9",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_8",
+            "refund_id": "rfd_sample_9",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_10",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_10",
+            "amount_paise": 11000
+          },
+          {
+            "event_id": "evt_sample_11",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_10",
+            "refund_id": "rfd_sample_11",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_12",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_12",
+            "amount_paise": 11200
+          },
+          {
+            "event_id": "evt_sample_13",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_12",
+            "refund_id": "rfd_sample_13",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_14",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_14",
+            "amount_paise": 11400
+          },
+          {
+            "event_id": "evt_sample_15",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_14",
+            "refund_id": "rfd_sample_15",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_16",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_16",
+            "amount_paise": 11600
+          },
+          {
+            "event_id": "evt_sample_17",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_16",
+            "refund_id": "rfd_sample_17",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_18",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_18",
+            "amount_paise": 11800
+          },
+          {
+            "event_id": "evt_sample_19",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_18",
+            "refund_id": "rfd_sample_19",
+            "amount_paise": 5000
+          }
+        ],
+        [
+          {
+            "event_id": "evt_hero_1",
+            "type": "payment.captured",
+            "payment_id": "pay_hero_1",
+            "amount_paise": 50000
+          },
+          {
+            "event_id": "evt_hero_1",
+            "type": "payment.captured",
+            "payment_id": "pay_hero_1",
+            "amount_paise": 50000
+          },
+          {
+            "event_id": "evt_sample_2",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_2",
+            "amount_paise": 10200
+          },
+          {
+            "event_id": "evt_sample_3",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_2",
+            "refund_id": "rfd_sample_3",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_4",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_4",
+            "amount_paise": 10400
+          },
+          {
+            "event_id": "evt_sample_5",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_4",
+            "refund_id": "rfd_sample_5",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_6",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_6",
+            "amount_paise": 10600
+          },
+          {
+            "event_id": "evt_sample_7",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_6",
+            "refund_id": "rfd_sample_7",
+            "amount_paise": 5000
+          },
+          {
+            "event_id": "evt_sample_8",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_8",
+            "amount_paise": 10800
+          },
+          {
+            "event_id": "evt_sample_9",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_8",
+            "refund_id": "rfd_sample_9",
+            "amount_paise": 5000
+          }
+        ],
+        [
+          {
+            "event_id": "evt_hero_1",
+            "type": "payment.captured",
+            "payment_id": "pay_hero_1",
+            "amount_paise": 50000
+          },
+          {
+            "event_id": "evt_hero_1",
+            "type": "payment.captured",
+            "payment_id": "pay_hero_1",
+            "amount_paise": 50000
+          },
+          {
+            "event_id": "evt_sample_2",
+            "type": "payment.captured",
+            "payment_id": "pay_sample_2",
+            "amount_paise": 10200
+          },
+          {
+            "event_id": "evt_sample_3",
+            "type": "refund.processed",
+            "payment_id": "pay_sample_2",
+            "refund_id": "rfd_sample_3",
+            "amount_paise": 5000
+          }
+        ],
+        [
+          {
+            "event_id": "evt_hero_1",
+            "type": "payment.captured",
+            "payment_id": "pay_hero_1",
+            "amount_paise": 50000
+          },
+          {
+            "event_id": "evt_hero_1",
+            "type": "payment.captured",
+            "payment_id": "pay_hero_1",
+            "amount_paise": 50000
+          }
+        ]
+      ],
+      "expected": {
+        "status": "duplicate",
+        "rule": "R3",
+        "payments": [
+          {
+            "payment_id": "pay_hero_1",
+            "captured_paise": 50000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_hero_1",
+            "kind": "capture",
+            "amount_paise": 50000,
+            "event_id": "evt_hero_1"
+          }
+        ],
+        "ledger_summary": {
+          "captures_count": 1,
+          "captures_sum": 50000,
+          "refunds_count": 0,
+          "refunds_sum": 0
+        }
+      },
+      "observed": {
+        "status": "applied",
+        "payments": [
+          {
+            "payment_id": "pay_hero_1",
+            "captured_paise": 100000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_hero_1",
+            "kind": "capture",
+            "amount_paise": 50000,
+            "event_id": "evt_hero_1"
+          },
+          {
+            "payment_id": "pay_hero_1",
+            "kind": "capture",
+            "amount_paise": 50000,
+            "event_id": "evt_hero_1"
+          }
+        ],
+        "ledger_summary": {
+          "captures_count": 2,
+          "captures_sum": 100000,
+          "refunds_count": 0,
+          "refunds_sum": 0
+        }
+      },
+      "explanation": "Event 'evt_hero_1' was redelivered. Expected duplicate response with 1 ledger entry totaling \u20b9500 (50,000 paise). Observed 2 entries totaling \u20b91,000 (100,000 paise). \u20b9500 created from nothing. Rule R3 violated.",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Hero demo candidate bug simulation"
+      }
+    }
+  ],
+  "noncompliant": null,
+  "repair_of": null,
+  "kill_matrix": {
+    "oracle_sha": "mock_oracle_sha_v1_0_sample",
+    "spec_sha": "mock_spec_sha_v1_0_sample",
+    "created_at": "2026-11-21T01:00:00Z",
+    "rows": [
+      {
+        "id": "ref",
+        "label": "handler_ref.py",
+        "source": "reference",
+        "expected_rule": "none",
+        "expected_invariant": "none",
+        "results": {
+          "I1_signature": {
+            "passed": 100,
+            "failed": 0
+          },
+          "I2_idempotency": {
+            "passed": 100,
+            "failed": 0
+          },
+          "I3_conservation": {
+            "passed": 100,
+            "failed": 0
+          },
+          "I4_bounds": {
+            "passed": 100,
+            "failed": 0
+          },
+          "I5_interface": {
+            "passed": 100,
+            "failed": 0
+          }
+        },
+        "concurrency": {
+          "scenario_A": {
+            "trials": 50,
+            "failed": 0,
+            "warnings": 0
+          },
+          "scenario_B": {
+            "trials": 50,
+            "failed": 0,
+            "warnings": 0
+          }
+        },
+        "killed": false,
+        "rules_hit": [],
+        "notes": "Reference implementation clean across all invariants and concurrency trials"
+      },
+      {
+        "id": "m1",
+        "label": "no dedupe",
+        "source": "mutant",
+        "expected_rule": "R3",
+        "expected_invariant": "I2_idempotency",
+        "results": {
+          "I2_idempotency": {
+            "passed": 70,
+            "failed": 30
+          }
+        },
+        "concurrency": {
+          "scenario_A": {
+            "trials": 50,
+            "failed": 50,
+            "warnings": 0
+          }
+        },
+        "killed": true,
+        "rules_hit": [
+          "R3"
+        ],
+        "notes": "Caught by duplicate stream families 0, 7, 9"
+      },
+      {
+        "id": "m2",
+        "label": "ledger written, payments not updated",
+        "source": "mutant",
+        "expected_rule": "R7",
+        "expected_invariant": "I3_conservation",
+        "results": {
+          "I3_conservation": {
+            "passed": 0,
+            "failed": 100
+          }
+        },
+        "concurrency": {},
+        "killed": true,
+        "rules_hit": [
+          "R7"
+        ],
+        "notes": "Payments table out of sync with ledger"
+      },
+      {
+        "id": "m3",
+        "label": "no refund bound",
+        "source": "mutant",
+        "expected_rule": "R6",
+        "expected_invariant": "I4_bounds",
+        "results": {
+          "I4_bounds": {
+            "passed": 60,
+            "failed": 40
+          }
+        },
+        "concurrency": {},
+        "killed": true,
+        "rules_hit": [
+          "R6"
+        ],
+        "notes": "Accepts refunds exceeding captured balance"
+      },
+      {
+        "id": "m4",
+        "label": "accepts negative amount",
+        "source": "mutant",
+        "expected_rule": "R2",
+        "expected_invariant": "I4_bounds",
+        "results": {
+          "I4_bounds": {
+            "passed": 80,
+            "failed": 20
+          }
+        },
+        "concurrency": {},
+        "killed": true,
+        "rules_hit": [
+          "R2"
+        ],
+        "notes": "Accepts negative integer paise"
+      },
+      {
+        "id": "m5",
+        "label": "rejected events marked processed",
+        "source": "mutant",
+        "expected_rule": "R8",
+        "expected_invariant": "I2_idempotency",
+        "results": {
+          "I2_idempotency": {
+            "passed": 85,
+            "failed": 15
+          }
+        },
+        "concurrency": {},
+        "killed": true,
+        "rules_hit": [
+          "R8"
+        ],
+        "notes": "Consumes event_id even when rejected"
+      },
+      {
+        "id": "m6",
+        "label": "signature over json.dumps(parsed)",
+        "source": "mutant",
+        "expected_rule": "R1",
+        "expected_invariant": "I1_signature",
+        "results": {
+          "I1_signature": {
+            "passed": 80,
+            "failed": 20
+          }
+        },
+        "concurrency": {},
+        "killed": true,
+        "rules_hit": [
+          "R1"
+        ],
+        "notes": "Fails on non-canonical spaced bodies (family 8)"
+      },
+      {
+        "id": "m7",
+        "label": "module-level in-memory dedupe",
+        "source": "mutant",
+        "expected_rule": "R9",
+        "expected_invariant": "I2_idempotency",
+        "results": {
+          "I2_idempotency": {
+            "passed": 100,
+            "failed": 0
+          }
+        },
+        "concurrency": {},
+        "killed": true,
+        "rules_hit": [
+          "R9"
+        ],
+        "notes": "Passes normal mode; fails restart mode"
+      },
+      {
+        "id": "m8",
+        "label": "check-then-insert without transaction",
+        "source": "mutant",
+        "expected_rule": "R10",
+        "expected_invariant": "I2_idempotency",
+        "results": {},
+        "concurrency": {
+          "scenario_A": {
+            "trials": 50,
+            "failed": 48,
+            "warnings": 2
+          }
+        },
+        "killed": true,
+        "rules_hit": [
+          "R10"
+        ],
+        "notes": "Caught in concurrency scenario A"
+      },
+      {
+        "id": "m9",
+        "label": "refund bound checked in separate statement",
+        "source": "mutant",
+        "expected_rule": "R10",
+        "expected_invariant": "I4_bounds",
+        "results": {},
+        "concurrency": {
+          "scenario_B": {
+            "trials": 50,
+            "failed": 46,
+            "warnings": 4
+          }
+        },
+        "killed": true,
+        "rules_hit": [
+          "R10"
+        ],
+        "notes": "Caught in concurrency scenario B"
+      },
+      {
+        "id": "x1",
+        "label": "accepts bool as amount",
+        "source": "extra-mutant",
+        "expected_rule": "R2",
+        "expected_invariant": "I4_bounds",
+        "results": {
+          "I4_bounds": {
+            "passed": 90,
+            "failed": 10
+          }
+        },
+        "concurrency": {},
+        "killed": true,
+        "rules_hit": [
+          "R2"
+        ],
+        "notes": "Treats boolean True as integer 1"
+      },
+      {
+        "id": "x2",
+        "label": "accepts float amount",
+        "source": "extra-mutant",
+        "expected_rule": "R2",
+        "expected_invariant": "I4_bounds",
+        "results": {
+          "I4_bounds": {
+            "passed": 90,
+            "failed": 10
+          }
+        },
+        "concurrency": {},
+        "killed": true,
+        "rules_hit": [
+          "R2"
+        ],
+        "notes": "Accepts 500.0 without integer assertion"
+      },
+      {
+        "id": "x3",
+        "label": "non-ASCII signature crashes handler",
+        "source": "extra-mutant",
+        "expected_rule": "R0",
+        "expected_invariant": "I5_interface",
+        "results": {
+          "I5_interface": {
+            "passed": 90,
+            "failed": 10
+          }
+        },
+        "concurrency": {},
+        "killed": true,
+        "rules_hit": [
+          "R0"
+        ],
+        "notes": "Uncaught UnicodeDecodeError violates R0"
+      },
+      {
+        "id": "x4",
+        "label": "signature over canonical compact json",
+        "source": "extra-mutant",
+        "expected_rule": "R1",
+        "expected_invariant": "I1_signature",
+        "results": {
+          "I1_signature": {
+            "passed": 90,
+            "failed": 10
+          }
+        },
+        "concurrency": {},
+        "killed": true,
+        "rules_hit": [
+          "R1"
+        ],
+        "notes": "Only caught by family 8 non-canonical streams"
+      }
+    ]
+  }
+}

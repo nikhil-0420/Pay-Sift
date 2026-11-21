@@ -1,0 +1,25 @@
+Write a Python function `handle_event(db_path, raw_body, signature, secret)` for a payment gateway webhook. It receives `payment.captured` and `refund.processed` events as JSON, verifies the HMAC-SHA256 signature, and records them in the SQLite tables `payments` and `ledger` (schema and event examples below). Return `{"status": ..., "reason": ...}`. Single file, no explanation. Allowed imports: sqlite3, hmac, hashlib, json, time, typing, contextlib.
+
+### Database Schema
+```sql
+CREATE TABLE payments (
+  payment_id TEXT PRIMARY KEY,
+  captured_paise INTEGER NOT NULL,
+  refunded_paise INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE ledger (
+  entry_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  payment_id TEXT NOT NULL,
+  kind TEXT NOT NULL CHECK (kind IN ('capture','refund')),
+  amount_paise INTEGER NOT NULL,
+  event_id TEXT
+);
+```
+
+### Event Examples
+```json
+{"event_id": "evt_001", "type": "payment.captured", "payment_id": "pay_1", "amount_paise": 50000}
+{"event_id": "evt_002", "type": "refund.processed", "payment_id": "pay_1", "refund_id": "rfd_1", "amount_paise": 20000}
+```
+
+Return only the Python code. No markdown fences, no explanatory text.
