@@ -1,16 +1,7 @@
 # PaySift Pilot Verification Report
 
-- **Generated:** `2026-11-21 11:25:14 UTC`
+- **Generated:** `2026-11-21 11:48:39 UTC`
 - **Specification SHA:** `289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a` (STATUS: `DRAFT-FROZEN`)
-
-> [!CAUTION]
-> ### PILOT BLOCKED: sandbox gate not passed
-> **Reason:** Error inspecting Docker sandbox image: Command '['docker', 'image', 'inspect', 'paysift-sandbox:1', '--format', '{{.Id}}']' timed out after 5.0 seconds
-> 
-> In accordance with **Agent Rule 3** (Untrusted Code Only in the Sandbox) and **Plan Section 10**:
-> - Untrusted model-generated candidates are NEVER executed natively.
-> - Docker sandbox execution remains halted until `paysift-sandbox:1` is verified.
-> - Human action is required: install Docker Desktop, start daemon, and run `python cli.py sandbox-test`.
 
 ## 1. Headline Finding Draft
 
@@ -24,16 +15,16 @@
 
 | Model | Generated | Compliant | Evaluated | Passed All | Financial Failures (I1-I4) | Interface-Only (I5) | Violated Rules |
 |---|---|---|---|---|---|---|---|
-| `gemini-3.5-flash-lite` | 5 | 5 | 0 | 0 | 0 | 0 | None |
-| `qwen/qwen3.8-27b` | 3 | 3 | 0 | 0 | 0 | 0 | None |
+| `gemini-3.5-flash-lite` | 5 | 5 | 5 | 4 | 0 | 1 | None |
+| `qwen/qwen3.8-27b` | 3 | 3 | 3 | 2 | 0 | 1 | None |
 
 ## 3. Condition B: Casual Prompt (Illustrative Only)
 *Tests candidates against informal natural-language prompt without numbered rules. Results are illustrative only and strictly excluded from the financial headline.*
 
 | Model | Generated | Compliant | Evaluated | Passed All | Financial Failures (I1-I4) | Interface-Only (I5) | Violated Rules |
 |---|---|---|---|---|---|---|---|
-| `gemini-3.5-flash-lite` | 5 | 5 | 0 | 0 | 0 | 0 | None |
-| `qwen/qwen3.8-27b` | 2 | 2 | 0 | 0 | 0 | 0 | None |
+| `gemini-3.5-flash-lite` | 5 | 5 | 5 | 0 | 0 | 5 | None |
+| `qwen/qwen3.8-27b` | 2 | 2 | 2 | 0 | 0 | 2 | None |
 
 ## 4. Candidate Compliance & Spec Binding
 
@@ -46,7 +37,7 @@
 
 | Outcome Case | Status | Reason & Action |
 |---|---|---|
-| **Pilot Blocked / Pre-conditions Pending** | **ACTIVE** | Docker sandbox gate (Gate 4) is blocked on host and API keys are unconfigured. **Action:** Fall back to curated mutant suite (`m1`–`m9`) for end-to-end demo and verification until morning setup completes. |
+| **All pass / 0 financial failures** | **NO FINDING** | Pitch the rigorous test harness: oracle kills 100% of mutants, but tested models adhered to full specification. |
 
 ## 6. Demo Candidate Proposals (Marked HUMAN DECISION)
 
