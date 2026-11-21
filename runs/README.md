@@ -7,7 +7,7 @@ This directory holds the artifacts, ground-truth runs, scenario verdicts, and co
 ## 1. Schema Location & Contract Version
 - **JSON Schema:** [`contract/run_schema.json`](file:///contract/run_schema.json)
 - **Validator Script:** [`contract/validate_run.py`](file:///contract/validate_run.py)
-- **Contract Version:** `1.0` (Draft-Frozen pending Gate 1)
+- **Contract Version:** `1.1` (Gate 1 PASSED, schema `PaySiftRunJSON_v1.1`)
 
 Every `<run_id>.json` file in this directory strictly validates against `contract/run_schema.json`.
 
