@@ -11,7 +11,8 @@ import re
 import time
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Request, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from grounding.fetch import fetch_rule_evidence, load_queries
@@ -23,15 +24,88 @@ router = APIRouter(tags=["evidence"])
 RULE_ID_PATTERN = re.compile(r"^R(10|[0-9])$")
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-# In-memory sliding window rate limiter (10 calls per 60 seconds)
-RATE_LIMIT_CALLS = 10
-RATE_LIMIT_WINDOW_SECS = 60.0
-_request_timestamps: deque = deque()
+# In-memory search limits
+_total_search_count = 0
+_ip_search_timestamps: Dict[str, deque] = {}
 
 # Configurable client hook for testing with fake clients
 _client_override: Optional[Any] = None
 _cache_dir_override: Optional[Path] = None
 _output_file_override: Optional[Path] = None
+
+
+def is_hosted_mode() -> bool:
+    """Check whether HOSTED_MODE is enabled."""
+    return os.environ.get("HOSTED_MODE", "").strip().lower() in ("1", "true", "yes", "on")
+
+
+def get_search_max_total() -> int:
+    """Return process-wide total search budget from SEARCH_MAX_TOTAL env var."""
+    try:
+        return int(os.environ.get("SEARCH_MAX_TOTAL", "25"))
+    except ValueError:
+        return 25
+
+
+def get_search_max_per_ip_per_hour() -> int:
+    """Return per-IP 1-hour search budget from SEARCH_MAX_PER_IP_PER_HOUR env var."""
+    try:
+        return int(os.environ.get("SEARCH_MAX_PER_IP_PER_HOUR", "10"))
+    except ValueError:
+        return 10
+
+
+def reset_search_limits() -> None:
+    """Reset in-memory search limit counters (useful for unit tests)."""
+    global _total_search_count, _ip_search_timestamps
+    _total_search_count = 0
+    _ip_search_timestamps.clear()
+
+
+def check_search_limits(client_ip: str) -> Optional[JSONResponse]:
+    """Enforce SEARCH_MAX_TOTAL and SEARCH_MAX_PER_IP_PER_HOUR in-memory limits."""
+    global _total_search_count
+    hosted = is_hosted_mode()
+
+    # Enforce total limit in hosted mode or if explicitly configured via SEARCH_MAX_TOTAL
+    if hosted or "SEARCH_MAX_TOTAL" in os.environ:
+        max_total = get_search_max_total()
+        if _total_search_count >= max_total:
+            return JSONResponse(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                content={
+                    "error": "rate_limited",
+                    "message": f"Hosted search limit reached ({max_total} total per deployment). Run locally with your own YDC_API_KEY to search without limits.",
+                },
+            )
+
+    max_per_ip = get_search_max_per_ip_per_hour()
+    now = time.time()
+    if client_ip not in _ip_search_timestamps:
+        _ip_search_timestamps[client_ip] = deque()
+
+    dq = _ip_search_timestamps[client_ip]
+    while dq and (now - dq[0]) > 3600.0:
+        dq.popleft()
+
+    if len(dq) >= max_per_ip:
+        return JSONResponse(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            content={
+                "error": "rate_limited",
+                "message": f"Search rate limit exceeded ({max_per_ip} queries per IP per hour). Run locally with your own YDC_API_KEY to search without limits.",
+            },
+        )
+    return None
+
+
+def record_search_success(client_ip: str) -> None:
+    """Record a completed search against rate limits."""
+    global _total_search_count
+    _total_search_count += 1
+    if client_ip not in _ip_search_timestamps:
+        _ip_search_timestamps[client_ip] = deque()
+    _ip_search_timestamps[client_ip].append(time.time())
 
 
 def get_youcom_client() -> YouComClient:
@@ -73,20 +147,6 @@ def set_output_file_override(output_file: Optional[Path]) -> None:
     _output_file_override = output_file
 
 
-def check_rate_limit() -> None:
-    """Enforce per-process 10 requests per minute limit."""
-    now = time.time()
-    while _request_timestamps and now - _request_timestamps[0] > RATE_LIMIT_WINDOW_SECS:
-        _request_timestamps.popleft()
-
-    if len(_request_timestamps) >= RATE_LIMIT_CALLS:
-        raise HTTPException(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail=f"Rate limit exceeded: maximum {RATE_LIMIT_CALLS} search requests per minute.",
-        )
-    _request_timestamps.append(now)
-
-
 class EvidenceSearchRequest(BaseModel):
     rule_id: str = Field(..., description="Specification rule ID (e.g. R1, R10)")
     extra_terms: Optional[str] = Field(None, description="Optional extra search terms (max 80 chars)")
@@ -99,20 +159,21 @@ def get_all_evidence() -> Dict[str, Any]:
     if not grounding_file.is_file():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="runs/grounding.json not found. Run 'python cli.py ground --fetch' first.",
+            detail="runs/grounding.json artifact not found on server.",
         )
     try:
         return json.loads(grounding_file.read_text(encoding="utf-8"))
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error reading grounding.json: {exc}",
+            detail=f"Failed to read runs/grounding.json: {exc}",
         )
 
 
 @router.get("/evidence/{rule_id}")
 def get_rule_evidence(rule_id: str) -> Dict[str, Any]:
-    """Retrieve evidence details for a specific rule."""
+    """Retrieve evidence citations and judge status for a specific rule."""
+    rule_id = rule_id.strip().upper()
     if not RULE_ID_PATTERN.match(rule_id):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -121,16 +182,9 @@ def get_rule_evidence(rule_id: str) -> Dict[str, Any]:
 
     grounding_file = get_output_file()
     if not grounding_file.is_file():
-        # Fallback to cache file if grounding.json has not been rebuilt yet
-        cache_file = get_cache_dir() / f"{rule_id}.json"
-        if cache_file.is_file():
-            try:
-                return json.loads(cache_file.read_text(encoding="utf-8"))
-            except Exception as exc:
-                raise HTTPException(status_code=500, detail=str(exc))
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"No evidence found for rule '{rule_id}'.",
+            detail="runs/grounding.json artifact not found on server.",
         )
 
     try:
@@ -152,7 +206,7 @@ def get_rule_evidence(rule_id: str) -> Dict[str, Any]:
 
 
 @router.post("/evidence/search")
-def search_evidence(req: EvidenceSearchRequest) -> Dict[str, Any]:
+def search_evidence(req: EvidenceSearchRequest, request: Request) -> Dict[str, Any]:
     """Trigger a live search for a rule with optional extra search terms."""
     rule_id = req.rule_id.strip()
     if not RULE_ID_PATTERN.match(rule_id):
@@ -169,11 +223,28 @@ def search_evidence(req: EvidenceSearchRequest) -> Dict[str, Any]:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="extra_terms exceeds maximum length of 80 characters.",
             )
-        # Sanitize control characters
         extra_terms = re.sub(r"[\r\n\t]+", " ", extra_terms)
 
-    # Check rate limit
-    check_rate_limit()
+    # Determine client IP for per-IP rate limiting
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        client_ip = forwarded.split(",")[0].strip()
+    elif request.client and request.client.host:
+        client_ip = request.client.host
+    else:
+        client_ip = "127.0.0.1"
+
+    # Enforce SEARCH_MAX_TOTAL and SEARCH_MAX_PER_IP_PER_HOUR
+    rate_limit_err = check_search_limits(client_ip)
+    if rate_limit_err is not None:
+        return rate_limit_err
+
+    # Verify YDC_API_KEY if no test client override
+    if _client_override is None and not os.environ.get("YDC_API_KEY", "").strip():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="YDC_API_KEY is not configured on the server.",
+        )
 
     client = get_youcom_client()
 
@@ -188,7 +259,6 @@ def search_evidence(req: EvidenceSearchRequest) -> Dict[str, Any]:
 
     rule_spec = dict(all_rules[rule_id])
     if extra_terms:
-        # Augment queries with extra terms
         base_queries = rule_spec.get("queries", [])
         rule_spec["queries"] = [f"{base_queries[0]} {extra_terms}"] + base_queries[1:]
 
@@ -201,6 +271,7 @@ def search_evidence(req: EvidenceSearchRequest) -> Dict[str, Any]:
             cache_dir=cache_dir,
             refresh=True,
         )
+        record_search_success(client_ip)
     except Exception as exc:
         err_msg = str(exc)
         if "API call cap reached" in err_msg:

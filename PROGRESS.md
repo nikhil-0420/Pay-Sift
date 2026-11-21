@@ -640,3 +640,34 @@
   - `repair/cache/strong_a_A_3__0.json`: Linked/cached for candidate label lookups.
   - `handoff/N8_REPAIR_DONE`
 
+
+### Stage C1 Report (Hosted Read-Only Backend & Local Mode)
+
+- **Timestamp:** 2026-11-21 23:00:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nikhil
+- **ASGI App Path:** `api.main:app`
+- **Python Version:** 3.12.9 (pinned in `render.yaml`)
+- **Hosted Mode (`HOSTED_MODE=1`):**
+  - Read-only protection active; all `GET` endpoints (`/health`, `/runs`, `/kill-matrix`, `/evidence`) remain accessible.
+  - Code execution (`POST /break`) and live model repairs (`POST /repair`) return HTTP 403 `{"error": "disabled_in_hosted_mode", "message": "Needs Docker and your own model key. Clone the repo and run it locally."}`.
+  - Cached pre-run repairs (`repair/cache/*.json`) remain fully viewable via `POST /repair` with HTTP 200.
+  - `GET /health` includes `hosted_mode: bool` and `sandbox: bool` (Docker check non-raising, cached 30s).
+- **Local Mode (`HOSTED_MODE=0`):**
+  - Full interactive repair and break scenarios supported with user's local Docker daemon and API keys.
+  - Missing model key returns clean HTTP 400 `{"error": "missing_api_key", "message": "Missing required environment variable: GEMINI_API_KEY. Add it to your .env file."}`.
+- **CORS & Private Network Preflight:**
+  - Added `https://pay-sift.vercel.app` and `CORS_ORIGINS` env var support to allowed origins.
+  - Enabled `allow_private_network=True` returning `Access-Control-Allow-Private-Network: true` on preflight OPTIONS requests, allowing the hosted UI on Vercel to seamlessly communicate with a local backend on `http://localhost:8000`.
+- **Search Rate Limits (`POST /evidence/search`):**
+  - Sliding-window in-memory rate limiting via `SEARCH_MAX_TOTAL` (default 25) and `SEARCH_MAX_PER_IP_PER_HOUR` (default 10) returning HTTP 429 `{"error": "rate_limited", ...}`.
+- **Artifacts Created / Updated:**
+  - `render.yaml`: Blueprint for Render Web Service (free tier, python 3.12.9, `/health` check).
+  - `.env.example`: Documented template for all configuration variables with empty values.
+  - `scripts/setup_local.ps1` & `scripts/setup_local.sh`: Automated one-command local developer environment setup.
+  - `docs/DEPLOY.md`: Comprehensive deployment and operation guide.
+  - `docs/API_CONTRACT.md` & `docs/API_EXAMPLES.json`: Updated with hosted mode errors, health fields, CORS headers, and rate limits.
+  - `tests/test_api.py`: Added comprehensive unit tests (19/19 passing).
+  - `handoff/C1_BACKEND_HOSTABLE`: Completed marker.
+
+

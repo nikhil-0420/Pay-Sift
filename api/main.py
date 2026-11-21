@@ -1,4 +1,4 @@
-﻿"""PaySift Thin REST API (FastAPI).
+"""PaySift Thin REST API (FastAPI).
 
 Provides endpoints for UI integration, live scenario testing (/break),
 and repair loop triggering (/repair).
@@ -7,18 +7,19 @@ and repair loop triggering (/repair).
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import re
+import time
 from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from generate.spec_binding import get_current_spec_sha
 from oracle.checks import compute_oracle_sha
-from pilot.runner import check_sandbox_precondition
-from scenarios.scenarios import SCENARIOS, resolve_candidate_path, run_scenario
 
 app = FastAPI(
     title="PaySift API",
@@ -26,21 +27,38 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# CORS middleware
-origins = [
-    "http://localhost:5173",
-    "https://pay-sift.vercel.app",
-    "http://localhost:3000",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:3000",
-]
+
+def is_hosted_mode() -> bool:
+    """Return True if running in read-only hosted mode (e.g. on Render)."""
+    val = os.environ.get("HOSTED_MODE", "").strip().lower()
+    return val in ("1", "true", "yes", "on")
+
+
+def get_allowed_origins() -> List[str]:
+    """Retrieve allowed CORS origins from env or sensible defaults."""
+    env_origins = os.environ.get("CORS_ORIGINS", "").strip()
+    if env_origins:
+        return [o.strip() for o in env_origins.split(",") if o.strip()]
+    return [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://pay-sift.vercel.app",
+    ]
+
+
+# Configure CORS with private-network preflight support
+origins = get_allowed_origins()
+allow_credentials = False if "*" in origins else True
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=True,
+    allow_credentials=allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_private_network=True,
 )
 
 from api.evidence import router as evidence_router
@@ -48,6 +66,47 @@ app.include_router(evidence_router)
 
 ID_PATTERN = re.compile(r"^[a-zA-Z0-9_\-]+$")
 REPO_ROOT = Path(__file__).resolve().parent.parent
+
+# Automatically load local .env if present without external dependencies
+_local_env = REPO_ROOT / ".env"
+if _local_env.is_file():
+    try:
+        for _line in _local_env.read_text(encoding="utf-8").splitlines():
+            _line = _line.strip()
+            if _line and not _line.startswith("#") and "=" in _line:
+                _k, _v = _line.split("=", 1)
+                _k, _v = _k.strip(), _v.strip()
+                if _k and _k not in os.environ:
+                    os.environ[_k] = _v
+    except Exception:
+        pass
+
+# Cache for sandbox availability check (30 seconds)
+_sandbox_cache: Optional[bool] = None
+_sandbox_cache_time: float = 0.0
+
+
+def check_sandbox_available() -> bool:
+    """Check if Docker is reachable and paysift-sandbox:1 exists.
+    
+    Result is cached for 30 seconds and never raises an exception.
+    """
+    global _sandbox_cache, _sandbox_cache_time
+    now = time.time()
+    if _sandbox_cache is not None and (now - _sandbox_cache_time) < 30.0:
+        return _sandbox_cache
+    avail = False
+    try:
+        from runner.sandbox import is_docker_available, is_docker_image_available
+        avail = bool(
+            is_docker_available(force_refresh=True)
+            and is_docker_image_available("paysift-sandbox:1", force_refresh=True)
+        )
+    except Exception:
+        avail = False
+    _sandbox_cache = avail
+    _sandbox_cache_time = now
+    return avail
 
 
 class BreakRequest(BaseModel):
@@ -62,11 +121,13 @@ class RepairRequest(BaseModel):
 
 @app.get("/health")
 def health() -> Dict[str, Any]:
-    """Healthcheck endpoint returning system status and contract hashes."""
+    """Healthcheck endpoint returning system status, contract hashes, and capabilities."""
     return {
         "status": "ok",
         "spec_sha": get_current_spec_sha(),
         "oracle_sha": compute_oracle_sha(),
+        "hosted_mode": is_hosted_mode(),
+        "sandbox": check_sandbox_available(),
     }
 
 
@@ -79,7 +140,7 @@ def list_runs() -> List[Dict[str, Any]]:
         return runs_list
 
     for rf in sorted(runs_dir.glob("*.json")):
-        if rf.name in ("scenario_verdicts.json", "kill_matrix.json", "kill_matrix.sample.json"):
+        if rf.name in ("scenario_verdicts.json", "kill_matrix.json", "kill_matrix.sample.json", "grounding.json"):
             continue
         try:
             data = json.loads(rf.read_text(encoding="utf-8"))
@@ -132,7 +193,6 @@ def get_run(run_id: str) -> Dict[str, Any]:
     runs_dir = REPO_ROOT / "runs"
     run_file = runs_dir / f"{run_id}.json"
     if not run_file.exists():
-        # Fallback to direct name without adding .json if already included
         run_file = runs_dir / run_id
     if not run_file.exists() or not run_file.is_file():
         raise HTTPException(
@@ -154,7 +214,6 @@ def get_kill_matrix() -> Dict[str, Any]:
     """Retrieve the kill matrix data."""
     km_file = REPO_ROOT / "runs" / "kill_matrix.json"
     if not km_file.exists():
-        # Try fallback to sample
         sample_file = REPO_ROOT / "runs" / "kill_matrix.sample.json"
         if sample_file.exists():
             return json.loads(sample_file.read_text(encoding="utf-8"))
@@ -166,8 +225,17 @@ def get_kill_matrix() -> Dict[str, Any]:
 
 
 @app.post("/break")
-def break_candidate(req: BreakRequest) -> Dict[str, Any]:
+def break_candidate(req: BreakRequest) -> Any:
     """Run a fixed scenario against a candidate and return verdict & ledger diff."""
+    if is_hosted_mode():
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={
+                "error": "disabled_in_hosted_mode",
+                "message": "Needs Docker and your own model key. Clone the repo and run it locally.",
+            },
+        )
+
     cand_id = req.candidate_id.strip()
     scenario_name = req.scenario.strip()
 
@@ -177,6 +245,7 @@ def break_candidate(req: BreakRequest) -> Dict[str, Any]:
             detail="Invalid candidate_id format (path traversal characters forbidden).",
         )
 
+    from scenarios.scenarios import SCENARIOS, resolve_candidate_path, run_scenario
     if scenario_name not in SCENARIOS:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -192,6 +261,7 @@ def break_candidate(req: BreakRequest) -> Dict[str, Any]:
         )
 
     if not is_trusted:
+        from pilot.runner import check_sandbox_precondition
         ok, reason = check_sandbox_precondition()
         if not ok:
             raise HTTPException(
@@ -209,7 +279,7 @@ def break_candidate(req: BreakRequest) -> Dict[str, Any]:
 
 
 @app.post("/repair")
-def repair_candidate(req: RepairRequest) -> Dict[str, Any]:
+def repair_candidate(req: RepairRequest) -> Any:
     """Trigger repair loop or retrieve cached pre-run repair."""
     cand_id = req.candidate_id.strip()
     failure_id = req.failure_id
@@ -220,7 +290,7 @@ def repair_candidate(req: RepairRequest) -> Dict[str, Any]:
             detail="Invalid candidate_id format (path traversal characters forbidden).",
         )
 
-    # Check cached pre-run repair
+    # Check cached pre-run repair first
     cache_dir = REPO_ROOT / "repair" / "cache"
     cached_repair_file = cache_dir / f"{cand_id}__{failure_id}.json"
     if cached_repair_file.exists():
@@ -236,19 +306,58 @@ def repair_candidate(req: RepairRequest) -> Dict[str, Any]:
                 detail=f"Failed to read cached repair: {exc}",
             )
 
-    # If no cached repair, check if live repair can run
+    # When not cached: in hosted mode, live repair is disabled
+    if is_hosted_mode():
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={
+                "error": "disabled_in_hosted_mode",
+                "message": "Needs Docker and your own model key. Clone the repo and run it locally.",
+            },
+        )
+
+    # Local mode: check model API key requirement
+    needed_key_env = "GEMINI_API_KEY"
+    models_yaml_path = REPO_ROOT / "config" / "models.yaml"
+    if models_yaml_path.exists():
+        try:
+            import yaml
+            mdata = yaml.safe_load(models_yaml_path.read_text(encoding="utf-8")) or {}
+            for m in mdata.get("models", []):
+                if m.get("name") in cand_id or m.get("model_id") in cand_id:
+                    needed_key_env = m.get("api_key_env", "GEMINI_API_KEY")
+                    break
+        except Exception:
+            pass
+
+    if not os.environ.get(needed_key_env, "").strip():
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                "error": "missing_api_key",
+                "message": f"Missing required environment variable: {needed_key_env}. Add it to your .env file.",
+            },
+        )
+
+    # Check sandbox precondition
     from pilot.runner import check_sandbox_precondition
     sandbox_ok, reason = check_sandbox_precondition()
     if not sandbox_ok:
-        raise HTTPException(
+        return JSONResponse(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=(
-                f"No cached pre-run repair found for '{cand_id}__{failure_id}', "
-                f"and live model repair is blocked (Docker sandbox gate not passed: {reason})."
-            ),
+            content={
+                "error": "sandbox_unavailable",
+                "message": f"Docker sandbox unavailable: {reason}",
+            },
         )
 
-    raise HTTPException(
-        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-        detail="Model API keys unconfigured (BH-002); cannot generate live repair.",
-    )
+    # Attempt live repair
+    try:
+        from repair.repair import run_repair
+        res = run_repair(cand_id, failure_index=failure_id)
+        return res
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Repair execution failed: {exc}",
+        )

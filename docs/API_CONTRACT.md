@@ -9,8 +9,42 @@ This document defines the formal REST API contract between the PaySift Python ba
   - `http://127.0.0.1:5173`
   - `http://localhost:3000`
   - `http://127.0.0.1:3000`
+  - `https://pay-sift.vercel.app` (Hosted production dashboard)
+  - Any origins configured via the `CORS_ORIGINS` environment variable (comma-separated).
 - **Supported Methods:** `GET`, `POST`, `OPTIONS`
 - **Preflight Support:** HTTP `OPTIONS` preflight returns `200 OK` with `Access-Control-Allow-Origin`, `Access-Control-Allow-Methods`, `Access-Control-Allow-Headers`.
+- **Private Network Preflight:** The API supports private-network CORS requests. When a browser initiates a cross-origin request from a public origin (`https://pay-sift.vercel.app`) to a private/local network backend (`http://localhost:8000` or `http://127.0.0.1:8000`) with header `Access-Control-Request-Private-Network: true`, the server responds with header `Access-Control-Allow-Private-Network: true`.
+
+---
+
+## Operating Modes: Hosted vs Local
+
+The backend operates in two modes controlled by the `HOSTED_MODE` environment variable (`1` / `true` / `on` to enable):
+
+### 1. Hosted Mode (`HOSTED_MODE=1`, e.g., Render Deployment)
+- Read-only environment without Docker daemon or local sandbox infrastructure.
+- Code execution (`POST /break`) and live model-based repair (`POST /repair`) are disabled to prevent untrusted execution and key abuse.
+- If invoked, these endpoints return `403 Forbidden` with:
+  ```json
+  {
+    "error": "disabled_in_hosted_mode",
+    "message": "Needs Docker and your own model key. Clone the repo and run it locally."
+  }
+  ```
+- **Pre-computed repairs** cached on disk (`repair/cache/{cand_id}__{failure_id}.json`) remain fully viewable via `POST /repair` with `200 OK`.
+- All read endpoints (`GET /health`, `GET /runs`, `GET /runs/{id}`, `GET /kill-matrix`, `GET /evidence`, `GET /evidence/{rule_id}`) work identically in hosted mode.
+- Search endpoint (`POST /evidence/search`) enforces rate limits (`SEARCH_MAX_TOTAL=25`, `SEARCH_MAX_PER_IP_PER_HOUR=10`) to preserve API quota.
+
+### 2. Local Mode (`HOSTED_MODE=0` or unset, default)
+- Full interactive capabilities on developer machine with Docker and API keys.
+- Live scenario execution (`POST /break`) runs candidates in Docker containers.
+- Interactive model repair (`POST /repair`) triggers live repair loops with Gemini/Anthropic models. If the required API key is unset in `.env`, a clean `400 Bad Request` is returned:
+  ```json
+  {
+    "error": "missing_api_key",
+    "message": "Missing required environment variable: GEMINI_API_KEY. Add it to your .env file."
+  }
+  ```
 
 ---
 
@@ -40,14 +74,16 @@ Validation errors (HTTP 422) return structured detail list:
 
 ### 1. Health & Integrity Check
 - **Path:** `GET /health`
-- **Description:** Verifies service health, SQLite database accessibility, and returns authoritative cryptographic hashes.
+- **Description:** Verifies service health, SQLite database accessibility, and returns authoritative cryptographic hashes, hosted mode status, and Docker sandbox readiness.
 - **Request Body:** None
 - **Response (HTTP 200):**
 ```json
 {
   "status": "ok",
   "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
-  "oracle_sha": "3c9fcb4d50d38984a9235d2182065842886f4553cb77a166164d142512f71887"
+  "oracle_sha": "3c9fcb4d50d38984a9235d2182065842886f4553cb77a166164d142512f71887",
+  "hosted_mode": false,
+  "sandbox": true
 }
 ```
 
@@ -146,6 +182,13 @@ Validation errors (HTTP 422) return structured detail list:
 ### 5. Break-It Scenario Evaluation
 - **Path:** `POST /break`
 - **Description:** Evaluates a candidate against one of the 6 canonical scenarios (`duplicate_capture`, `forged_signature`, `over_refund`, `bool_amount`, `restart_between_calls`, `rejected_redelivery`).
+- **Hosted Mode Behavior:** If `HOSTED_MODE=1` is enabled, returns `403 Forbidden` with:
+  ```json
+  {
+    "error": "disabled_in_hosted_mode",
+    "message": "Needs Docker and your own model key. Clone the repo and run it locally."
+  }
+  ```
 - **Security Check:** Untrusted model-generated candidates are strictly rejected (`403 Forbidden`) unless `runs/GATE4_PASSED` exists.
 - **Request Body:**
 ```json
@@ -204,9 +247,30 @@ Validation errors (HTTP 422) return structured detail list:
 }
 ```
 - **Responses:**
-  - `200 OK`: Returns repair diff, before/after invariant pass rates, and repaired candidate code.
-  - `403 Forbidden`: Candidate execution blocked when Gate 4 sandbox verification is absent.
-  - `503 Service Unavailable`: Live model repair generation blocked due to missing API keys / provider configuration.
+  - `200 OK`: Returns repair result:
+    ```json
+    {
+      "source": "pre-run",
+      "cached": true,
+      "data": { ... }
+    }
+    ```
+  - `400 Bad Request`: In local mode when required model API key is missing:
+    ```json
+    {
+      "error": "missing_api_key",
+      "message": "Missing required environment variable: GEMINI_API_KEY. Add it to your .env file."
+    }
+    ```
+  - `403 Forbidden (Hosted Mode)`: When uncached repair is requested in hosted mode (`HOSTED_MODE=1`):
+    ```json
+    {
+      "error": "disabled_in_hosted_mode",
+      "message": "Needs Docker and your own model key. Clone the repo and run it locally."
+    }
+    ```
+  - `403 Forbidden (Sandbox Unavailable)`: Candidate execution blocked when Docker sandbox is unavailable.
+  - `503 Service Unavailable`: Live repair execution failed.
 
 ---
 
@@ -311,7 +375,21 @@ PaySift includes a live documentation grounding layer (`api/evidence.py`) that q
 #### 7.3 Live Search & Re-Grounding
 - **Path:** `POST /evidence/search`
 - **Description:** Triggers an on-demand You.com search for a rule with optional extra search terms, updates `grounding/cache/{rule_id}.json`, and rebuilds `runs/grounding.json`.
-- **Rate Limit:** Per-process sliding window limit of 10 calls per 60 seconds (`429 Too Many Requests`).
+- **Rate Limiting:**
+  - `SEARCH_MAX_TOTAL` (default `25` in hosted mode): Process-lifetime cap across all IPs. When reached, returns `429 Too Many Requests`:
+    ```json
+    {
+      "error": "rate_limited",
+      "message": "Hosted search limit reached (25 total per deployment). Run locally with your own YDC_API_KEY to search without limits."
+    }
+    ```
+  - `SEARCH_MAX_PER_IP_PER_HOUR` (default `10`): Per-IP sliding-window hourly cap. When exceeded, returns `429 Too Many Requests`:
+    ```json
+    {
+      "error": "rate_limited",
+      "message": "Search rate limit exceeded (10 queries per IP per hour). Run locally with your own YDC_API_KEY to search without limits."
+    }
+    ```
 - **Request Body:**
 ```json
 {
@@ -351,6 +429,6 @@ PaySift includes a live documentation grounding layer (`api/evidence.py`) that q
 - **Errors:**
   - `400 Bad Request`: Malformed `rule_id` or `extra_terms` exceeds 80 characters.
   - `404 Not Found`: Rule ID not defined in `grounding/queries.yaml`.
-  - `429 Too Many Requests`: Sliding-window rate limit (10 calls/min) or upstream You.com call cap exceeded.
+  - `429 Too Many Requests`: Sliding-window rate limit (`SEARCH_MAX_TOTAL` or `SEARCH_MAX_PER_IP_PER_HOUR`) or upstream You.com call cap exceeded.
   - `502 Bad Gateway`: Upstream search request failed.
   - `503 Service Unavailable`: `YDC_API_KEY` is missing / not configured on the server.

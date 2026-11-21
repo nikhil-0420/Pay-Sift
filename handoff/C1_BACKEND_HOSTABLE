@@ -1,0 +1,9 @@
+stage: C1
+owner: nikhil
+status: DONE
+completed_at: 2026-11-21T17:31:00Z
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Hosted read-only backend, CORS private network support, search rate limits, render.yaml and setup scripts
+app_path: api.main:app
+python_version: 3.12.9
+tests: pass

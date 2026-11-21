@@ -4,7 +4,9 @@
     "body": {
       "status": "ok",
       "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
-      "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16"
+      "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+      "hosted_mode": false,
+      "sandbox": true
     }
   },
   "GET /runs": {
@@ -1166,6 +1168,59 @@
         "retrieved_at": "2026-11-21T07:38:51.048378+00:00",
         "provider": "you.com"
       }
+    }
+  },
+  "POST /break (hosted mode)": {
+    "request_body": {
+      "candidate_id": "reference",
+      "scenario": "duplicate_capture"
+    },
+    "status": 403,
+    "body": {
+      "error": "disabled_in_hosted_mode",
+      "message": "Needs Docker and your own model key. Clone the repo and run it locally."
+    }
+  },
+  "POST /repair (hosted mode)": {
+    "request_body": {
+      "candidate_id": "m1_no_dedupe",
+      "failure_id": 0
+    },
+    "status": 403,
+    "body": {
+      "error": "disabled_in_hosted_mode",
+      "message": "Needs Docker and your own model key. Clone the repo and run it locally."
+    }
+  },
+  "POST /repair (missing API key in local mode)": {
+    "request_body": {
+      "candidate_id": "m1_no_dedupe",
+      "failure_id": 0
+    },
+    "status": 400,
+    "body": {
+      "error": "missing_api_key",
+      "message": "Missing required environment variable: GEMINI_API_KEY. Add it to your .env file."
+    }
+  },
+  "POST /evidence/search (rate limited total)": {
+    "request_body": {
+      "rule_id": "R1"
+    },
+    "status": 429,
+    "body": {
+      "error": "rate_limited",
+      "message": "Hosted search limit reached (25 total per deployment). Run locally with your own YDC_API_KEY to search without limits."
+    }
+  },
+  "POST /evidence/search (rate limited per IP)": {
+    "request_body": {
+      "rule_id": "R1"
+    },
+    "status": 429,
+    "body": {
+      "error": "rate_limited",
+      "message": "Search rate limit exceeded (10 queries per IP per hour). Run locally with your own YDC_API_KEY to search without limits."
     }
   }
 }
