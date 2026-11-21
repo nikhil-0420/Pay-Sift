@@ -670,4 +670,45 @@
   - `tests/test_api.py`: Added comprehensive unit tests (19/19 passing).
   - `handoff/C1_BACKEND_HOSTABLE`: Completed marker.
 
+---
+
+### Phase C2 Report - Frontend Cleanup, Hosted Wiring and Local Connect
+
+- **Timestamp:** 2026-11-21 23:45:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nikhil
+- **Section A (Truth and Data Fixes):**
+  - Featured demo candidate: `strong_a/A/3` (`R8`, `I2_idempotency`), labeled `"real model finding"`, minimal trace length of 4 events from data per `pilot/DECISION.md`.
+  - Readiness ledger and Method pipeline: Authoritative status derived from handoff markers; Docker, Models, Sandbox gate, Pilot, and Repair (`Rule R8 fixed on strong_a/A/3`) show done; Oracle gate shows passed (`100/100`).
+  - Spec Page: Header and banner display `G1_RESULT` outcome (`"Gate 1 passed, spec unchanged, reviewed by two independent predictors: Koushik and Rithvik"`); `DRAFT-FROZEN` banner preserved.
+  - Spec distinct runs count: Computes distinct runs (`runs.filter(r => r.failures.some(f => f.rule === rule.id)).length`) and labels as `"Violated in N runs"`.
+  - Filtered STUB / FAKE SAMPLE runs out of `index.json` and all UI counts.
+  - Evidence stats: Displays `"1 supported, 5 partial, 5 not found"` dynamically computed from grounding data. Added one-sentence definition for PARTIAL.
+  - Pilot cards: Candidate de-duplication updated with composite key (`model/condition/id`), reconciling Condition A candidates to exactly 8 evaluated candidates as documented in `pilot/DECISION.md`.
+  - Kill matrix heatmap: Concurrency checks for M8 and M9 rendered directly from data (`concurrency.scenario_A` / `concurrency.scenario_B`), displaying recorded trial failures with full tooltips instead of blank cells.
+- **Section B (Hosted Wiring & Local Connect):**
+  - Hosted API base derived solely from `VITE_API_BASE`. Zero ngrok URLs in the codebase.
+  - Initial load calls `/health` with a 6s timeout; if unavailable, renders top banner `"Backend waking or unavailable, showing static snapshot"`.
+  - Chip displays `"LIVE API (read-only)"` when `sandbox: false` and `"LOCAL BACKEND"` when `sandbox: true`. Never displays LIVE unless `/health` succeeded in the session.
+  - Added `LocalConnectControl` on Break it and Repair pages with 4s probe timeout, Docker detection, localStorage caching, browser CORS/mixed-content explanation, and DEPLOY link.
+  - When `sandbox: false`, "Run live" and "Ask the model to fix it" buttons remain visible but disabled with clear tooltip, displaying recorded static scenario replay and cached repair result (`repair/cache/3__0.json`) labeled `"CACHED REPAIR RESULT (run on operator machine)"`.
+  - Live calls supported with 90s timeout, spinner, and plain-language error handling for 400, 403, 429.
+- **Section C (Design, UX, Accessibility, Performance):**
+  - High-contrast accessible focus outlines, ARIA roles/labels for tables/dialogs/accordions.
+  - Responsive layout verified across viewports (360px, 390px, 768px, 1280px, 1920px) with `overflow-x: hidden`.
+  - Brand SVG favicon created at `ui/public/favicon.svg` and linked with Open Graph & Twitter card metadata in `ui/index.html`.
+  - All 23 Vitest tests passing with dynamic run counts.
+- **Artifacts Created / Updated:**
+  - `ui/public/favicon.svg`: Created SVG brandmark.
+  - `ui/index.html`: Open Graph, Twitter cards, SVG favicon, and updated metadata.
+  - `ui/scripts/sync-data.mjs`: Syncs repair cache, derives authoritative readiness from handoff markers, filters stubs.
+  - `ui/src/data/source.ts`: Dynamic API base, health probing, local storage persistence, clean error handling.
+  - `ui/src/components.tsx`: Concurrency checks for M8/M9, `LocalConnectControl`, PARTIAL explanation in `EvidenceLanding`.
+  - `ui/src/lib/helpers.ts`: Unique candidate keying (`model/condition/id`), `getMinimalTrace` fallback.
+  - `ui/src/main.tsx`: Shell health probe, top banner, Break it & Repair wiring, Spec G1 banner & distinct counts, Pilot 8 Condition A candidates.
+  - `ui/src/styles.css`: Styles for local connect panel, status chips, banners, and overflow protection.
+  - `ui/tests/phase2_truth_hosted.test.ts`: Vitest test suite for Phase 2 data and wiring.
+  - `handoff/C2_UI_CLEAN`: Completed marker.
+
+
 
