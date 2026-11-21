@@ -462,3 +462,21 @@
 - **Artifacts:**
   - `grounding/cache/R0.json` ... `R10.json`: updated with `judge_verdict` and `judge_meta`.
   - `runs/grounding.json`: rebuilt and verified against `contract/grounding_schema.json` with 0 errors; `spec_sha` matches `contract/SPEC_HASH`.
+
+
+### Stage K3C Report (Judge Parse Fix)
+
+- **Timestamp:** 2026-11-21 15:05:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nikhil
+- **Summary:**
+  - Implemented robust JSON output parsing for the model judge in `grounding/judge.py`:
+    - Strips markdown code fences (` ```json ` / ` ``` `).
+    - Extracts the first balanced `{...}` JSON structure, safely accounting for string literals and escapes.
+    - Validates required keys (`label`, `sources_used`, `quote`, `reason`) and allowable label values.
+    - Added single-retry fallback on parse failure with strict instructions ("reply with only the JSON object, no prose, no code fences").
+    - If retry also fails, assigns `NOT_FOUND` with reason `"Judge output unparseable after retry"`.
+  - Maintained all hard code-level constraints (verbatim substring check <= 25 words, source ID existence).
+  - Added unit tests in `tests/test_grounding.py` with mock adapter covering: fenced JSON, prose before/after, truncated JSON with recovery on retry, unparseable output after retry, and verbatim-quote violations.
+  - Re-judged rule R2: parsed cleanly into `NOT_FOUND` with reason `"None of the retrieved documentation snippets contain the specific payload validation rules, field constraints, or error handling behavior described in rule R2."` (no longer failing on JSON parsing).
+  - Validated `runs/grounding.json` against `contract/grounding_schema.json` (0 errors, `spec_sha` matches).

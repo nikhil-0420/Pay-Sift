@@ -11,3 +11,4 @@ manus_attachments.zip
 candidates/_stale/
 node_modules/
 *.log
+*.judge_raw.txt

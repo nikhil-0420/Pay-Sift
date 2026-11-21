@@ -19,9 +19,12 @@ from api.evidence import (
     set_output_file_override,
 )
 from api.main import app
+from generate.providers import GenerationResult
 from grounding.fetch import fetch_all_evidence, fetch_rule_evidence, load_queries
 from grounding.judge import (
     build_judge_prompt,
+    judge_single_rule,
+    parse_judge_output,
     rebuild_grounding_json,
     validate_judge_verdict,
 )
@@ -303,3 +306,149 @@ def test_repair_prompt_sources():
         sources=[],
     )
     assert "OFFICIAL DOCUMENTATION & VERIFIED SOURCES" not in prompt_no_sources
+
+
+class MockJudgeAdapter:
+    """Mock ProviderAdapter for testing judge single-rule parsing, retries, and errors."""
+
+    def __init__(self, responses: List[str]):
+        self.responses = list(responses)
+        self.calls = 0
+        self.prompts: List[str] = []
+
+    def generate(self, prompt: str, **kwargs) -> GenerationResult:
+        self.calls += 1
+        self.prompts.append(prompt)
+        text = self.responses.pop(0) if self.responses else ""
+        return GenerationResult(
+            raw_text=text,
+            model_id="mock-judge",
+            provider="mock",
+            temperature=0.0,
+            max_tokens=1000,
+            token_usage={"total_tokens": 20},
+            latency=0.01,
+            timestamp="2026-11-21T00:00:00Z",
+        )
+
+
+def test_judge_fenced_and_prose_parsing():
+    """Verify parse_judge_output handles fenced JSON and prose before/after."""
+    sources = [{"id": "R1_s1", "snippet": "Always verify HMAC-SHA256 signatures over raw body."}]
+
+    # 1. Fenced JSON
+    fenced = """```json
+{
+  "label": "SUPPORTED",
+  "sources_used": ["R1_s1"],
+  "quote": "Always verify HMAC-SHA256 signatures",
+  "reason": "Clear HMAC guidance."
+}
+```"""
+    adapter1 = MockJudgeAdapter([fenced])
+    v1, m1, calls1 = judge_single_rule(
+        adapter=adapter1,
+        rule_id="R1",
+        title="Sig",
+        description="Verify",
+        sources=sources,
+        model_id="mock",
+        api_key="test-key",
+    )
+    assert calls1 == 1
+    assert v1["label"] == "SUPPORTED"
+    assert v1["quote"] == "Always verify HMAC-SHA256 signatures"
+    assert v1["convention"] is False
+
+    # 2. Prose before and after
+    with_prose = """Based on the retrieved snippets, here is the verdict:
+{
+  "label": "PARTIAL",
+  "sources_used": ["R1_s1"],
+  "quote": "Always verify HMAC-SHA256 signatures",
+  "reason": "Partially mentioned."
+}
+Hope this analysis helps!"""
+    adapter2 = MockJudgeAdapter([with_prose])
+    v2, m2, calls2 = judge_single_rule(
+        adapter=adapter2,
+        rule_id="R1",
+        title="Sig",
+        description="Verify",
+        sources=sources,
+        model_id="mock",
+        api_key="test-key",
+    )
+    assert calls2 == 1
+    assert v2["label"] == "PARTIAL"
+    assert v2["quote"] == "Always verify HMAC-SHA256 signatures"
+
+
+def test_judge_retry_on_truncated_or_bad_json():
+    """Verify single-retry on unparseable JSON, succeeding or failing cleanly."""
+    sources = [{"id": "R1_s1", "snippet": "Always verify HMAC-SHA256 signatures over raw body."}]
+
+    # 1. Truncated JSON on call 1 -> succeeds on retry (call 2)
+    truncated = '{"label": "SUPPORTED", "sources_used": ["R1_s1"], "quote":'
+    valid_retry = """{
+  "label": "SUPPORTED",
+  "sources_used": ["R1_s1"],
+  "quote": "Always verify HMAC-SHA256 signatures",
+  "reason": "Recovered on retry."
+}"""
+    adapter_recover = MockJudgeAdapter([truncated, valid_retry])
+    v_rec, m_rec, calls_rec = judge_single_rule(
+        adapter=adapter_recover,
+        rule_id="R1",
+        title="Sig",
+        description="Verify",
+        sources=sources,
+        model_id="mock",
+        api_key="test-key",
+    )
+    assert calls_rec == 2
+    assert v_rec["label"] == "SUPPORTED"
+    assert v_rec["quote"] == "Always verify HMAC-SHA256 signatures"
+    assert "reply with only the JSON object" in adapter_recover.prompts[1]
+
+    # 2. Still bad after retry -> label NOT_FOUND and designated reason
+    adapter_fail = MockJudgeAdapter(["Not JSON at all", "Still not JSON"])
+    v_fail, m_fail, calls_fail = judge_single_rule(
+        adapter=adapter_fail,
+        rule_id="R1",
+        title="Sig",
+        description="Verify",
+        sources=sources,
+        model_id="mock",
+        api_key="test-key",
+    )
+    assert calls_fail == 2
+    assert v_fail["label"] == "NOT_FOUND"
+    assert v_fail["reason"] == "Judge output unparseable after retry"
+    assert v_fail["convention"] is True
+
+
+def test_judge_verbatim_quote_violation_downgrade():
+    """Verify quote not in snippet verbatim still downgrades to NOT_FOUND."""
+    sources = [{"id": "R1_s1", "snippet": "Always verify HMAC-SHA256 signatures over raw body."}]
+    fake_quote_json = """{
+  "label": "SUPPORTED",
+  "sources_used": ["R1_s1"],
+  "quote": "This quote is completely fabricated and not in snippet",
+  "reason": "Hallucinated citation."
+}"""
+    adapter = MockJudgeAdapter([fake_quote_json])
+    v, m, calls = judge_single_rule(
+        adapter=adapter,
+        rule_id="R1",
+        title="Sig",
+        description="Verify",
+        sources=sources,
+        model_id="mock",
+        api_key="test-key",
+    )
+    assert calls == 1
+    assert v["label"] == "NOT_FOUND"
+    assert v["convention"] is True
+    assert v["quote"] == ""
+    assert "[Downgraded: quote is not a verbatim substring" in v["reason"]

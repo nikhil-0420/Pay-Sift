@@ -264,7 +264,7 @@
     "label": "NOT_FOUND",
     "sources_used": [],
     "quote": "",
-    "reason": "Failed to parse model JSON output",
+    "reason": "None of the retrieved documentation snippets contain the specific payload validation rules, field constraints, or error handling behavior described in rule R2.",
     "convention": true
   },
   "judge_meta": {
@@ -272,9 +272,9 @@
     "temperature": 0.0,
     "token_usage": {
       "prompt_tokens": 1366,
-      "completion_tokens": 80,
-      "total_tokens": 1446
+      "completion_tokens": 64,
+      "total_tokens": 1430
     },
-    "timestamp": "2026-11-21T08:29:50.956460+00:00"
+    "timestamp": "2026-11-21T09:35:05.943992+00:00"
   }
 }

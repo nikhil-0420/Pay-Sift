@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T09:27:16.836241+00:00",
+  "generated_at": "2026-11-21T09:35:05.959042+00:00",
   "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
   "provider": "you.com",
   "rules": {
@@ -256,16 +256,16 @@
       ],
       "sources_used": [],
       "quote": "",
-      "reason": "Failed to parse model JSON output",
+      "reason": "None of the retrieved documentation snippets contain the specific payload validation rules, field constraints, or error handling behavior described in rule R2.",
       "judge": {
         "model": "gemini-3.5-flash-lite",
         "temperature": 0.0,
         "token_usage": {
           "prompt_tokens": 1366,
-          "completion_tokens": 80,
-          "total_tokens": 1446
+          "completion_tokens": 64,
+          "total_tokens": 1430
         },
-        "timestamp": "2026-11-21T08:29:50.956460+00:00"
+        "timestamp": "2026-11-21T09:35:05.943992+00:00"
       }
     },
     "R3": {

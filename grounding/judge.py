@@ -7,7 +7,7 @@ import json
 import os
 from pathlib import Path
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 import yaml
 
 from generate.providers import get_provider, load_env_file, ProviderAdapter
@@ -91,7 +91,7 @@ def build_judge_prompt(
     """Format prompt for evaluating web search snippets against a specification rule."""
     sources_text = ""
     for s in sources:
-        sources_text += f"\n- Source [{s['id']}]: {s['title']} ({s['url']})\n  Snippet: {s['snippet']}\n"
+        sources_text += f"\n- Source [{s.get('id', '')}]: {s.get('title', '')} ({s.get('url', '')})\n  Snippet: {s.get('snippet', '')}\n"
 
     return f"""You are an expert evaluator verifying financial payment gateway specifications.
 Evaluate whether the retrieved documentation snippets support or conflict with the following specification rule.
@@ -119,16 +119,179 @@ Respond with strict JSON matching this schema:
 """
 
 
-def extract_json_verdict(raw_text: str) -> Dict[str, Any]:
-    """Extract and parse JSON object from raw LLM output text."""
-    # Match ```json ... ``` or raw {...}
-    match = re.search(r"\{[\s\S]*\}", raw_text)
-    if not match:
-        return {"label": "NOT_FOUND", "sources_used": [], "quote": "", "reason": "Failed to parse model JSON output"}
+REQUIRED_JUDGE_KEYS = {"label", "sources_used", "quote", "reason"}
+RETRY_INSTRUCTION = "\n\nCRITICAL: reply with only the JSON object, no prose, no code fences."
+
+
+def extract_first_balanced_json(text: str) -> Optional[str]:
+    """Find and return the substring of the first balanced {...} block in text."""
+    start_idx = text.find("{")
+    if start_idx == -1:
+        return None
+
+    depth = 0
+    in_string = False
+    escape = False
+
+    for i in range(start_idx, len(text)):
+        ch = text[i]
+        if escape:
+            escape = False
+            continue
+        if ch == "\\" and in_string:
+            escape = True
+            continue
+        if ch == '"':
+            in_string = not in_string
+            continue
+        if not in_string:
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    return text[start_idx : i + 1]
+    return None
+
+
+def parse_judge_output(raw_text: str) -> Optional[Dict[str, Any]]:
+    """Parse and validate required structure from LLM judge output."""
+    if not raw_text or not isinstance(raw_text, str):
+        return None
+
+    cleaned = raw_text.strip()
+    # Strip markdown code fences if present
+    fence_match = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", cleaned)
+    candidate_text = fence_match.group(1).strip() if fence_match else cleaned
+
+    # Extract first balanced JSON object
+    json_str = extract_first_balanced_json(candidate_text)
+    if not json_str:
+        json_str = extract_first_balanced_json(cleaned)
+        if not json_str:
+            return None
+
     try:
-        return json.loads(match.group(0))
-    except Exception as exc:
-        return {"label": "NOT_FOUND", "sources_used": [], "quote": "", "reason": f"Malformed JSON: {exc}"}
+        data = json.loads(json_str)
+    except Exception:
+        return None
+
+    if not isinstance(data, dict):
+        return None
+
+    # Verify required keys
+    if not REQUIRED_JUDGE_KEYS.issubset(data.keys()):
+        return None
+
+    label = str(data.get("label", "")).strip().upper()
+    if label not in VALID_LABELS:
+        return None
+
+    if not isinstance(data.get("sources_used"), list):
+        return None
+
+    if not isinstance(data.get("quote"), str):
+        return None
+
+    if not isinstance(data.get("reason"), str):
+        return None
+
+    return {
+        "label": label,
+        "sources_used": [str(s).strip() for s in data["sources_used"] if str(s).strip()],
+        "quote": data["quote"].strip(),
+        "reason": data["reason"].strip(),
+    }
+
+
+def extract_json_verdict(raw_text: str) -> Dict[str, Any]:
+    """Extract and parse JSON object from raw LLM output text, returning fallback dict on failure."""
+    parsed = parse_judge_output(raw_text)
+    if parsed is not None:
+        return parsed
+    return {
+        "label": "NOT_FOUND",
+        "sources_used": [],
+        "quote": "",
+        "reason": "Failed to parse model JSON output",
+    }
+
+
+def judge_single_rule(
+    adapter: Any,
+    rule_id: str,
+    title: str,
+    description: str,
+    sources: List[Dict[str, Any]],
+    model_id: str,
+    api_key: str,
+    base_url: Optional[str] = None,
+    temperature: float = 0.0,
+    max_tokens: int = 1000,
+    cache_dir: Optional[Path] = None,
+) -> Tuple[Dict[str, Any], Dict[str, Any], int]:
+    """Execute model evaluation for a single rule with single-retry fallback on parse failure."""
+    prompt = build_judge_prompt(rule_id, title, description, sources)
+    calls_made = 1
+
+    res = adapter.generate(
+        prompt=prompt,
+        model_id=model_id,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        api_key=api_key,
+        base_url=base_url,
+    )
+    final_res = res
+
+    # Save debug raw file if cache_dir is provided
+    if cache_dir:
+        raw_debug_file = cache_dir / f"{rule_id}.judge_raw.txt"
+        try:
+            raw_debug_file.write_text(res.raw_text, encoding="utf-8")
+        except Exception:
+            pass
+
+    verdict = parse_judge_output(res.raw_text)
+
+    # Retry once if parsing failed
+    if verdict is None:
+        retry_prompt = prompt + RETRY_INSTRUCTION
+        retry_res = adapter.generate(
+            prompt=retry_prompt,
+            model_id=model_id,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            api_key=api_key,
+            base_url=base_url,
+        )
+        calls_made += 1
+        final_res = retry_res
+
+        if cache_dir:
+            raw_debug_file = cache_dir / f"{rule_id}.judge_raw.txt"
+            try:
+                raw_debug_file.write_text(retry_res.raw_text, encoding="utf-8")
+            except Exception:
+                pass
+
+        verdict = parse_judge_output(retry_res.raw_text)
+        if verdict is None:
+            verdict = {
+                "label": "NOT_FOUND",
+                "sources_used": [],
+                "quote": "",
+                "reason": "Judge output unparseable after retry",
+            }
+
+    validated = validate_judge_verdict(verdict, sources)
+    meta = {
+        "model": model_id,
+        "temperature": temperature,
+        "token_usage": getattr(final_res, "token_usage", None),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+    return validated, meta, calls_made
 
 
 def run_judge(
@@ -183,27 +346,23 @@ def run_judge(
         description = cdata.get("description", "")
         sources = cdata.get("sources", [])
 
-        prompt = build_judge_prompt(rule_id, title, description, sources)
-        res = adapter.generate(
-            prompt=prompt,
+        validated_verdict, judge_meta, calls = judge_single_rule(
+            adapter=adapter,
+            rule_id=rule_id,
+            title=title,
+            description=description,
+            sources=sources,
             model_id=judge_model_id,
-            temperature=0.0,
-            max_tokens=1000,
             api_key=api_key,
             base_url=base_url,
+            temperature=0.0,
+            max_tokens=1000,
+            cache_dir=cache_dir,
         )
-        model_calls_used += 1
-
-        raw_verdict = extract_json_verdict(res.raw_text)
-        validated_verdict = validate_judge_verdict(raw_verdict, sources)
+        model_calls_used += calls
 
         cdata["judge_verdict"] = validated_verdict
-        cdata["judge_meta"] = {
-            "model": judge_model_id,
-            "temperature": 0.0,
-            "token_usage": res.token_usage,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-        }
+        cdata["judge_meta"] = judge_meta
 
         # Write back to cache file
         with open(cf, "w", encoding="utf-8") as f:
