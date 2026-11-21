@@ -1,0 +1,12 @@
+stage: N8
+owner: nehaa
+status: DONE
+completed_at: 2026-11-21T17:24:45Z
+work_commit: 3da4f74cd07ab7fa5be8a2d39cdc806dde1e7827
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Real grounded repair on strong_a/A/3 fixed Rule R8 with 0 invariant regressions
+repair_file: repair/cache/3__0.json
+fixed_rule: true
+broke_other: false
+grounding_used: true
+source_ids: ["R8_s1", "R8_s2", "R8_s3", "R8_s4", "R8_s5", "R8_s6", "R8_s7", "R8_s8", "R8_s9"]
