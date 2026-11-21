@@ -45,6 +45,7 @@ def scrub_secrets(text: str, secret_keys: Optional[List[str]] = None) -> str:
             "OPENAI_API_KEY",
             "GEMINI_API_KEY",
             "SMALL_MODEL_API_KEY",
+            "YDC_API_KEY",
         ]:
             val = os.environ.get(env_var, "").strip()
             if len(val) >= 6:
