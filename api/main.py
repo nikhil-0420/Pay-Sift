@@ -42,6 +42,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from api.evidence import router as evidence_router
+app.include_router(evidence_router)
+
 ID_PATTERN = re.compile(r"^[a-zA-Z0-9_\-]+$")
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
