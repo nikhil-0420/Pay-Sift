@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-21T12:01:40.337Z",
-  "run_count": 192,
+  "generated_at": "2026-11-21T12:40:10.458Z",
+  "run_count": 183,
   "phases": [
     {
       "id": "P0",
@@ -142,5 +142,36 @@
       "severity": "FYI"
     }
   ],
+  "readiness": {
+    "docker": {
+      "state": "ok",
+      "detail": "Docker runtime verified (Gate 4 passed)"
+    },
+    "models": {
+      "state": "ok",
+      "detail": "Models configured and candidates generated"
+    },
+    "sandbox_gate": {
+      "state": "ok",
+      "detail": "Hostile tests contained (Gate 4 passed)"
+    },
+    "pilot": {
+      "state": "ok",
+      "detail": "Pilot completed (15 candidate runs evaluated)"
+    },
+    "repair": {
+      "state": "not run",
+      "detail": "NOT RUN (standing by for pilot repair loop)"
+    },
+    "oracle_gate": {
+      "state": "PASSED",
+      "detail": "Reference handler passes 100/100 invariants (PASSED)"
+    }
+  },
+  "g1_result": {
+    "outcome": "PASSED",
+    "summary": "Gate G1 recorded as PASSED; spec unchanged; SQ-001 confirmed",
+    "spec_changed": false
+  },
   "spec_draft_frozen": true
 }

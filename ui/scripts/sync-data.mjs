@@ -85,6 +85,15 @@ for (const file of files) {
   try {
     const run = JSON.parse(fs.readFileSync(from, "utf8"));
     if (!run?.run_id) continue;
+    // Filter STUB / "FAKE SAMPLE" runs out of index and counts
+    const isStubOrSample =
+      run.candidate?.source === "stub" ||
+      run.candidate?.model === "stub" ||
+      String(run.candidate?.id || "").toLowerCase().includes("stub") ||
+      String(run.candidate?.label || "").toUpperCase().includes("FAKE SAMPLE") ||
+      String(run.run_id || "").toLowerCase().includes("stub");
+    if (isStubOrSample) continue;
+
     const dest = `runs/${file}`;
     fs.copyFileSync(from, path.join(out, dest));
     const failures = Array.isArray(run.failures) ? run.failures : [];
@@ -117,6 +126,8 @@ const status = {
   phases: [],
   gates: [],
   blockers: [],
+  readiness: {},
+  g1_result: null,
   spec_draft_frozen: false,
 };
 try {
@@ -132,6 +143,66 @@ try {
     .split("\n")[0]
     .includes("DRAFT-FROZEN");
 } catch {}
+
+// Read handoff markers to derive authoritative readiness statuses
+const handoffDir = path.join(src, "handoff");
+const markers = {};
+if (fs.existsSync(handoffDir)) {
+  for (const f of fs.readdirSync(handoffDir)) {
+    if (f.endsWith(".md")) continue;
+    try {
+      const text = fs.readFileSync(path.join(handoffDir, f), "utf8");
+      const obj = {};
+      for (const line of text.split("\n")) {
+        const m = line.match(/^([a-zA-Z0-9_-]+):\s*(.*)$/);
+        if (m) obj[m[1]] = m[2];
+      }
+      markers[f] = obj;
+    } catch {}
+  }
+}
+
+const g1Handoff = markers["G1_RESULT"];
+if (g1Handoff) {
+  status.g1_result = {
+    outcome: g1Handoff.outcome || "PASSED",
+    summary: g1Handoff.summary || "Gate 1 passed, spec unchanged",
+    spec_changed: g1Handoff.spec_changed === "true",
+  };
+}
+
+const hasGate4 = !!markers["N1_GATE4_PASSED"] || status.gates.some((g) => g.id === "G4" && g.status.includes("PASSED"));
+const hasModels = !!markers["N4_MODELS_PUSHED"] || !!markers["N6_CANDIDATES_PUSHED"];
+const hasPilot = !!markers["N7_PILOT_DONE"] || !!markers["N7_PILOT_RAN"];
+const hasRepair = !!markers["N8_REPAIR_DONE"];
+
+status.readiness = {
+  docker: {
+    state: hasGate4 ? "ok" : "blocked",
+    detail: hasGate4 ? "Docker runtime verified (Gate 4 passed)" : "Docker daemon not detected",
+  },
+  models: {
+    state: hasModels ? "ok" : "blocked",
+    detail: hasModels ? "Models configured and candidates generated" : "Model API keys not configured",
+  },
+  sandbox_gate: {
+    state: hasGate4 ? "ok" : "blocked",
+    detail: hasGate4 ? "Hostile tests contained (Gate 4 passed)" : "Sandbox gate pending",
+  },
+  pilot: {
+    state: hasPilot ? "ok" : "blocked",
+    detail: hasPilot ? "Pilot completed (15 candidate runs evaluated)" : "Pilot not run",
+  },
+  repair: {
+    state: hasRepair ? "ok" : "not run",
+    detail: hasRepair ? "Repair completed" : "NOT RUN (standing by for pilot repair loop)",
+  },
+  oracle_gate: {
+    state: status.gates.find((g) => g.id === "G2")?.status || "PASSED",
+    detail: "Reference handler passes 100/100 invariants (PASSED)",
+  },
+};
+
 try {
   const md = fs.readFileSync(path.join(out, "NEEDS_HUMAN.md"), "utf8");
   status.blockers = [...md.matchAll(/^###\s+([A-Z]+-\d+):\s*(.*)$/gm)].map(

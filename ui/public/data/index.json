@@ -942,30 +942,6 @@
     "financialInvariantsFailed": []
   },
   {
-    "id": "run_handler_ref_1795218941",
-    "file": "runs/run_handler_ref_1795218941.json",
-    "candidateId": "handler_ref",
-    "source": "stub",
-    "model": "stub",
-    "condition": "-",
-    "created_at": "2026-11-20T23:55:41.264359+00:00",
-    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
-    "failureCount": 0,
-    "financialInvariantsFailed": []
-  },
-  {
-    "id": "run_handler_ref_1795219215",
-    "file": "runs/run_handler_ref_1795219215.json",
-    "candidateId": "handler_ref",
-    "source": "stub",
-    "model": "stub",
-    "condition": "-",
-    "created_at": "2026-11-21T00:00:15.058246+00:00",
-    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
-    "failureCount": 0,
-    "financialInvariantsFailed": []
-  },
-  {
     "id": "run_handler_ref_1795219217",
     "file": "runs/run_handler_ref_1795219217.json",
     "candidateId": "handler_ref",
@@ -973,54 +949,6 @@
     "model": "reference",
     "condition": "-",
     "created_at": "2026-11-21T00:00:17.351168+00:00",
-    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
-    "failureCount": 0,
-    "financialInvariantsFailed": []
-  },
-  {
-    "id": "run_handler_ref_1795219499",
-    "file": "runs/run_handler_ref_1795219499.json",
-    "candidateId": "handler_ref",
-    "source": "stub",
-    "model": "stub",
-    "condition": "-",
-    "created_at": "2026-11-21T00:04:59.956207+00:00",
-    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
-    "failureCount": 0,
-    "financialInvariantsFailed": []
-  },
-  {
-    "id": "run_handler_ref_1795230604",
-    "file": "runs/run_handler_ref_1795230604.json",
-    "candidateId": "handler_ref",
-    "source": "stub",
-    "model": "stub",
-    "condition": "-",
-    "created_at": "2026-11-21T03:10:04.336285+00:00",
-    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
-    "failureCount": 0,
-    "financialInvariantsFailed": []
-  },
-  {
-    "id": "run_handler_ref_1795230687",
-    "file": "runs/run_handler_ref_1795230687.json",
-    "candidateId": "handler_ref",
-    "source": "stub",
-    "model": "stub",
-    "condition": "-",
-    "created_at": "2026-11-21T03:11:27.760837+00:00",
-    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
-    "failureCount": 0,
-    "financialInvariantsFailed": []
-  },
-  {
-    "id": "run_handler_ref_1795230836",
-    "file": "runs/run_handler_ref_1795230836.json",
-    "candidateId": "handler_ref",
-    "source": "stub",
-    "model": "stub",
-    "condition": "-",
-    "created_at": "2026-11-21T03:13:56.528191+00:00",
     "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
     "failureCount": 0,
     "financialInvariantsFailed": []
@@ -1038,18 +966,6 @@
     "financialInvariantsFailed": []
   },
   {
-    "id": "run_handler_ref_1795230907",
-    "file": "runs/run_handler_ref_1795230907.json",
-    "candidateId": "handler_ref",
-    "source": "stub",
-    "model": "stub",
-    "condition": "-",
-    "created_at": "2026-11-21T03:15:07.711365+00:00",
-    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
-    "failureCount": 0,
-    "financialInvariantsFailed": []
-  },
-  {
     "id": "run_handler_ref_1795230912",
     "file": "runs/run_handler_ref_1795230912.json",
     "candidateId": "handler_ref",
@@ -1057,18 +973,6 @@
     "model": "reference",
     "condition": "-",
     "created_at": "2026-11-21T03:15:12.228069+00:00",
-    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
-    "failureCount": 0,
-    "financialInvariantsFailed": []
-  },
-  {
-    "id": "run_handler_ref_1795231104",
-    "file": "runs/run_handler_ref_1795231104.json",
-    "candidateId": "handler_ref",
-    "source": "stub",
-    "model": "stub",
-    "condition": "-",
-    "created_at": "2026-11-21T03:18:24.630726+00:00",
     "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
     "failureCount": 0,
     "financialInvariantsFailed": []
@@ -2227,18 +2131,6 @@
     "financialInvariantsFailed": [
       "I2_idempotency"
     ]
-  },
-  {
-    "id": "run_repair_m1_no_dedupe_1795218914",
-    "file": "runs/run_repair_m1_no_dedupe_1795218914.json",
-    "candidateId": "handler_ref",
-    "source": "stub",
-    "model": "stub",
-    "condition": "-",
-    "created_at": "2026-11-20T23:55:41.264359+00:00",
-    "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
-    "failureCount": 0,
-    "financialInvariantsFailed": []
   },
   {
     "id": "run_x1_bool_amount_1795208773",

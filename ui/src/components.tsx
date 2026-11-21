@@ -483,7 +483,11 @@ export function EvidencePanel({
           {item.human_reviewed ? "human-reviewed" : "LLM-judged, unreviewed"}
         </span>
       </div>
-      <p className="evidence-wording">supporting sources, retrieved {date}.</p>
+      <p className="evidence-wording">
+        {item.label === "NOT_FOUND"
+          ? `sources retrieved, none support this rule (retrieved ${date})`
+          : `supporting sources, retrieved ${date}.`}
+      </p>
       {item.quote && (
         <blockquote className="evidence-quote">“{item.quote}”</blockquote>
       )}
@@ -507,7 +511,7 @@ export function EvidencePanel({
 
 export function EvidenceLanding({
   data,
-  featuredRule,
+  featuredRule = "R8",
 }: {
   data: GroundingData | null;
   featuredRule?: string;
@@ -518,18 +522,21 @@ export function EvidenceLanding({
         <div className="evidence-empty">Evidence not retrieved yet</div>
       </div>
     );
-  const count = citedRuleCount(data);
-  const total = Object.keys(data.rules || {}).length || 11;
   const targetRule =
     featuredRule ||
     Object.keys(data.rules).find((r) => data.rules[r].sources.length > 0) ||
-    "R1";
+    "R8";
+
+  const labels = Object.values(data.rules || {}).map((r) => r.label);
+  const supported = labels.filter((l) => l === "SUPPORTED").length;
+  const partial = labels.filter((l) => l === "PARTIAL").length;
+  const notFound = labels.filter((l) => l === "NOT_FOUND").length;
 
   return (
     <section className="evidence-landing-section">
       <div className="section-head">
         <div>
-          <div className="eyebrow">Official documentation grounding</div>
+          <div className="eyebrow">Documentation grounding</div>
           <h2>Live, cited evidence</h2>
         </div>
         <Link className="text-link" to="/gaps">
@@ -539,10 +546,10 @@ export function EvidenceLanding({
       <div className="evidence-landing card">
         <div className="evidence-landing-stat">
           <strong>
-            {count} of {total} rules backed by cited sources
+            {supported} supported, {partial} partial, {notFound} not found
           </strong>
           <p className="lead">
-            Every quote is verified as a verbatim substring from provider documentation or SQLite core guarantees.
+            Empirical documentation retrieved via search and evaluated against formal contract rules.
           </p>
         </div>
         <div className="evidence-landing-preview">

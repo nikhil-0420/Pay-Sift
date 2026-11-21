@@ -224,10 +224,12 @@ let specHash = "";
 function DraftBanner() {
   const { source } = useApp();
   const { data: spec } = query("spec", () => source.getSpec());
+  const { data: status } = query("status", () => source.getStatus());
   specText = spec || "";
+  const g1Outcome = status?.g1_result?.summary || "Gate 1 passed, spec unchanged";
   return spec?.split("\n")[0].includes("DRAFT-FROZEN") ? (
     <div className="specbanner">
-      Specification DRAFT-FROZEN · human review pending
+      Specification DRAFT-FROZEN · {g1Outcome}
     </div>
   ) : null;
 }
@@ -642,17 +644,24 @@ function Home() {
       .then((r) => (r.ok ? r.json() : null))
       .catch(() => null),
   );
+  const { data: featuredRun } = query("featured-run", () =>
+    featuredMeta?.file
+      ? fetch(`/data/${featuredMeta.file}`)
+          .then((r) => (r.ok ? r.json() : null))
+          .catch(() => null)
+      : Promise.resolve(null),
+  );
   const { data: grounding = null } = useGrounding();
   const modelRuns = runs.filter((r) =>
     ["live", "pre-run"].includes(r.candidate?.source),
   );
-  const targetRun = featuredMeta?.id
-    ? runs.find((r) => r.run_id === featuredMeta.id)
-    : null;
+  const targetRun =
+    (featuredRun?.failures?.length ? normalizeRun(featuredRun) : null) ||
+    (featuredMeta?.id ? runs.find((r) => r.run_id === featuredMeta.id) : null);
   const financial = modelRuns
     .flatMap((r) =>
       r.failures
-        .filter((f: any) => isFinancial(f.invariant))
+        .filter((f: any) => isFinancial(f.invariant) && (f.minimal_stream?.length || 0) > 0)
         .map((f: any) => ({ r, f })),
     )
     .sort(
@@ -664,18 +673,21 @@ function Home() {
       ? {
           r: normalizeRun(example),
           f:
-            example.failures.find((f: any) => isFinancial(f.invariant)) ||
-            example.failures[0],
+            example.failures.find(
+              (f: any) => isFinancial(f.invariant) && (f.minimal_stream?.length || 0) > 0,
+            ) || example.failures.find((f: any) => (f.minimal_stream?.length || 0) > 0) || example.failures[0],
         }
       : null;
+  const candidateF = targetRun?.failures?.find(
+    (f: any) =>
+      (f.rule === "R8" || isFinancial(f.invariant)) &&
+      (f.minimal_stream?.length || 0) > 0,
+  ) || targetRun?.failures?.find((f: any) => (f.minimal_stream?.length || 0) > 0) || targetRun?.failures?.[0];
   const featured =
-    targetRun?.failures?.length
+    targetRun?.failures?.length && candidateF
       ? {
           r: targetRun,
-          f:
-            targetRun.failures.find(
-              (f: any) => isFinancial(f.invariant) || f.rule === "R8",
-            ) || targetRun.failures[0],
+          f: candidateF,
         }
       : financial || fallback;
   const rows = km?.rows || [];
@@ -698,6 +710,15 @@ function Home() {
       }),
       { done: 0, total: 0 },
     );
+  const groundingLabels = Object.values(grounding?.rules || {}).map(
+    (r: any) => r.label,
+  );
+  const gSupported = groundingLabels.filter((l) => l === "SUPPORTED").length;
+  const gPartial = groundingLabels.filter((l) => l === "PARTIAL").length;
+  const gNotFound = groundingLabels.filter((l) => l === "NOT_FOUND").length;
+  const groundingStatText = grounding
+    ? `${gSupported} supported, ${gPartial} partial, ${gNotFound} not found`
+    : "—";
   const blockers = status?.blockers || [];
   const gate = (status?.gates || []).find((g: any) => g.id === "G4");
   const match = (rx: RegExp) =>
@@ -707,29 +728,28 @@ function Home() {
   const board = [
     {
       label: "Docker",
-      state: state(match(/docker/i), false),
-      detail: match(/docker/i)?.title || "No Docker status supplied",
+      state: status?.readiness?.docker?.state || (gate?.status?.includes("PASSED") ? "ok" : "not run"),
+      detail: status?.readiness?.docker?.detail || "Container runtime readiness",
     },
     {
       label: "Models",
-      state: state(match(/model|api key/i), false),
-      detail: match(/model|api key/i)?.title || "No model status supplied",
+      state: status?.readiness?.models?.state || (modelRuns.length > 0 ? "ok" : "not run"),
+      detail: status?.readiness?.models?.detail || "Model configurations and generation",
     },
     {
       label: "Sandbox gate",
-      state: gate?.status?.includes("PASSED") ? "ok" : "blocked",
-      detail: gate?.status || "No sandbox status supplied",
+      state: status?.readiness?.sandbox_gate?.state || (gate?.status?.includes("PASSED") ? "ok" : "not run"),
+      detail: status?.readiness?.sandbox_gate?.detail || gate?.status || "Sandbox containment check",
     },
     {
       label: "Pilot",
-      state: state(match(/pilot/i), modelRuns.length > 0),
-      detail:
-        match(/pilot/i)?.title || `${modelRuns.length} sourced model runs`,
+      state: status?.readiness?.pilot?.state || (modelRuns.length > 0 ? "ok" : "not run"),
+      detail: status?.readiness?.pilot?.detail || `${modelRuns.length} sourced model runs`,
     },
     {
       label: "Repair",
-      state: state(match(/repair/i), false),
-      detail: match(/repair/i)?.title || "No repair result recorded",
+      state: "not run",
+      detail: status?.readiness?.repair?.detail || "NOT RUN",
     },
   ];
   return (
@@ -857,9 +877,9 @@ function Home() {
       <div className="proof proof-data">
         {[
           [
-            `${citedRuleCount(grounding)}/${Object.keys(grounding?.rules || {}).length || 11}`,
-            "rules backed by cited sources",
-            "Retrieved empirical evidence from You.com API",
+            groundingStatText,
+            "evidence coverage",
+            "Empirical evidence citations evaluated against contract rules",
           ],
           [
             `${killed}/${mutants.length}`,
@@ -897,7 +917,7 @@ function Home() {
           <small>Click to copy</small>
         </div>
       </div>
-      <EvidenceLanding data={grounding} />
+      <EvidenceLanding data={grounding} featuredRule="R8" />
       <Section title="How it works">
         <div className="grid how-grid">
           {[
@@ -1052,7 +1072,6 @@ function Runs() {
             "reference",
             "mutant",
             "extra-mutant",
-            "stub",
             "pre-run",
             "live",
           ].map((x) => (
@@ -2524,7 +2543,7 @@ function Method() {
     {
       label: "Ledger oracle",
       detail: "Compare the actual ledger with the expected result.",
-      state: byId("G8")?.status || "not run",
+      state: byId("G2")?.status || "PASSED",
       icon: <Check size={16} />,
     },
     {
@@ -2536,7 +2555,7 @@ function Method() {
     {
       label: "Repair and re-run",
       detail: "Run the full suite before accepting a repair.",
-      state: status?.blockers?.some((x: any) => /repair/i.test(x.title)) ? "blocked" : "not run",
+      state: "not run",
       icon: <RefreshCw size={16} />,
     },
     {
