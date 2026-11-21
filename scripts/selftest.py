@@ -223,6 +223,22 @@ def run_selftest(full: bool = False) -> int:
     except Exception as exc:
         results.append(CheckResult("10. Git Baseline Integrity (check-git)", False, False, str(exc), time.monotonic() - t0))
 
+    # 11. You.com Grounding Artifact (runs/grounding.json)
+    t0 = time.monotonic()
+    try:
+        grounding_path = repo_root / "runs" / "grounding.json"
+        if not grounding_path.is_file():
+            results.append(CheckResult("11. You.com Grounding Schema", True, True, "SKIP (runs/grounding.json absent)", time.monotonic() - t0))
+        else:
+            from grounding.validator import validate_grounding
+            g_data = json.loads(grounding_path.read_text(encoding="utf-8"))
+            g_errs = validate_grounding(g_data)
+            passed = len(g_errs) == 0
+            msg = f"Validated {len(g_data.get('rules', {}))} rules with 0 errors" if passed else f"Validation errors: {g_errs[:2]}"
+            results.append(CheckResult("11. You.com Grounding Schema", passed, False, msg, time.monotonic() - t0))
+    except Exception as exc:
+        results.append(CheckResult("11. You.com Grounding Schema", False, False, str(exc), time.monotonic() - t0))
+
     # Print summary table
     print("-----------------------------------------------------------------")
     print(f" {'Check':<42} | {'Result':<6} | {'Time':<6} | Details")
