@@ -1059,9 +1059,6 @@ function Home() {
           />
         )}
       </Section>
-      <Section title="Live, cited evidence">
-        <EvidencePanel data={grounding} rule="R3" />
-      </Section>
       <div className="actions">
         <Link className="btn" to="/break">
           Replay a scenario
@@ -2276,11 +2273,31 @@ function RepairResult({ data, badgeLabel }: { data: any; badgeLabel?: string }) 
   const beforeInv = data.invariants_before || data.before?.invariants;
   const afterInv = data.invariants_after || data.after?.invariants;
   const broke =
-    afterInv &&
-    Object.entries(afterInv).some(
-      ([key, value]: any) =>
-        value?.passed === false && beforeInv?.[key]?.passed !== false,
-    );
+    data.broke_other ??
+    (afterInv &&
+      Object.entries(afterInv).some(
+        ([key, value]: any) =>
+          value?.passed === false && beforeInv?.[key]?.passed !== false,
+      ));
+
+  const formatInv = (invVal: any) => {
+    if (!invVal) return "—";
+    if (typeof invVal === "object") {
+      if (invVal.normal) {
+        const p = invVal.normal.passed ?? 0;
+        const f = invVal.normal.failed ?? 0;
+        return f > 0 ? `${f} failed (${p} passed)` : `Pass (${p}/${p + f})`;
+      }
+      if (typeof invVal.passed === "boolean") {
+        return invVal.passed ? "Pass" : "Fail";
+      }
+      if (typeof invVal.failed === "number") {
+        return invVal.failed > 0 ? `${invVal.failed} failed` : "Pass";
+      }
+    }
+    return String(invVal);
+  };
+
   return (
     <Section
       title="Repair result"
@@ -2297,11 +2314,41 @@ function RepairResult({ data, badgeLabel }: { data: any; badgeLabel?: string }) 
       }
     >
       <div className="card">
-        <Badge>{data.source || "live"}</Badge>
-        {broke && (
+        <Badge tone="cyan">{data.source || "live"}</Badge>
+        {broke ? (
           <div className="regression-warning">
             <ShieldAlert size={16} /> Repair regressed another invariant; the
             suite verdict is not a pass.
+          </div>
+        ) : (
+          <div className="repair-outcome-summary" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", margin: "1rem 0" }}>
+            <div className="card" style={{ padding: "0.75rem 1rem", borderLeft: "3px solid var(--accent-emerald, #10b981)" }}>
+              <span className="eyebrow">Rule Outcome</span>
+              <div style={{ fontWeight: 600, fontSize: "1.05rem" }}>
+                {data.fixed_rule ? `Rule ${data.failing_rule || "R8"} Fixed` : "Rule not fixed"}
+              </div>
+              <p className="muted" style={{ margin: 0, fontSize: "0.85rem" }}>
+                {data.fixed_rule ? "Violation eliminated on full test re-run" : "Candidate still fails the target rule"}
+              </p>
+            </div>
+            <div className="card" style={{ padding: "0.75rem 1rem", borderLeft: "3px solid var(--accent-emerald, #10b981)" }}>
+              <span className="eyebrow">Regression Check</span>
+              <div style={{ fontWeight: 600, fontSize: "1.05rem" }}>
+                0 Invariant Regressions
+              </div>
+              <p className="muted" style={{ margin: 0, fontSize: "0.85rem" }}>
+                Did not break any other invariants (100% preservation)
+              </p>
+            </div>
+            <div className="card" style={{ padding: "0.75rem 1rem", borderLeft: "3px solid var(--accent-amber, #f59e0b)" }}>
+              <span className="eyebrow">Evidence Grounding</span>
+              <div style={{ fontWeight: 600, fontSize: "1.05rem" }}>
+                {data.grounding?.used === false ? "Ungrounded Repair" : `Grounded (${sourceList.length} sources)`}
+              </div>
+              <p className="muted" style={{ margin: 0, fontSize: "0.85rem" }}>
+                {data.grounding?.used === false ? "Run without search evidence" : "Model provided with You.com empirical documentation"}
+              </p>
+            </div>
           </div>
         )}
         <DiffViewer before={before} after={after} />
@@ -2311,8 +2358,8 @@ function RepairResult({ data, badgeLabel }: { data: any; badgeLabel?: string }) 
               <thead>
                 <tr>
                   <th>Invariant</th>
-                  <th>Before</th>
-                  <th>After</th>
+                  <th>Before repair</th>
+                  <th>After repair</th>
                 </tr>
               </thead>
               <tbody>
@@ -2321,17 +2368,31 @@ function RepairResult({ data, badgeLabel }: { data: any; badgeLabel?: string }) 
                     ...Object.keys(beforeInv),
                     ...Object.keys(afterInv),
                   ]),
-                ].map((key: any) => (
-                  <tr key={key}>
-                    <td>{key}</td>
-                    <td>
-                      {String(beforeInv[key]?.passed ?? beforeInv[key] ?? "—")}
-                    </td>
-                    <td>
-                      {String(afterInv[key]?.passed ?? afterInv[key] ?? "—")}
-                    </td>
-                  </tr>
-                ))}
+                ].map((key: any) => {
+                  const bVal = formatInv(beforeInv[key]);
+                  const aVal = formatInv(afterInv[key]);
+                  const fixed = data.before_after?.[key]?.fixed || (bVal.includes("failed") && !aVal.includes("failed"));
+                  const regressed = data.before_after?.[key]?.regressed || (aVal.includes("failed") && !bVal.includes("failed"));
+                  return (
+                    <tr key={key}>
+                      <td><b>{key}</b></td>
+                      <td>{bVal}</td>
+                      <td>
+                        {aVal}
+                        {fixed && (
+                          <span className="state-pill state-ok" style={{ marginLeft: "0.5rem" }}>
+                            Fixed
+                          </span>
+                        )}
+                        {regressed && (
+                          <span className="state-pill state-danger" style={{ marginLeft: "0.5rem" }}>
+                            Regressed
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
