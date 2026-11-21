@@ -1,0 +1,10 @@
+stage: K6
+owner: nikhil
+status: DONE
+completed_at: 2026-11-21T10:55:00Z
+work_commit: 003ee89422159b36541436ef5041f4073f7f8643
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Evidence panels, spec gaps tab, 'Why is this a bug?' live search, landing proof stat, and UX polish verified
+verify: pass
+check_api: pass
+routes_added: /gaps
