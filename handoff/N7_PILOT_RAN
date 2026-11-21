@@ -1,0 +1,8 @@
+stage: N7
+owner: nehaa
+status: DONE
+completed_at: 2026-11-21T11:35:00Z
+work_commit: 3f330f018d066e86c37ed555a728aa946f8533ce
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Pilot ran across evaluated model candidates; failing candidates identified
+failing_candidates: strong_a/A/3

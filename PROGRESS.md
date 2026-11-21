@@ -589,3 +589,25 @@
   - `candidates/strong_b/A/1, 2, 4.py` (+ raw text and meta JSON)
   - `candidates/strong_b/B/2, 3.py` (+ raw text and meta JSON)
   - `candidates/GENERATION_SUMMARY.md`
+
+
+### Stage N7 Report (Pilot Evaluation & Human Classification)
+
+- **Timestamp:** 2026-11-21 17:11:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nehaa
+- **Execution Mode:** FINALIZE
+- **Decision:** `FINDING`
+- **Demo Candidate:** `strong_a/A/3` (Gemini 3.5 Flash Lite)
+- **Failing Rule:** `Rule R8: Rejection Non-Consumption` (Invariant `I2_idempotency`)
+- **Classification:** `(a)` - Rule violated as written (confirmed by Nikhil and Nehaa)
+- **Illustrative Only:** `false` (Condition A full contract prompt)
+- **Pitch Label:** `"real model finding"`
+- **Candidate Population:** 15 candidates evaluated in Docker sandbox across seeds 0–99 (Gemini 10, Groq 5, OpenRouter 0 rate-limited).
+- **Run Outputs:** `runs/run_3_1795260584.json` updated with human classification and validated against schema with 0 errors.
+- **Artifacts:**
+  - `pilot/REVIEW_SHEET.md`
+  - `pilot/DECISION.md`
+  - `pilot/packets/3__0.md` through `3__9.md`
+  - `handoff/N7_PILOT_RAN`
+  - `handoff/N7_PILOT_DONE`

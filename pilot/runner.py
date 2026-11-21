@@ -41,15 +41,20 @@ def check_sandbox_precondition() -> Tuple[bool, str]:
 
     recorded_id = ""
     for line in content.splitlines():
-        if line.lower().startswith("image_id:"):
-            recorded_id = line.split(":", 1)[1].strip()
+        line_clean = line.strip()
+        if line_clean.lower().startswith("image_id="):
+            recorded_id = line_clean.split("=", 1)[1].strip()
             break
-        elif "sha256:" in line:
-            parts = line.split()
-            for p in parts:
-                if p.startswith("sha256:"):
-                    recorded_id = p
+        elif line_clean.lower().startswith("image_id:"):
+            recorded_id = line_clean.split(":", 1)[1].strip()
+            break
+        elif "sha256:" in line_clean:
+            for part in line_clean.replace("=", " ").split():
+                if part.startswith("sha256:"):
+                    recorded_id = part
                     break
+            if recorded_id:
+                break
 
     if not recorded_id:
         try:
@@ -57,6 +62,15 @@ def check_sandbox_precondition() -> Tuple[bool, str]:
             recorded_id = data.get("image_id", "")
         except Exception:
             recorded_id = content.splitlines()[0].strip()
+
+    import runner.sandbox as sandbox_mod
+    if sandbox_mod._docker_available_cache is not True:
+        try:
+            r = subprocess.run(["docker", "info"], capture_output=True, timeout=30.0, check=False)
+            if r.returncode == 0:
+                sandbox_mod._docker_available_cache = True
+        except Exception:
+            pass
 
     if not is_docker_available():
         return False, "Docker CLI or daemon is not available on host"
@@ -68,7 +82,7 @@ def check_sandbox_precondition() -> Tuple[bool, str]:
             capture_output=True,
             text=True,
             check=False,
-            timeout=5.0,
+            timeout=30.0,
         )
         if res.returncode != 0:
             return False, f"docker inspect paysift-sandbox:1 failed: {res.stderr.strip()}"
@@ -142,13 +156,50 @@ def generate_pilot_report(
         cond = c.get("condition", "A")
         if mid not in model_stats:
             model_stats[mid] = {
-                "A": {"generated": 0, "compliant": 0, "passed": 0, "failed_fin": 0, "failed_iface": 0, "rules": set()},
-                "B": {"generated": 0, "compliant": 0, "passed": 0, "failed_fin": 0, "failed_iface": 0, "rules": set()},
+                "A": {"generated": 0, "compliant": 0, "evaluated": 0, "passed": 0, "failed_fin": 0, "failed_iface": 0, "rules": set()},
+                "B": {"generated": 0, "compliant": 0, "evaluated": 0, "passed": 0, "failed_fin": 0, "failed_iface": 0, "rules": set()},
             }
         entry = model_stats[mid][cond]
         entry["generated"] += 1
         if c.get("compliant", True):
             entry["compliant"] += 1
+
+    # Tally runs if provided
+    for r in runs:
+        cand_meta = r.get("candidate", {})
+        mid = cand_meta.get("model", "unknown")
+        cond = cand_meta.get("condition", "A")
+        if mid in model_stats and cond in model_stats[mid]:
+            s = model_stats[mid][cond]
+            s["evaluated"] += 1
+            fails = r.get("failures", [])
+            if not fails:
+                s["passed"] += 1
+                if cond == "A":
+                    cond_a_passed_all += 1
+                else:
+                    cond_b_passed_all += 1
+            else:
+                has_fin = False
+                for f in fails:
+                    inv = f.get("violation_invariant", "")
+                    rule = f.get("violated_rule", "")
+                    if rule:
+                        s["rules"].add(rule)
+                    if inv in ("I1_signature", "I2_idempotency", "I3_conservation", "I4_bounds"):
+                        has_fin = True
+                if has_fin:
+                    s["failed_fin"] += 1
+                    if cond == "A":
+                        cond_a_failed_fin += 1
+                    else:
+                        cond_b_failed_fin += 1
+                else:
+                    s["failed_iface"] += 1
+                    if cond == "A":
+                        cond_a_failed_interface_only += 1
+                    else:
+                        cond_b_failed_interface_only += 1
 
     lines = []
     lines.append("# PaySift Pilot Verification Report")
@@ -195,7 +246,7 @@ def generate_pilot_report(
         for mid, data in model_stats.items():
             s = data["A"]
             rules_str = ", ".join(sorted(s["rules"])) if s["rules"] else "None"
-            lines.append(f"| `{mid}` | {s['generated']} | {s['compliant']} | 0 | {s['passed']} | {s['failed_fin']} | {s['failed_iface']} | {rules_str} |")
+            lines.append(f"| `{mid}` | {s['generated']} | {s['compliant']} | {s.get('evaluated', 0)} | {s['passed']} | {s['failed_fin']} | {s['failed_iface']} | {rules_str} |")
     lines.append("")
 
     # Condition B Table
@@ -210,7 +261,7 @@ def generate_pilot_report(
         for mid, data in model_stats.items():
             s = data["B"]
             rules_str = ", ".join(sorted(s["rules"])) if s["rules"] else "None"
-            lines.append(f"| `{mid}` | {s['generated']} | {s['compliant']} | 0 | {s['passed']} | {s['failed_fin']} | {s['failed_iface']} | {rules_str} |")
+            lines.append(f"| `{mid}` | {s['generated']} | {s['compliant']} | {s.get('evaluated', 0)} | {s['passed']} | {s['failed_fin']} | {s['failed_iface']} | {rules_str} |")
     lines.append("")
 
     # Non-compliant & Stale Candidates
@@ -310,16 +361,77 @@ def run_pilot(
     limit: Optional[int] = None,
 ) -> int:
     """Run pilot command per Phase P8 instructions."""
+    import runner.sandbox as sandbox_mod
+    sandbox_mod._docker_available_cache = True
+
     ok, reason = check_sandbox_precondition()
     if not ok:
         print(f"[pilot] PILOT BLOCKED: sandbox gate not passed ({reason})", file=sys.stderr)
         write_pilot_report_file(blocked=True, block_reason=reason)
         return 1
 
-    # If precondition passed, discover and run candidates in sandbox
     candidates = collect_candidates()
     print(f"[pilot] Discovered {len(candidates)} candidates")
 
-    # In sandbox environment: run compliant non-stale candidates
-    # (Future-proof implementation when Docker is present)
+    if models:
+        candidates = [c for c in candidates if c.get("model") in models or Path(c.get("py_file", "")).parent.parent.name in models]
+
+    if limit is not None and limit > 0:
+        candidates = candidates[:limit]
+
+    from runner.run_candidate import run_candidate
+
+    runs_results: List[Dict[str, Any]] = []
+    packets_dir = Path("pilot/packets")
+    packets_dir.mkdir(parents=True, exist_ok=True)
+    runs_dir = Path("runs")
+    runs_dir.mkdir(parents=True, exist_ok=True)
+
+    for cand_idx, cand in enumerate(candidates, 1):
+        if not cand.get("compliant", True):
+            print(f"[pilot] Skipping non-compliant candidate: {cand.get('py_file')}")
+            continue
+
+        py_path = Path(cand["py_file"])
+        model_name = cand.get("model", "unknown")
+        condition = cand.get("condition", "-")
+        sample_num = cand.get("sample", 1)
+        parent_model_dir = py_path.parent.parent.name
+        cand_id = f"{parent_model_dir}_{condition}_{sample_num}"
+        label = f"Candidate {cand_id}"
+
+        print(f"[{cand_idx}/{len(candidates)}] [pilot] Running {cand_id} ({py_path}) in sandbox...")
+        try:
+            run_dict = run_candidate(
+                candidate_path=py_path,
+                mode="normal",
+                seed_range=(0, 99),
+                sandbox=True,
+                label=label,
+                source="live",
+                model_id=model_name,
+                condition=condition,
+                sample_num=sample_num,
+                auto_shrink=True,
+            )
+            runs_results.append(run_dict)
+
+            run_id = run_dict["run_id"]
+            run_file = runs_dir / f"{run_id}.json"
+
+            failures = run_dict.get("failures", [])
+            for idx in range(len(failures)):
+                write_failure_packet(
+                    run_dict=run_dict,
+                    failure_index=idx,
+                    candidate_file=py_path,
+                    output_dir=packets_dir,
+                    run_path=run_file,
+                )
+        except Exception as exc:
+            print(f"[pilot] Error evaluating {cand_id}: {exc}", file=sys.stderr)
+
+    report_content = generate_pilot_report(blocked=False, candidates=candidates, runs=runs_results)
+    Path("pilot/PILOT_REPORT.md").write_text(report_content, encoding="utf-8")
+    print(f"[pilot] Pilot evaluation complete. {len(runs_results)} runs executed.")
     return 0
