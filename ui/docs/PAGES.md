@@ -10,7 +10,8 @@
 | `/break` | static `scenario_verdicts.json`; live POST `/break` |
 | `/repair` | cached snapshot only if supplied; live POST `/repair` |
 | `/pilot` | static runs, status, `PILOT_REPORT.md` |
-| `/spec` | static `SPEC.md`, `SPEC_HASH`, run failure references |
+| `/spec` | static `SPEC.md`, `SPEC_HASH`, run failure references, and EvidencePanels (Contract Rules & Spec Gaps tabs) |
+| `/gaps` | static or live `grounding.json` with spec gaps and review questions |
 | `/method` | static contract explanation and supplied status caveats |
 | `/demo` | derives guided beats from matrix, runs, scenarios, status |
 | `/status` | GET `/health` in live mode; static parsed status and blocker notes |
