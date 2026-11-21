@@ -413,3 +413,33 @@
 
 
 
+
+### Stage K3 Report (You.com Grounding Layer)
+
+- **Timestamp:** 2026-11-21 13:15:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nikhil
+- **Commands Added:**
+  - `python cli.py ground --fetch [--rules R1,R3] [--refresh] [--call-cap 60]`
+  - `python cli.py ground --judge [--rules ...]`
+  - `python cli.py ground --rebuild`
+- **Files Created / Updated:**
+  - `grounding/youcom.py`: Client for You.com search API (`https://ydc-index.io/v1/search`) with 10s timeout, exponential backoff retries on 429/5xx, global call cap (default 60), keyless fallback opt-in, and secret scrubbing.
+  - `grounding/queries.yaml`: Deterministic search queries for rules R0-R10 with text hashes for change detection.
+  - `grounding/fetch.py`: Fetch engine with cache under `grounding/cache/<rule>.json` storing raw responses and parsed sources.
+  - `grounding/judge.py`: Code-level judge validator (verbatim substring checks, 25-word cap, source ID existence, convention flags), human override support, and offline rebuild.
+  - `grounding/validator.py`: Pure-Python schema validator for `runs/grounding.json`.
+  - `contract/grounding_schema.json`: JSON schema defining structure of `runs/grounding.json`.
+  - `contract/run_schema.json`: Additive optional `failures[].evidence_refs` field; all 190 runs validate with 0 errors.
+  - `api/evidence.py`: APIRouter with `GET /evidence`, `GET /evidence/{rule_id}`, and rate-limited `POST /evidence/search`.
+  - `repair/prompt.py` & `repair/repair.py`: Additive "Sources" section and grounding metadata in repair artifacts.
+  - `generate/providers.py`: Scrubber extended to protect `YDC_API_KEY`.
+  - `scripts/selftest.py`: Added Check 11 for `runs/grounding.json` validation.
+  - `tests/test_grounding.py`: Unit and integration test suite covering query building, caching, call caps, scrubbing, retries, judge validation, API routes, and grounded repair prompts.
+- **You.com Calls Used:**
+  - 30 / 60 calls used across all 11 specification rules (R0–R10).
+  - All 11 rules populated with verified sources in `runs/grounding.json`.
+- **Honesty & Integrity:**
+  - In Stage K3, judge labels remain honestly marked `NOT_JUDGED` pending model evaluation in K3B.
+  - No model-generated code was executed natively.
+  - Every displayed source URL traces directly to raw responses stored in `grounding/cache/`.
