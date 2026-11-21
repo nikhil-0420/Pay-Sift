@@ -1,0 +1,10 @@
+stage: N6
+owner: nehaa
+status: DONE
+completed_at: 2026-11-21T11:08:00Z
+work_commit: 3f330f018d066e86c37ed555a728aa946f8533ce
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: 15 candidates generated across Gemini and Groq; all 15 compliant
+candidates_total: 15
+compliant_total: 15
+api_calls_used: 48
