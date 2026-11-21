@@ -3,25 +3,22 @@ repair_reserved_calls: 10
 samples_per_model_per_condition: 5
 temperature: null            # null = provider default (recorded either way)
 max_output_tokens: 4000
+judge_model_id: "gemini-3.5-flash-lite"
 models:
   - name: strong_a
-    provider: anthropic      # anthropic | openai | google | openai_compatible
-    model_id: "FILL_ME"
-    api_key_env: ANTHROPIC_API_KEY
-    tier: strong
-  - name: strong_b
-    provider: openai
-    model_id: "FILL_ME"
-    api_key_env: OPENAI_API_KEY
-    tier: strong
-  - name: strong_c
     provider: google
-    model_id: "FILL_ME"
+    model_id: "gemini-3.5-flash-lite"
     api_key_env: GEMINI_API_KEY
     tier: strong
-  - name: small_a
+  - name: strong_b
     provider: openai_compatible
-    model_id: "FILL_ME"
-    api_key_env: SMALL_MODEL_API_KEY
-    base_url: ""             # only for openai_compatible
-    tier: small
+    model_id: "qwen/qwen3.8-27b"
+    api_key_env: GROQ_API_KEY
+    base_url: "https://api.groq.com/openai/v1"
+    tier: strong
+  - name: strong_c
+    provider: openai_compatible
+    model_id: "inclusionai/ling-3.2-flash:free"
+    api_key_env: OPENROUTER_API_KEY
+    base_url: "https://openrouter.ai/api/v1"
+    tier: strong
