@@ -710,5 +710,32 @@
   - `ui/tests/phase2_truth_hosted.test.ts`: Vitest test suite for Phase 2 data and wiring.
   - `handoff/C2_UI_CLEAN`: Completed marker.
 
+---
+
+### Phase C3 Report - Deploy Backend to Render and Frontend to Vercel
+
+- **Timestamp:** 2026-11-22 00:05:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nikhil
+- **Deployed Endpoints:**
+  - **Frontend (Vercel):** `https://pay-sift.vercel.app`
+  - **Backend (Render):** `https://paysift-api.onrender.com`
+- **Render Backend Verification:**
+  - `GET /health`: 200 OK (`{"status":"ok", "hosted_mode": true, "sandbox": false}`)
+  - `GET /runs`: 200 OK (all runs served)
+  - `GET /kill-matrix`: 200 OK (full kill matrix with M8/M9 concurrency trials served)
+  - `POST /break`: 403 Forbidden (`{"error":"disabled_in_hosted_mode","message":"Needs Docker and your own model key. Clone the repo and run it locally."}`)
+  - `OPTIONS /health` CORS Preflight with Origin `https://pay-sift.vercel.app`: 200 OK with `access-control-allow-origin: https://pay-sift.vercel.app` and `access-control-allow-credentials: true`
+- **Vercel Frontend Verification:**
+  - SPA Routing: Direct navigation to `/`, `/spec`, `/repair` returns 200 OK via `vercel.json` rewrites.
+  - Data Assets: `/data/grounding.json` served directly with valid contract structure.
+  - Live Bundle: Built with `VITE_API_BASE=https://paysift-api.onrender.com` cleanly embedded; zero ngrok references across repository.
+  - Fallback Checked: Verified fallback behavior (`probeHealth` fallback to static snapshot with truth banner `"Backend waking or unavailable, showing static snapshot"`).
+  - Local Connect: Docker not available on host environment (`not-tested`).
+- **Cold-Start Note:**
+  - Render free tier spins down on idle; first request after idle takes ~45–55 seconds. Frontend includes health probe with 6s timeout falling back to static snapshot until awakened.
+- **Marker:** `handoff/C3_DEPLOYED`
+
+
 
 

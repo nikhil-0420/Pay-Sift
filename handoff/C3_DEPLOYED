@@ -1,0 +1,9 @@
+stage: C3
+owner: nikhil
+status: DONE
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+frontend_url: https://pay-sift.vercel.app
+backend_url: https://paysift-api.onrender.com
+hosted_checks: pass
+fallback_checked: true
+local_connect_checked: not-tested

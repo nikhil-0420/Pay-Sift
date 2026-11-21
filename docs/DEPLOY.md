@@ -6,11 +6,22 @@ PaySift supports two operational modes:
 
 ---
 
+## Live Deployments
+
+- **Production Frontend (Vercel):** [https://pay-sift.vercel.app](https://pay-sift.vercel.app)
+- **Production Backend (Render):** [https://paysift-api.onrender.com](https://paysift-api.onrender.com)
+  - Health check: `https://paysift-api.onrender.com/health`
+  - Runs endpoint: `https://paysift-api.onrender.com/runs`
+  - Kill matrix: `https://paysift-api.onrender.com/kill-matrix`
+- **Render Cold Starts Note:** Free-tier Render instances spin down after 15 minutes of inactivity. The initial wake request may take 45–55 seconds. The frontend automatically probes health and displays `"Backend waking or unavailable, showing static snapshot"` until the service is active, maintaining full read-only snapshot accessibility.
+
+---
+
 ## Architecture Overview
 
 ```
                       +-----------------------------------+
-                      |   Hosted Frontend (e.g. Vercel)   |
+                      |   Hosted Frontend (Vercel)        |
                       |    https://pay-sift.vercel.app    |
                       +-----------------+-----------------+
                                         |
@@ -19,7 +30,7 @@ PaySift supports two operational modes:
                  v                                             v
 +-----------------------------------+        +-----------------------------------+
 |      Hosted Backend (Render)      |        |        Local Backend Daemon       |
-|    https://paysift.onrender.com   |        |       http://localhost:8000       |
+|  https://paysift-api.onrender.com |        |       http://localhost:8000       |
 +-----------------------------------+        +-----------------------------------+
 | - Read-only benchmarks & runs     |        | - Full interactive repair loop    |
 | - Pre-computed repairs            |        | - Live candidate break execution  |
