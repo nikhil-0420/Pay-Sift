@@ -8,5 +8,6 @@ summary: Gate G1 recorded as PASSED; spec unchanged; SQ-001 confirmed
 outcome: PASSED
 spec_changed: false
 regen_required: false
-partner: Nikhil
+partner: Koushik and Rithvik
+correction: partner names corrected on 2026-11-21; outcome unchanged
 sq001: CONFIRMED

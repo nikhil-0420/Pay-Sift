@@ -52,3 +52,19 @@ Note: on 2026-11-21 the human authorized a one-time publish (git add/commit/push
 ## Git permissions and stop protocol
 
 Stages run from `PROMPTS_NEHAA.md` and `PROMPTS_NIKHIL.md` may commit and push under the PROTOCOL section P5 and must stop under P3; the old "no git writes" rule is superseded for those stages only; all other rules remain unchanged.
+
+
+## COMPLETION RULES
+
+Rules for every later phase:
+1. Every number comes from data; no test may hardcode run counts, derive them from the data.
+2. Mutants are always labeled "HAND-WRITTEN MUTANT".
+3. Never rank models.
+4. The real finding is exactly what `pilot/DECISION.md` says (`strong_a/A/3`, `R8`, `I2_idempotency`, class `a`, Condition `A`, 15 candidates across 2 usable models) and is never generalized.
+5. "Supported by sources" never means "spec verified"; R8 to R10 are PARTIAL by human override.
+6. No repair result is claimed unless `handoff/N8_REPAIR_DONE` says `fixed_rule: true`.
+7. Never print or commit secret values; read keys only from `.env` or the host environment.
+8. The hosted instance never executes candidate code, never calls the sandbox and never calls a model; live runs and repair work only on a user's own machine with their own Docker and keys.
+9. No ngrok URLs anywhere.
+10. One agent at a time per machine; the `RUNNING.lock` protocol stays.
+11. Both people push to `main`, so always `git pull --rebase` before pushing and keep both sides when `PROGRESS.md` conflicts.

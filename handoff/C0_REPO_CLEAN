@@ -1,0 +1,9 @@
+stage: C0
+owner: nikhil
+status: DONE
+completed_at: 2026-11-21T17:05:00Z
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Repo audit and honesty fixes completed; completion rules appended to AGENT_RULES.md; G1 predictor names corrected; honest status aligned across PROGRESS.md and status.json; K8 evidence marker ready
+g1_names_fixed: true
+k8_ready: true
+tests: pass

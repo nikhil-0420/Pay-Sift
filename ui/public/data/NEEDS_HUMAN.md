@@ -34,7 +34,7 @@ ID | Phase | Severity (BLOCKER | IMPORTANT | FYI) | What is needed | What was do
 - **Question:** Plan section 7 lists rule R10 under `I4_bounds`, but Scenario A tests concurrent delivery of the identical capture event (an idempotency/R3 property), while Scenario B tests concurrent refund events competing against a balance (a bounds/R6 property).
 - **Adopted Resolution:** In `SPEC.md` and the oracle, Scenario A failures cite R10 under `I2_idempotency`, and Scenario B failures cite R10 under `I4_bounds`. Both count toward the financial headline.
 - **Action for Gate 1 Reviewers:** Confirm during Gate 1 review whether this attribution aligns with team expectations.
-- **Gate 1 Resolution:** CONFIRMED by Nikhil on 2026-11-21. Scenario A attribute under I2_idempotency and Scenario B under I4_bounds adopted as final.
+- **Gate 1 Resolution:** CONFIRMED by Koushik and Rithvik on 2026-11-21. Scenario A attribute under I2_idempotency and Scenario B under I4_bounds adopted as final.
 
 ### BH-001: Docker Unavailable on Host (Gate 4 Hard Blocker)
 - **Logged:** 2026-11-20T21:52:33.947575+00:00

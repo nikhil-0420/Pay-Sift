@@ -12,3 +12,4 @@ candidates/_stale/
 node_modules/
 *.log
 *.judge_raw.txt
+MORNING_HANDOFF.md

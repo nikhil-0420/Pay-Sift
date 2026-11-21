@@ -1,0 +1,10 @@
+stage: K8
+owner: nikhil
+status: DONE
+completed_at: 2026-11-21T16:55:00Z
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Evidence for failing rule R8 verified and ready for repair prompt
+failing_rule: R8
+label: PARTIAL
+sources_count: 9
+convention: false

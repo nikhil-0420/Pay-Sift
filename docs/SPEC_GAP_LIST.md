@@ -13,7 +13,7 @@ This document lists rules where public provider documentation is silent, partial
 | Rule | Title | Post-Review Label | Type / Classification | Question for Review |
 |---|---|---|---|---|
 | **R0** | Totality & Interface | `NOT_FOUND` | PaySift convention | Is the exact return dictionary structure (`{"status": ..., "reason": ...}`) and 5.0 s execution timeout a PaySift convention that should be standardized, or can standard webhook response conventions be adopted? |
-| **R2** | Payload Validation | `NOT_FOUND` | PaySift convention | Are the strict integer amount bounds (1 to 10^12 paise inclusive) and field presence constraints PaySift conventions, or should gateway-specific schema validation limits be documented? |
+| **R2** | Payload Validation | `NOT_FOUND` | PaySift convention | Are the strict integer amount bounds (1 to 10^12 paise, i.e. up to Rs 10,000,000,000 inclusive) and field presence constraints PaySift conventions, or should gateway-specific schema validation limits be documented? |
 | **R3** | Event Idempotency | `PARTIAL` | Empirical / Partial | While duplicate event delivery is widely recognized across payment gateways, should the spec clarify whether duplicate events must return status `"duplicate"` or HTTP 200 without re-processing? |
 | **R4** | Payment Capture | `NOT_FOUND` | PaySift convention | Is the single-capture restriction per `payment_id` with rejection of subsequent captures a PaySift convention, or does it vary by gateway multi-capture policies? |
 | **R5** | Refund Target Existence | `NOT_FOUND` | PaySift convention | Is rejecting refunds when the original payment capture is absent a PaySift convention, or should out-of-order event delivery be buffered rather than rejected? |

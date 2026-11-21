@@ -11,17 +11,17 @@
 | P4 | Sandbox, AST gate, hostile tests, parity | DONE | 2026-11-21 03:13 | 2026-11-21 15:18 | Dockerfile, AST gate, sandbox harness, 7 hostile handlers contained, native vs sandbox parity verified. Gate 4 passed. |
 | P5 | Restart & concurrency, m7-m9 | DONE | 2026-11-21 03:30 | 2026-11-21 04:10 | Restart mode (R9), concurrency harness (R10), mutants m7-m9, Gate 5 and Gate 6 passed. |
 | P6 | Shrinker, explanations | DONE | 2026-11-21 04:15 | 2026-11-21 04:45 | ddmin delta debugging, predicate memoization, template explanations (R0-R10), cli shrink, Gate 7 passed. |
-| P7 | Model generation & intake | PARTIAL (no model keys) | 2026-11-21 04:50 | 2026-11-21 05:15 | Provider adapters, AST intake, spec binding, generation CLI, fake provider tests. BH-002 logged (missing API keys). |
-| P8 | Pilot runs, packets, report | PARTIAL (blocked: live model run) | 2026-11-21 05:00 | 2026-11-21 05:35 | Pilot runner, precondition check, failure packet generator, real_example.json, PILOT_REPORT.md. Live candidate execution blocked on model generation (BH-003). |
-| P9 | Repair loop, scenarios, API, static report | PARTIAL (blocked: live model run) | 2026-11-21 05:40 | 2026-11-21 06:15 | Repair loop, 6 fixed scenarios, FastAPI thin API, static HTML report, runs/README.md. Live repair calls blocked on model generation (BH-004). |
-| P10 | CLI pipeline, selftest, morning handoff | DONE | 2026-11-21 06:15 | 2026-11-21 06:45 | cli.py completed (0 stubs), demo offline script, selftest 10/10 checks passed (Gate G8), audit complete, README_DEMO.md, MORNING_HANDOFF.md. |
+| P7 | Model generation & intake | DONE | 2026-11-21 04:50 | 2026-11-21 16:38 | Provider adapters, intake, AST gate, 15 candidates generated across 2 models (100% compliant). Gate N6 passed. |
+| P8 | Pilot runs, packets, report | DONE | 2026-11-21 05:00 | 2026-11-21 17:11 | Pilot runner, sandbox evaluation, 15 candidates, real finding on strong_a/A/3 (R8, I2_idempotency). Gate N7 passed. |
+| P9 | Repair loop, scenarios, API, static report | NOT RUN | - | - | Scenarios, REST API, and static reports built; live model repair loop not run (standing by for N8). |
+| P10 | CLI pipeline, selftest, morning handoff | DONE | 2026-11-21 06:15 | 2026-11-21 06:45 | cli.py completed (0 stubs), demo offline script, selftest 10/10 checks passed (Gate G8), audit complete, README_DEMO.md. |
 
 
 ## Gates
 
 | Gate | Description | Status | Started | Finished | Notes |
 |---|---|---|---|---|---|
-| G1 | Independent spec prediction & freeze | PASSED | 2026-11-21 15:10 | 2026-11-21 15:15 | PASSED with partner Nikhil. Disagreements: NONE. Spec unchanged (hash 289fa48f). SQ-001 confirmed. |
+| G1 | Independent spec prediction & freeze | PASSED | 2026-11-21 15:10 | 2026-11-21 15:15 | PASSED with independent predictors Koushik and Rithvik (each filled the sheet independently). Disagreements: NONE. Spec unchanged (hash 289fa48f). SQ-001 confirmed. |
 | G2 | Reference handler passes 100/100 invariants | PASSED | 2026-11-21 01:50 | 2026-11-21 02:15 | Reference handler 100/100 pass across seeds 0-99; repeatable across runs; m1-m3 killed with intended rules. |
 | G3 | Reference clean; m1-m6 & x1-x4 fail intended rule | PASSED | 2026-11-21 02:40 | 2026-11-21 03:07 | Reference clean (0 failures across all invariants); all 10 mutants killed with intended rules; x4 sensitive only to family 8. |
 | G4 | Hostile tests contained; sandbox parity | PASSED | 2026-11-21 14:30 | 2026-11-21 15:18 | All 7 hostile handlers contained. Seeds 0-19 parity matched (11/11). Ref seeds 0-99 parity matched. runs/GATE4_PASSED generated. |
@@ -488,7 +488,7 @@
 - **Status:** COMPLETED
 - **Owner:** Nehaa (executed by Nikhil under project owner override)
 - **Gate G1 Outcome:** `PASSED`
-- **Partner:** Nikhil
+- **Partners:** Koushik and Rithvik (independent predictors)
 - **Disagreements Summary:** `NONE`
 - **SQ-001 Resolution:** `CONFIRMED` (Scenario A attributes to I2_idempotency, Scenario B attributes to I4_bounds)
 - **Specification Status:** Unchanged (`SPEC_HASH` is `289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a`)

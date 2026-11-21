@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T12:40:10.458Z",
+  "generated_at": "2026-11-21T17:02:45.564Z",
   "run_count": 183,
   "phases": [
     {
@@ -40,17 +40,17 @@
     {
       "id": "P7",
       "title": "Model generation & intake",
-      "status": "PARTIAL (no model keys)"
+      "status": "DONE"
     },
     {
       "id": "P8",
       "title": "Pilot runs, packets, report",
-      "status": "PARTIAL (blocked: live model run)"
+      "status": "DONE"
     },
     {
       "id": "P9",
       "title": "Repair loop, scenarios, API, static report",
-      "status": "PARTIAL (blocked: live model run)"
+      "status": "NOT RUN"
     },
     {
       "id": "P10",
