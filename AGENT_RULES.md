@@ -47,3 +47,8 @@
    presented as model output. Use the source labels from the run JSON schema.
 
 Note: on 2026-11-21 the human authorized a one-time publish (git add/commit/push). All other sessions still follow rule 2.
+
+
+## Git permissions and stop protocol
+
+Stages run from `PROMPTS_NEHAA.md` and `PROMPTS_NIKHIL.md` may commit and push under the PROTOCOL section P5 and must stop under P3; the old "no git writes" rule is superseded for those stages only; all other rules remain unchanged.
