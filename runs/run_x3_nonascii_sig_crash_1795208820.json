@@ -1,0 +1,360 @@
+{
+  "run_id": "run_x3_nonascii_sig_crash_1795208820",
+  "contract_version": "1.0",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "oracle_sha": "a2212b2b5ab0dbdde5ef9773ef6b17a9fab9bd46cb99fa2bbcbbb2a554e1f857",
+  "created_at": "2026-11-20T21:07:00.717060+00:00",
+  "candidate": {
+    "id": "x3_nonascii_sig_crash",
+    "model": "reference",
+    "condition": "-",
+    "sample": null,
+    "sha256": "5aaddfb63c65c679a74cfacc9485641cd8e0a2b8a06b812804a89dcf729d2958",
+    "source": "reference",
+    "label": "Candidate x3_nonascii_sig_crash"
+  },
+  "harness": {
+    "mode_set": [
+      "normal"
+    ],
+    "docker": false,
+    "cpus": 1
+  },
+  "seeds": [
+    0,
+    99
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 90,
+        "failed": 10
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [
+    {
+      "invariant": "I5_interface",
+      "severity": "interface",
+      "rule": "R0",
+      "mode": "normal",
+      "seed": 5,
+      "first_bad_step": 4,
+      "stream": [],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 4: uncaught exception in handler: Exception in handle_event: 'ascii' codec can't encode character '\\xf1' in position 0: ordinal not in range(128) (R0).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Interface violation at step 4"
+      }
+    },
+    {
+      "invariant": "I5_interface",
+      "severity": "interface",
+      "rule": "R0",
+      "mode": "normal",
+      "seed": 15,
+      "first_bad_step": 4,
+      "stream": [],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 4: uncaught exception in handler: Exception in handle_event: 'ascii' codec can't encode character '\\xf1' in position 0: ordinal not in range(128) (R0).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Interface violation at step 4"
+      }
+    },
+    {
+      "invariant": "I5_interface",
+      "severity": "interface",
+      "rule": "R0",
+      "mode": "normal",
+      "seed": 25,
+      "first_bad_step": 4,
+      "stream": [],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 4: uncaught exception in handler: Exception in handle_event: 'ascii' codec can't encode character '\\xf1' in position 0: ordinal not in range(128) (R0).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Interface violation at step 4"
+      }
+    },
+    {
+      "invariant": "I5_interface",
+      "severity": "interface",
+      "rule": "R0",
+      "mode": "normal",
+      "seed": 35,
+      "first_bad_step": 4,
+      "stream": [],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 4: uncaught exception in handler: Exception in handle_event: 'ascii' codec can't encode character '\\xf1' in position 0: ordinal not in range(128) (R0).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Interface violation at step 4"
+      }
+    },
+    {
+      "invariant": "I5_interface",
+      "severity": "interface",
+      "rule": "R0",
+      "mode": "normal",
+      "seed": 45,
+      "first_bad_step": 4,
+      "stream": [],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 4: uncaught exception in handler: Exception in handle_event: 'ascii' codec can't encode character '\\xf1' in position 0: ordinal not in range(128) (R0).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Interface violation at step 4"
+      }
+    },
+    {
+      "invariant": "I5_interface",
+      "severity": "interface",
+      "rule": "R0",
+      "mode": "normal",
+      "seed": 55,
+      "first_bad_step": 4,
+      "stream": [],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 4: uncaught exception in handler: Exception in handle_event: 'ascii' codec can't encode character '\\xf1' in position 0: ordinal not in range(128) (R0).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Interface violation at step 4"
+      }
+    },
+    {
+      "invariant": "I5_interface",
+      "severity": "interface",
+      "rule": "R0",
+      "mode": "normal",
+      "seed": 65,
+      "first_bad_step": 4,
+      "stream": [],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 4: uncaught exception in handler: Exception in handle_event: 'ascii' codec can't encode character '\\xf1' in position 0: ordinal not in range(128) (R0).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Interface violation at step 4"
+      }
+    },
+    {
+      "invariant": "I5_interface",
+      "severity": "interface",
+      "rule": "R0",
+      "mode": "normal",
+      "seed": 75,
+      "first_bad_step": 4,
+      "stream": [],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 4: uncaught exception in handler: Exception in handle_event: 'ascii' codec can't encode character '\\xf1' in position 0: ordinal not in range(128) (R0).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Interface violation at step 4"
+      }
+    },
+    {
+      "invariant": "I5_interface",
+      "severity": "interface",
+      "rule": "R0",
+      "mode": "normal",
+      "seed": 85,
+      "first_bad_step": 4,
+      "stream": [],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 4: uncaught exception in handler: Exception in handle_event: 'ascii' codec can't encode character '\\xf1' in position 0: ordinal not in range(128) (R0).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Interface violation at step 4"
+      }
+    },
+    {
+      "invariant": "I5_interface",
+      "severity": "interface",
+      "rule": "R0",
+      "mode": "normal",
+      "seed": 95,
+      "first_bad_step": 4,
+      "stream": [],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 4: uncaught exception in handler: Exception in handle_event: 'ascii' codec can't encode character '\\xf1' in position 0: ordinal not in range(128) (R0).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Interface violation at step 4"
+      }
+    }
+  ],
+  "noncompliant": null,
+  "repair_of": null
+}

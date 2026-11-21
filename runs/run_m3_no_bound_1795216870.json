@@ -1,0 +1,412 @@
+{
+  "run_id": "run_m3_no_bound_1795216870",
+  "contract_version": "1.0",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+  "created_at": "2026-11-20T23:21:10.975292+00:00",
+  "candidate": {
+    "id": "m3_no_bound",
+    "model": "reference",
+    "condition": "-",
+    "sample": null,
+    "sha256": "c4d3acd8ea84538bf9a5fa9aefc8acd93423edbefea03050c5f397c816ebd42e",
+    "source": "reference",
+    "label": "Candidate m3_no_bound"
+  },
+  "harness": {
+    "mode_set": [
+      "normal"
+    ],
+    "docker": false,
+    "cpus": 1
+  },
+  "seeds": [
+    2,
+    2
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 1,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 1,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 1,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 0,
+        "failed": 1
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 1,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [
+    {
+      "invariant": "I4_bounds",
+      "severity": "financial",
+      "rule": "R6",
+      "mode": "normal",
+      "seed": 2,
+      "first_bad_step": 5,
+      "stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjEwMDAwMCwiZXZlbnRfaWQiOiJzMl9jYXBfYmFzZSIsInBheW1lbnRfaWQiOiJwYXlfMl9yZmQiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "67365fc1b53d8f960e678a8a34e46a285ccf9f592785309b384afc715b6f5bd6",
+          "tag": "capture_base",
+          "amount_paise": 100000,
+          "event_id": "s2_cap_base",
+          "payment_id": "pay_2_rfd",
+          "type": "payment.captured",
+          "summary": "payment.captured s2_cap_base (Rs 1,000)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjIwMDAwLCJldmVudF9pZCI6InMyX3JmZF8wIiwicGF5bWVudF9pZCI6InBheV8yX3JmZCIsInJlZnVuZF9pZCI6InJfMCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "dbc8cc10d31b606d854562368db5345f59491665c70e13684669265ec29beb34",
+          "tag": "partial_refund_20000",
+          "amount_paise": 20000,
+          "event_id": "s2_rfd_0",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_0",
+          "type": "refund.processed",
+          "summary": "refund.processed s2_rfd_0 (Rs 200)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjIwMDAwLCJldmVudF9pZCI6InMyX3JmZF8xIiwicGF5bWVudF9pZCI6InBheV8yX3JmZCIsInJlZnVuZF9pZCI6InJfMSIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "7ecadffd95c3eeb88956ae07f40d4620d5153062cb2cd789bdae7a8df237335a",
+          "tag": "partial_refund_20000",
+          "amount_paise": 20000,
+          "event_id": "s2_rfd_1",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_1",
+          "type": "refund.processed",
+          "summary": "refund.processed s2_rfd_1 (Rs 200)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjIwMDAwLCJldmVudF9pZCI6InMyX3JmZF8yIiwicGF5bWVudF9pZCI6InBheV8yX3JmZCIsInJlZnVuZF9pZCI6InJfMiIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "a9cb9f0967a9cde8a61ad1486a9bee9c367ad13f349d51ae9a4bd55ecb5343f9",
+          "tag": "partial_refund_20000",
+          "amount_paise": 20000,
+          "event_id": "s2_rfd_2",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_2",
+          "type": "refund.processed",
+          "summary": "refund.processed s2_rfd_2 (Rs 200)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InMyX3JmZF8zIiwicGF5bWVudF9pZCI6InBheV8yX3JmZCIsInJlZnVuZF9pZCI6InJfMyIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "d0b426d5f39e8d5670950affd1e367c01e3722d92f29ecc109e8cf9072c940be",
+          "tag": "exact_bound_refund_40000",
+          "amount_paise": 40000,
+          "event_id": "s2_rfd_3",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_3",
+          "type": "refund.processed",
+          "summary": "refund.processed s2_rfd_3 (Rs 400)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjUwMDAsImV2ZW50X2lkIjoiczJfZmluYWxfb3ZlciIsInBheW1lbnRfaWQiOiJwYXlfMl9yZmQiLCJyZWZ1bmRfaWQiOiJyX292ZXIiLCJ0eXBlIjoicmVmdW5kLnByb2Nlc3NlZCJ9",
+          "signature": "81255b2eca018e94ab657469bed623fdcd6d935ee7470500bdc4149dcc7cd6b4",
+          "tag": "final_over_bound",
+          "amount_paise": 5000,
+          "event_id": "s2_final_over",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_over",
+          "type": "refund.processed",
+          "summary": "refund.processed s2_final_over (Rs 50)"
+        }
+      ],
+      "minimal_stream": [
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjEwMDAwMCwiZXZlbnRfaWQiOiJzMl9jYXBfYmFzZSIsInBheW1lbnRfaWQiOiJwYXlfMl9yZmQiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+          "signature": "67365fc1b53d8f960e678a8a34e46a285ccf9f592785309b384afc715b6f5bd6",
+          "tag": "capture_base",
+          "amount_paise": 100000,
+          "event_id": "s2_cap_base",
+          "payment_id": "pay_2_rfd",
+          "type": "payment.captured",
+          "summary": "payment.captured s2_cap_base (Rs 1,000)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjIwMDAwLCJldmVudF9pZCI6InMyX3JmZF8wIiwicGF5bWVudF9pZCI6InBheV8yX3JmZCIsInJlZnVuZF9pZCI6InJfMCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "dbc8cc10d31b606d854562368db5345f59491665c70e13684669265ec29beb34",
+          "tag": "partial_refund_20000",
+          "amount_paise": 20000,
+          "event_id": "s2_rfd_0",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_0",
+          "type": "refund.processed",
+          "summary": "refund.processed s2_rfd_0 (Rs 200)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjIwMDAwLCJldmVudF9pZCI6InMyX3JmZF8xIiwicGF5bWVudF9pZCI6InBheV8yX3JmZCIsInJlZnVuZF9pZCI6InJfMSIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "7ecadffd95c3eeb88956ae07f40d4620d5153062cb2cd789bdae7a8df237335a",
+          "tag": "partial_refund_20000",
+          "amount_paise": 20000,
+          "event_id": "s2_rfd_1",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_1",
+          "type": "refund.processed",
+          "summary": "refund.processed s2_rfd_1 (Rs 200)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjIwMDAwLCJldmVudF9pZCI6InMyX3JmZF8yIiwicGF5bWVudF9pZCI6InBheV8yX3JmZCIsInJlZnVuZF9pZCI6InJfMiIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "a9cb9f0967a9cde8a61ad1486a9bee9c367ad13f349d51ae9a4bd55ecb5343f9",
+          "tag": "partial_refund_20000",
+          "amount_paise": 20000,
+          "event_id": "s2_rfd_2",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_2",
+          "type": "refund.processed",
+          "summary": "refund.processed s2_rfd_2 (Rs 200)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InMyX3JmZF8zIiwicGF5bWVudF9pZCI6InBheV8yX3JmZCIsInJlZnVuZF9pZCI6InJfMyIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+          "signature": "d0b426d5f39e8d5670950affd1e367c01e3722d92f29ecc109e8cf9072c940be",
+          "tag": "exact_bound_refund_40000",
+          "amount_paise": 40000,
+          "event_id": "s2_rfd_3",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_3",
+          "type": "refund.processed",
+          "summary": "refund.processed s2_rfd_3 (Rs 400)"
+        },
+        {
+          "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjUwMDAsImV2ZW50X2lkIjoiczJfZmluYWxfb3ZlciIsInBheW1lbnRfaWQiOiJwYXlfMl9yZmQiLCJyZWZ1bmRfaWQiOiJyX292ZXIiLCJ0eXBlIjoicmVmdW5kLnByb2Nlc3NlZCJ9",
+          "signature": "81255b2eca018e94ab657469bed623fdcd6d935ee7470500bdc4149dcc7cd6b4",
+          "tag": "final_over_bound",
+          "amount_paise": 5000,
+          "event_id": "s2_final_over",
+          "payment_id": "pay_2_rfd",
+          "refund_id": "r_over",
+          "type": "refund.processed",
+          "summary": "refund.processed s2_final_over (Rs 50)"
+        }
+      ],
+      "one_minimal": true,
+      "shrink_history": [
+        [
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjEwMDAwMCwiZXZlbnRfaWQiOiJzMl9jYXBfYmFzZSIsInBheW1lbnRfaWQiOiJwYXlfMl9yZmQiLCJ0eXBlIjoicGF5bWVudC5jYXB0dXJlZCJ9",
+            "signature": "67365fc1b53d8f960e678a8a34e46a285ccf9f592785309b384afc715b6f5bd6",
+            "tag": "capture_base",
+            "amount_paise": 100000,
+            "event_id": "s2_cap_base",
+            "payment_id": "pay_2_rfd",
+            "type": "payment.captured",
+            "summary": "payment.captured s2_cap_base (Rs 1,000)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjIwMDAwLCJldmVudF9pZCI6InMyX3JmZF8wIiwicGF5bWVudF9pZCI6InBheV8yX3JmZCIsInJlZnVuZF9pZCI6InJfMCIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+            "signature": "dbc8cc10d31b606d854562368db5345f59491665c70e13684669265ec29beb34",
+            "tag": "partial_refund_20000",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_0",
+            "payment_id": "pay_2_rfd",
+            "refund_id": "r_0",
+            "type": "refund.processed",
+            "summary": "refund.processed s2_rfd_0 (Rs 200)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjIwMDAwLCJldmVudF9pZCI6InMyX3JmZF8xIiwicGF5bWVudF9pZCI6InBheV8yX3JmZCIsInJlZnVuZF9pZCI6InJfMSIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+            "signature": "7ecadffd95c3eeb88956ae07f40d4620d5153062cb2cd789bdae7a8df237335a",
+            "tag": "partial_refund_20000",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_1",
+            "payment_id": "pay_2_rfd",
+            "refund_id": "r_1",
+            "type": "refund.processed",
+            "summary": "refund.processed s2_rfd_1 (Rs 200)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjIwMDAwLCJldmVudF9pZCI6InMyX3JmZF8yIiwicGF5bWVudF9pZCI6InBheV8yX3JmZCIsInJlZnVuZF9pZCI6InJfMiIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+            "signature": "a9cb9f0967a9cde8a61ad1486a9bee9c367ad13f349d51ae9a4bd55ecb5343f9",
+            "tag": "partial_refund_20000",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_2",
+            "payment_id": "pay_2_rfd",
+            "refund_id": "r_2",
+            "type": "refund.processed",
+            "summary": "refund.processed s2_rfd_2 (Rs 200)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjQwMDAwLCJldmVudF9pZCI6InMyX3JmZF8zIiwicGF5bWVudF9pZCI6InBheV8yX3JmZCIsInJlZnVuZF9pZCI6InJfMyIsInR5cGUiOiJyZWZ1bmQucHJvY2Vzc2VkIn0=",
+            "signature": "d0b426d5f39e8d5670950affd1e367c01e3722d92f29ecc109e8cf9072c940be",
+            "tag": "exact_bound_refund_40000",
+            "amount_paise": 40000,
+            "event_id": "s2_rfd_3",
+            "payment_id": "pay_2_rfd",
+            "refund_id": "r_3",
+            "type": "refund.processed",
+            "summary": "refund.processed s2_rfd_3 (Rs 400)"
+          },
+          {
+            "raw_body_b64": "eyJhbW91bnRfcGFpc2UiOjUwMDAsImV2ZW50X2lkIjoiczJfZmluYWxfb3ZlciIsInBheW1lbnRfaWQiOiJwYXlfMl9yZmQiLCJyZWZ1bmRfaWQiOiJyX292ZXIiLCJ0eXBlIjoicmVmdW5kLnByb2Nlc3NlZCJ9",
+            "signature": "81255b2eca018e94ab657469bed623fdcd6d935ee7470500bdc4149dcc7cd6b4",
+            "tag": "final_over_bound",
+            "amount_paise": 5000,
+            "event_id": "s2_final_over",
+            "payment_id": "pay_2_rfd",
+            "refund_id": "r_over",
+            "type": "refund.processed",
+            "summary": "refund.processed s2_final_over (Rs 50)"
+          }
+        ]
+      ],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_2_rfd",
+            "captured_paise": 100000,
+            "refunded_paise": 100000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "capture",
+            "amount_paise": 100000,
+            "event_id": "s2_cap_base"
+          },
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_0"
+          },
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_1"
+          },
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_2"
+          },
+          {
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 40000,
+            "event_id": "s2_rfd_3"
+          }
+        ],
+        "summary": {
+          "pay_2_rfd": {
+            "captures_count": 1,
+            "captures_sum": 100000,
+            "refunds_count": 4,
+            "refunds_sum": 100000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_2_rfd",
+            "captured_paise": 100000,
+            "refunded_paise": 105000
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_2_rfd",
+            "kind": "capture",
+            "amount_paise": 100000,
+            "event_id": "s2_cap_base"
+          },
+          {
+            "entry_id": 2,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_0"
+          },
+          {
+            "entry_id": 3,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_1"
+          },
+          {
+            "entry_id": 4,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 20000,
+            "event_id": "s2_rfd_2"
+          },
+          {
+            "entry_id": 5,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 40000,
+            "event_id": "s2_rfd_3"
+          },
+          {
+            "entry_id": 6,
+            "payment_id": "pay_2_rfd",
+            "kind": "refund",
+            "amount_paise": 5000,
+            "event_id": "s2_final_over"
+          }
+        ],
+        "summary": {
+          "pay_2_rfd": {
+            "captures_count": 1,
+            "captures_sum": 100000,
+            "refunds_count": 5,
+            "refunds_sum": 105000
+          }
+        }
+      },
+      "explanation": "Refund s2_final_over (Rs 50) exceeds captured balance for payment 'pay_2_rfd'. Expected status 'rejected' under Rule R6, observed 'unknown'. Rule R6.",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 2 failed at step 5"
+      },
+      "repro": {
+        "runs": 10,
+        "reproduced": 10
+      }
+    }
+  ],
+  "noncompliant": null,
+  "repair_of": null
+}

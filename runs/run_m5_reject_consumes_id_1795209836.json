@@ -1,0 +1,2070 @@
+{
+  "run_id": "run_m5_reject_consumes_id_1795209836",
+  "contract_version": "1.0",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "oracle_sha": "d2fb0681feeaca1190c9b092daf8aea126b409472143089acf42888f81601e26",
+  "created_at": "2026-11-20T21:23:56.499566+00:00",
+  "candidate": {
+    "id": "m5_reject_consumes_id",
+    "model": "reference",
+    "condition": "-",
+    "sample": null,
+    "sha256": "29dd273832ae71312dde0c8552e8b0eaf8f8247038d88a1bbdc990f9cb7d624f",
+    "source": "reference",
+    "label": "Candidate m5_reject_consumes_id"
+  },
+  "harness": {
+    "mode_set": [
+      "normal"
+    ],
+    "docker": false,
+    "cpus": 1
+  },
+  "seeds": [
+    0,
+    99
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 90,
+        "failed": 10
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 80,
+        "failed": 20
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 5,
+      "first_bad_step": 6,
+      "stream": [
+        {
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "event_id": "s5_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s5_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s5_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 6: payment IDs mismatch. Expected ['pay_sig'], observed [] (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 5 failed at step 6"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 6,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "amount_paise": 25000,
+          "event_id": "s6_rfd_r8",
+          "payment_id": "pay_6_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 60000,
+          "event_id": "s6_cap_r8",
+          "payment_id": "pay_6_r8",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25000,
+          "event_id": "s6_rfd_r8",
+          "payment_id": "pay_6_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s6_badsig_then_good",
+          "payment_id": "pay_bsg_6",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s6_badsig_then_good",
+          "payment_id": "pay_bsg_6",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_6_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_6_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s6_cap_r8"
+          },
+          {
+            "payment_id": "pay_6_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s6_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_6_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_6_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_6_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s6_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_6_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_6_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 6 failed at step 2"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 15,
+      "first_bad_step": 6,
+      "stream": [
+        {
+          "amount_paise": 30000,
+          "event_id": "s15_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s15_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s15_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s15_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s15_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "event_id": "s15_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s15_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s15_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 6: payment IDs mismatch. Expected ['pay_sig'], observed [] (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 15 failed at step 6"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 16,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "amount_paise": 25000,
+          "event_id": "s16_rfd_r8",
+          "payment_id": "pay_16_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 60000,
+          "event_id": "s16_cap_r8",
+          "payment_id": "pay_16_r8",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25000,
+          "event_id": "s16_rfd_r8",
+          "payment_id": "pay_16_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s16_badsig_then_good",
+          "payment_id": "pay_bsg_16",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s16_badsig_then_good",
+          "payment_id": "pay_bsg_16",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_16_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_16_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s16_cap_r8"
+          },
+          {
+            "payment_id": "pay_16_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s16_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_16_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_16_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_16_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s16_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_16_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_16_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 16 failed at step 2"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 25,
+      "first_bad_step": 6,
+      "stream": [
+        {
+          "amount_paise": 30000,
+          "event_id": "s25_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s25_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s25_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s25_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s25_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "event_id": "s25_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s25_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s25_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 6: payment IDs mismatch. Expected ['pay_sig'], observed [] (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 25 failed at step 6"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 26,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "amount_paise": 25000,
+          "event_id": "s26_rfd_r8",
+          "payment_id": "pay_26_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 60000,
+          "event_id": "s26_cap_r8",
+          "payment_id": "pay_26_r8",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25000,
+          "event_id": "s26_rfd_r8",
+          "payment_id": "pay_26_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s26_badsig_then_good",
+          "payment_id": "pay_bsg_26",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s26_badsig_then_good",
+          "payment_id": "pay_bsg_26",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_26_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_26_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s26_cap_r8"
+          },
+          {
+            "payment_id": "pay_26_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s26_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_26_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_26_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_26_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s26_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_26_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_26_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 26 failed at step 2"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 35,
+      "first_bad_step": 6,
+      "stream": [
+        {
+          "amount_paise": 30000,
+          "event_id": "s35_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s35_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s35_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s35_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s35_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "event_id": "s35_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s35_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s35_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 6: payment IDs mismatch. Expected ['pay_sig'], observed [] (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 35 failed at step 6"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 36,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "amount_paise": 25000,
+          "event_id": "s36_rfd_r8",
+          "payment_id": "pay_36_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 60000,
+          "event_id": "s36_cap_r8",
+          "payment_id": "pay_36_r8",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25000,
+          "event_id": "s36_rfd_r8",
+          "payment_id": "pay_36_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s36_badsig_then_good",
+          "payment_id": "pay_bsg_36",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s36_badsig_then_good",
+          "payment_id": "pay_bsg_36",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_36_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_36_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s36_cap_r8"
+          },
+          {
+            "payment_id": "pay_36_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s36_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_36_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_36_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_36_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s36_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_36_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_36_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 36 failed at step 2"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 45,
+      "first_bad_step": 6,
+      "stream": [
+        {
+          "amount_paise": 30000,
+          "event_id": "s45_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s45_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s45_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s45_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s45_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "event_id": "s45_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s45_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s45_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 6: payment IDs mismatch. Expected ['pay_sig'], observed [] (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 45 failed at step 6"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 46,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "amount_paise": 25000,
+          "event_id": "s46_rfd_r8",
+          "payment_id": "pay_46_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 60000,
+          "event_id": "s46_cap_r8",
+          "payment_id": "pay_46_r8",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25000,
+          "event_id": "s46_rfd_r8",
+          "payment_id": "pay_46_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s46_badsig_then_good",
+          "payment_id": "pay_bsg_46",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s46_badsig_then_good",
+          "payment_id": "pay_bsg_46",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_46_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_46_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s46_cap_r8"
+          },
+          {
+            "payment_id": "pay_46_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s46_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_46_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_46_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_46_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s46_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_46_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_46_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 46 failed at step 2"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 55,
+      "first_bad_step": 6,
+      "stream": [
+        {
+          "amount_paise": 30000,
+          "event_id": "s55_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s55_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s55_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s55_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s55_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "event_id": "s55_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s55_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s55_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 6: payment IDs mismatch. Expected ['pay_sig'], observed [] (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 55 failed at step 6"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 56,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "amount_paise": 25000,
+          "event_id": "s56_rfd_r8",
+          "payment_id": "pay_56_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 60000,
+          "event_id": "s56_cap_r8",
+          "payment_id": "pay_56_r8",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25000,
+          "event_id": "s56_rfd_r8",
+          "payment_id": "pay_56_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s56_badsig_then_good",
+          "payment_id": "pay_bsg_56",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s56_badsig_then_good",
+          "payment_id": "pay_bsg_56",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_56_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_56_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s56_cap_r8"
+          },
+          {
+            "payment_id": "pay_56_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s56_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_56_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_56_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_56_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s56_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_56_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_56_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 56 failed at step 2"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 65,
+      "first_bad_step": 6,
+      "stream": [
+        {
+          "amount_paise": 30000,
+          "event_id": "s65_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s65_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s65_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s65_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s65_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "event_id": "s65_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s65_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s65_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 6: payment IDs mismatch. Expected ['pay_sig'], observed [] (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 65 failed at step 6"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 66,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "amount_paise": 25000,
+          "event_id": "s66_rfd_r8",
+          "payment_id": "pay_66_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 60000,
+          "event_id": "s66_cap_r8",
+          "payment_id": "pay_66_r8",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25000,
+          "event_id": "s66_rfd_r8",
+          "payment_id": "pay_66_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s66_badsig_then_good",
+          "payment_id": "pay_bsg_66",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s66_badsig_then_good",
+          "payment_id": "pay_bsg_66",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_66_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_66_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s66_cap_r8"
+          },
+          {
+            "payment_id": "pay_66_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s66_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_66_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_66_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_66_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s66_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_66_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_66_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 66 failed at step 2"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 75,
+      "first_bad_step": 6,
+      "stream": [
+        {
+          "amount_paise": 30000,
+          "event_id": "s75_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s75_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s75_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s75_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s75_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "event_id": "s75_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s75_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s75_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 6: payment IDs mismatch. Expected ['pay_sig'], observed [] (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 75 failed at step 6"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 76,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "amount_paise": 25000,
+          "event_id": "s76_rfd_r8",
+          "payment_id": "pay_76_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 60000,
+          "event_id": "s76_cap_r8",
+          "payment_id": "pay_76_r8",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25000,
+          "event_id": "s76_rfd_r8",
+          "payment_id": "pay_76_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s76_badsig_then_good",
+          "payment_id": "pay_bsg_76",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s76_badsig_then_good",
+          "payment_id": "pay_bsg_76",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_76_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_76_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s76_cap_r8"
+          },
+          {
+            "payment_id": "pay_76_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s76_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_76_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_76_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_76_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s76_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_76_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_76_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 76 failed at step 2"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 85,
+      "first_bad_step": 6,
+      "stream": [
+        {
+          "amount_paise": 30000,
+          "event_id": "s85_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s85_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s85_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s85_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s85_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "event_id": "s85_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s85_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s85_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 6: payment IDs mismatch. Expected ['pay_sig'], observed [] (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 85 failed at step 6"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 86,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "amount_paise": 25000,
+          "event_id": "s86_rfd_r8",
+          "payment_id": "pay_86_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 60000,
+          "event_id": "s86_cap_r8",
+          "payment_id": "pay_86_r8",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25000,
+          "event_id": "s86_rfd_r8",
+          "payment_id": "pay_86_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s86_badsig_then_good",
+          "payment_id": "pay_bsg_86",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s86_badsig_then_good",
+          "payment_id": "pay_bsg_86",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_86_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_86_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s86_cap_r8"
+          },
+          {
+            "payment_id": "pay_86_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s86_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_86_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_86_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_86_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s86_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_86_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_86_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 86 failed at step 2"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 95,
+      "first_bad_step": 6,
+      "stream": [
+        {
+          "amount_paise": 30000,
+          "event_id": "s95_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s95_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s95_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s95_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s95_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        },
+        {
+          "event_id": "s95_sig_test",
+          "type": "payment.captured",
+          "payment_id": "pay_sig",
+          "amount_paise": 30000
+        },
+        {
+          "amount_paise": 30000,
+          "event_id": "s95_sig_test",
+          "payment_id": "pay_sig",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_sig",
+            "captured_paise": 30000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_sig",
+            "kind": "capture",
+            "amount_paise": 30000,
+            "event_id": "s95_sig_test"
+          }
+        ],
+        "summary": {
+          "pay_sig": {
+            "captures_count": 1,
+            "captures_sum": 30000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 6: payment IDs mismatch. Expected ['pay_sig'], observed [] (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 95 failed at step 6"
+      }
+    },
+    {
+      "invariant": "I2_idempotency",
+      "severity": "financial",
+      "rule": "R8",
+      "mode": "normal",
+      "seed": 96,
+      "first_bad_step": 2,
+      "stream": [
+        {
+          "amount_paise": 25000,
+          "event_id": "s96_rfd_r8",
+          "payment_id": "pay_96_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 60000,
+          "event_id": "s96_cap_r8",
+          "payment_id": "pay_96_r8",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 25000,
+          "event_id": "s96_rfd_r8",
+          "payment_id": "pay_96_r8",
+          "refund_id": "r_r8",
+          "type": "refund.processed"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s96_badsig_then_good",
+          "payment_id": "pay_bsg_96",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 40000,
+          "event_id": "s96_badsig_then_good",
+          "payment_id": "pay_bsg_96",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_96_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 25000
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_96_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s96_cap_r8"
+          },
+          {
+            "payment_id": "pay_96_r8",
+            "kind": "refund",
+            "amount_paise": 25000,
+            "event_id": "s96_rfd_r8"
+          }
+        ],
+        "summary": {
+          "pay_96_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 1,
+            "refunds_sum": 25000
+          }
+        }
+      },
+      "observed": {
+        "payments": [
+          {
+            "payment_id": "pay_96_r8",
+            "captured_paise": 60000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "entry_id": 1,
+            "payment_id": "pay_96_r8",
+            "kind": "capture",
+            "amount_paise": 60000,
+            "event_id": "s96_cap_r8"
+          }
+        ],
+        "summary": {
+          "pay_96_r8": {
+            "captures_count": 1,
+            "captures_sum": 60000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "explanation": "Step 2: balance mismatch for 'pay_96_r8'. Expected captured=60000, refunded=25000; Observed captured=60000, refunded=0 (R8).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 96 failed at step 2"
+      }
+    }
+  ],
+  "noncompliant": null,
+  "repair_of": null
+}

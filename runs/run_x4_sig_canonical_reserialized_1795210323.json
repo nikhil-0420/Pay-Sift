@@ -1,0 +1,870 @@
+{
+  "run_id": "run_x4_sig_canonical_reserialized_1795210323",
+  "contract_version": "1.0",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "oracle_sha": "d2fb0681feeaca1190c9b092daf8aea126b409472143089acf42888f81601e26",
+  "created_at": "2026-11-20T21:32:03.533773+00:00",
+  "candidate": {
+    "id": "x4_sig_canonical_reserialized",
+    "model": "reference",
+    "condition": "-",
+    "sample": null,
+    "sha256": "2f7e60802be3bf715a1a55575c7a6c2a37f1783136e3d1ef89a5a59e5b749fce",
+    "source": "reference",
+    "label": "Candidate x4_sig_canonical_reserialized"
+  },
+  "harness": {
+    "mode_set": [
+      "normal"
+    ],
+    "docker": false,
+    "cpus": 1
+  },
+  "seeds": [
+    0,
+    99
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 90,
+        "failed": 10
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 100,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 8,
+      "first_bad_step": 0,
+      "stream": [
+        {
+          "event_id": "s8_nc_0",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_8_0",
+          "amount_paise": 35000
+        },
+        {
+          "amount_paise": 36000,
+          "payment_id": "pay_nc_8_1",
+          "type": "payment.captured",
+          "event_id": "s8_nc_1"
+        },
+        {
+          "event_id": "s8_nc_2",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_8_2",
+          "amount_paise": 37000
+        },
+        {
+          "amount_paise": 38000,
+          "event_id": "s8_nc_3",
+          "payment_id": "pay_nc_8_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 39000,
+          "event_id": "s8_nc_4",
+          "payment_id": "pay_nc_8_4",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_nc_8_0",
+            "captured_paise": 35000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_nc_8_0",
+            "kind": "capture",
+            "amount_paise": 35000,
+            "event_id": "s8_nc_0"
+          }
+        ],
+        "summary": {
+          "pay_nc_8_0": {
+            "captures_count": 1,
+            "captures_sum": 35000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 0: payment IDs mismatch. Expected ['pay_nc_8_0'], observed [] (R4).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 8 failed at step 0"
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 18,
+      "first_bad_step": 0,
+      "stream": [
+        {
+          "event_id": "s18_nc_0",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_18_0",
+          "amount_paise": 35000
+        },
+        {
+          "amount_paise": 36000,
+          "payment_id": "pay_nc_18_1",
+          "type": "payment.captured",
+          "event_id": "s18_nc_1"
+        },
+        {
+          "event_id": "s18_nc_2",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_18_2",
+          "amount_paise": 37000
+        },
+        {
+          "amount_paise": 38000,
+          "event_id": "s18_nc_3",
+          "payment_id": "pay_nc_18_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 39000,
+          "event_id": "s18_nc_4",
+          "payment_id": "pay_nc_18_4",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_nc_18_0",
+            "captured_paise": 35000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_nc_18_0",
+            "kind": "capture",
+            "amount_paise": 35000,
+            "event_id": "s18_nc_0"
+          }
+        ],
+        "summary": {
+          "pay_nc_18_0": {
+            "captures_count": 1,
+            "captures_sum": 35000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 0: payment IDs mismatch. Expected ['pay_nc_18_0'], observed [] (R4).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 18 failed at step 0"
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 28,
+      "first_bad_step": 0,
+      "stream": [
+        {
+          "event_id": "s28_nc_0",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_28_0",
+          "amount_paise": 35000
+        },
+        {
+          "amount_paise": 36000,
+          "payment_id": "pay_nc_28_1",
+          "type": "payment.captured",
+          "event_id": "s28_nc_1"
+        },
+        {
+          "event_id": "s28_nc_2",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_28_2",
+          "amount_paise": 37000
+        },
+        {
+          "amount_paise": 38000,
+          "event_id": "s28_nc_3",
+          "payment_id": "pay_nc_28_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 39000,
+          "event_id": "s28_nc_4",
+          "payment_id": "pay_nc_28_4",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_nc_28_0",
+            "captured_paise": 35000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_nc_28_0",
+            "kind": "capture",
+            "amount_paise": 35000,
+            "event_id": "s28_nc_0"
+          }
+        ],
+        "summary": {
+          "pay_nc_28_0": {
+            "captures_count": 1,
+            "captures_sum": 35000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 0: payment IDs mismatch. Expected ['pay_nc_28_0'], observed [] (R4).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 28 failed at step 0"
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 38,
+      "first_bad_step": 0,
+      "stream": [
+        {
+          "event_id": "s38_nc_0",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_38_0",
+          "amount_paise": 35000
+        },
+        {
+          "amount_paise": 36000,
+          "payment_id": "pay_nc_38_1",
+          "type": "payment.captured",
+          "event_id": "s38_nc_1"
+        },
+        {
+          "event_id": "s38_nc_2",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_38_2",
+          "amount_paise": 37000
+        },
+        {
+          "amount_paise": 38000,
+          "event_id": "s38_nc_3",
+          "payment_id": "pay_nc_38_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 39000,
+          "event_id": "s38_nc_4",
+          "payment_id": "pay_nc_38_4",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_nc_38_0",
+            "captured_paise": 35000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_nc_38_0",
+            "kind": "capture",
+            "amount_paise": 35000,
+            "event_id": "s38_nc_0"
+          }
+        ],
+        "summary": {
+          "pay_nc_38_0": {
+            "captures_count": 1,
+            "captures_sum": 35000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 0: payment IDs mismatch. Expected ['pay_nc_38_0'], observed [] (R4).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 38 failed at step 0"
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 48,
+      "first_bad_step": 0,
+      "stream": [
+        {
+          "event_id": "s48_nc_0",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_48_0",
+          "amount_paise": 35000
+        },
+        {
+          "amount_paise": 36000,
+          "payment_id": "pay_nc_48_1",
+          "type": "payment.captured",
+          "event_id": "s48_nc_1"
+        },
+        {
+          "event_id": "s48_nc_2",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_48_2",
+          "amount_paise": 37000
+        },
+        {
+          "amount_paise": 38000,
+          "event_id": "s48_nc_3",
+          "payment_id": "pay_nc_48_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 39000,
+          "event_id": "s48_nc_4",
+          "payment_id": "pay_nc_48_4",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_nc_48_0",
+            "captured_paise": 35000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_nc_48_0",
+            "kind": "capture",
+            "amount_paise": 35000,
+            "event_id": "s48_nc_0"
+          }
+        ],
+        "summary": {
+          "pay_nc_48_0": {
+            "captures_count": 1,
+            "captures_sum": 35000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 0: payment IDs mismatch. Expected ['pay_nc_48_0'], observed [] (R4).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 48 failed at step 0"
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 58,
+      "first_bad_step": 0,
+      "stream": [
+        {
+          "event_id": "s58_nc_0",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_58_0",
+          "amount_paise": 35000
+        },
+        {
+          "amount_paise": 36000,
+          "payment_id": "pay_nc_58_1",
+          "type": "payment.captured",
+          "event_id": "s58_nc_1"
+        },
+        {
+          "event_id": "s58_nc_2",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_58_2",
+          "amount_paise": 37000
+        },
+        {
+          "amount_paise": 38000,
+          "event_id": "s58_nc_3",
+          "payment_id": "pay_nc_58_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 39000,
+          "event_id": "s58_nc_4",
+          "payment_id": "pay_nc_58_4",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_nc_58_0",
+            "captured_paise": 35000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_nc_58_0",
+            "kind": "capture",
+            "amount_paise": 35000,
+            "event_id": "s58_nc_0"
+          }
+        ],
+        "summary": {
+          "pay_nc_58_0": {
+            "captures_count": 1,
+            "captures_sum": 35000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 0: payment IDs mismatch. Expected ['pay_nc_58_0'], observed [] (R4).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 58 failed at step 0"
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 68,
+      "first_bad_step": 0,
+      "stream": [
+        {
+          "event_id": "s68_nc_0",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_68_0",
+          "amount_paise": 35000
+        },
+        {
+          "amount_paise": 36000,
+          "payment_id": "pay_nc_68_1",
+          "type": "payment.captured",
+          "event_id": "s68_nc_1"
+        },
+        {
+          "event_id": "s68_nc_2",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_68_2",
+          "amount_paise": 37000
+        },
+        {
+          "amount_paise": 38000,
+          "event_id": "s68_nc_3",
+          "payment_id": "pay_nc_68_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 39000,
+          "event_id": "s68_nc_4",
+          "payment_id": "pay_nc_68_4",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_nc_68_0",
+            "captured_paise": 35000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_nc_68_0",
+            "kind": "capture",
+            "amount_paise": 35000,
+            "event_id": "s68_nc_0"
+          }
+        ],
+        "summary": {
+          "pay_nc_68_0": {
+            "captures_count": 1,
+            "captures_sum": 35000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 0: payment IDs mismatch. Expected ['pay_nc_68_0'], observed [] (R4).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 68 failed at step 0"
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 78,
+      "first_bad_step": 0,
+      "stream": [
+        {
+          "event_id": "s78_nc_0",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_78_0",
+          "amount_paise": 35000
+        },
+        {
+          "amount_paise": 36000,
+          "payment_id": "pay_nc_78_1",
+          "type": "payment.captured",
+          "event_id": "s78_nc_1"
+        },
+        {
+          "event_id": "s78_nc_2",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_78_2",
+          "amount_paise": 37000
+        },
+        {
+          "amount_paise": 38000,
+          "event_id": "s78_nc_3",
+          "payment_id": "pay_nc_78_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 39000,
+          "event_id": "s78_nc_4",
+          "payment_id": "pay_nc_78_4",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_nc_78_0",
+            "captured_paise": 35000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_nc_78_0",
+            "kind": "capture",
+            "amount_paise": 35000,
+            "event_id": "s78_nc_0"
+          }
+        ],
+        "summary": {
+          "pay_nc_78_0": {
+            "captures_count": 1,
+            "captures_sum": 35000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 0: payment IDs mismatch. Expected ['pay_nc_78_0'], observed [] (R4).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 78 failed at step 0"
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 88,
+      "first_bad_step": 0,
+      "stream": [
+        {
+          "event_id": "s88_nc_0",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_88_0",
+          "amount_paise": 35000
+        },
+        {
+          "amount_paise": 36000,
+          "payment_id": "pay_nc_88_1",
+          "type": "payment.captured",
+          "event_id": "s88_nc_1"
+        },
+        {
+          "event_id": "s88_nc_2",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_88_2",
+          "amount_paise": 37000
+        },
+        {
+          "amount_paise": 38000,
+          "event_id": "s88_nc_3",
+          "payment_id": "pay_nc_88_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 39000,
+          "event_id": "s88_nc_4",
+          "payment_id": "pay_nc_88_4",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_nc_88_0",
+            "captured_paise": 35000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_nc_88_0",
+            "kind": "capture",
+            "amount_paise": 35000,
+            "event_id": "s88_nc_0"
+          }
+        ],
+        "summary": {
+          "pay_nc_88_0": {
+            "captures_count": 1,
+            "captures_sum": 35000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 0: payment IDs mismatch. Expected ['pay_nc_88_0'], observed [] (R4).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 88 failed at step 0"
+      }
+    },
+    {
+      "invariant": "I1_signature",
+      "severity": "financial",
+      "rule": "R1",
+      "mode": "normal",
+      "seed": 98,
+      "first_bad_step": 0,
+      "stream": [
+        {
+          "event_id": "s98_nc_0",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_98_0",
+          "amount_paise": 35000
+        },
+        {
+          "amount_paise": 36000,
+          "payment_id": "pay_nc_98_1",
+          "type": "payment.captured",
+          "event_id": "s98_nc_1"
+        },
+        {
+          "event_id": "s98_nc_2",
+          "type": "payment.captured",
+          "payment_id": "pay_nc_98_2",
+          "amount_paise": 37000
+        },
+        {
+          "amount_paise": 38000,
+          "event_id": "s98_nc_3",
+          "payment_id": "pay_nc_98_3",
+          "type": "payment.captured"
+        },
+        {
+          "amount_paise": 39000,
+          "event_id": "s98_nc_4",
+          "payment_id": "pay_nc_98_4",
+          "type": "payment.captured"
+        }
+      ],
+      "minimal_stream": [],
+      "one_minimal": false,
+      "shrink_history": [],
+      "expected": {
+        "payments": [
+          {
+            "payment_id": "pay_nc_98_0",
+            "captured_paise": 35000,
+            "refunded_paise": 0
+          }
+        ],
+        "ledger": [
+          {
+            "payment_id": "pay_nc_98_0",
+            "kind": "capture",
+            "amount_paise": 35000,
+            "event_id": "s98_nc_0"
+          }
+        ],
+        "summary": {
+          "pay_nc_98_0": {
+            "captures_count": 1,
+            "captures_sum": 35000,
+            "refunds_count": 0,
+            "refunds_sum": 0
+          }
+        }
+      },
+      "observed": {
+        "payments": [],
+        "ledger": [],
+        "summary": {}
+      },
+      "explanation": "Step 0: payment IDs mismatch. Expected ['pay_nc_98_0'], observed [] (R4).",
+      "classification": {
+        "label": "unreviewed",
+        "by": "agent-proposed",
+        "note": "Seed 98 failed at step 0"
+      }
+    }
+  ],
+  "noncompliant": null,
+  "repair_of": null
+}

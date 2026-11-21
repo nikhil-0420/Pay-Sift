@@ -1,0 +1,79 @@
+{
+  "run_id": "run_handler_ref_1795216047",
+  "contract_version": "1.0",
+  "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
+  "oracle_sha": "3c9fcb4d50d389846eacc942b2ae78dc823a795584ef0af002d1ba01a3675e16",
+  "created_at": "2026-11-20T23:07:27.352137+00:00",
+  "candidate": {
+    "id": "handler_ref",
+    "model": "reference",
+    "condition": "-",
+    "sample": null,
+    "sha256": "1092a0201b512c6e8f94e1f8c909b73b9b9362b45b0c90a147f4b7003f9721d9",
+    "source": "reference",
+    "label": "Candidate handler_ref"
+  },
+  "harness": {
+    "mode_set": [
+      "normal"
+    ],
+    "docker": false,
+    "cpus": 1
+  },
+  "seeds": [
+    0,
+    9
+  ],
+  "results": {
+    "I1_signature": {
+      "normal": {
+        "passed": 10,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I2_idempotency": {
+      "normal": {
+        "passed": 10,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I3_conservation": {
+      "normal": {
+        "passed": 10,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I4_bounds": {
+      "normal": {
+        "passed": 10,
+        "failed": 0
+      },
+      "restart": null
+    },
+    "I5_interface": {
+      "normal": {
+        "passed": 10,
+        "failed": 0
+      },
+      "restart": null
+    }
+  },
+  "concurrency": {
+    "scenario_A": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    },
+    "scenario_B": {
+      "trials": 0,
+      "failed": 0,
+      "warnings": 0
+    }
+  },
+  "failures": [],
+  "noncompliant": null,
+  "repair_of": null
+}
