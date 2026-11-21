@@ -239,5 +239,25 @@
       },
       "timestamp": "2026-11-21T07:33:51.164003+00:00"
     }
-  ]
+  ],
+  "judge_verdict": {
+    "label": "PARTIAL",
+    "sources_used": [
+      "R6_s1",
+      "R6_s7"
+    ],
+    "quote": "you can\u2019t refund a total greater than the original charge amount",
+    "reason": "The retrieved sources support the core rule that total refunds cannot exceed the captured/original payment amount. However, the specific implementation details regarding returning status 'rejected', committing no state change, updating specific fields like 'refunded_paise', and inserting a ledger entry are not mentioned in the snippets.",
+    "convention": false
+  },
+  "judge_meta": {
+    "model": "gemini-3.5-flash-lite",
+    "temperature": 0.0,
+    "token_usage": {
+      "prompt_tokens": 1254,
+      "completion_tokens": 131,
+      "total_tokens": 1385
+    },
+    "timestamp": "2026-11-21T08:30:19.769210+00:00"
+  }
 }

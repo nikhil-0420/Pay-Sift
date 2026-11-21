@@ -264,5 +264,24 @@
       },
       "timestamp": "2026-11-21T07:34:08.648919+00:00"
     }
-  ]
+  ],
+  "judge_verdict": {
+    "label": "SUPPORTED",
+    "sources_used": [
+      "R9_s5"
+    ],
+    "quote": "SQLite guarantees all transactions are ACID-compliant even if the transaction is interrupted by a program crash",
+    "reason": "Source R9_s5 supports the rule by confirming that SQLite maintains transactional integrity across program crashes and interruptions, ensuring durability.",
+    "convention": false
+  },
+  "judge_meta": {
+    "model": "gemini-3.5-flash-lite",
+    "temperature": 0.0,
+    "token_usage": {
+      "prompt_tokens": 1228,
+      "completion_tokens": 93,
+      "total_tokens": 1321
+    },
+    "timestamp": "2026-11-21T08:30:59.249893+00:00"
+  }
 }

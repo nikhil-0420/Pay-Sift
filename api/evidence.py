@@ -30,6 +30,8 @@ _request_timestamps: deque = deque()
 
 # Configurable client hook for testing with fake clients
 _client_override: Optional[Any] = None
+_cache_dir_override: Optional[Path] = None
+_output_file_override: Optional[Path] = None
 
 
 def get_youcom_client() -> YouComClient:
@@ -43,6 +45,32 @@ def set_client_override(client: Optional[Any]) -> None:
     """Set or clear a test client override."""
     global _client_override
     _client_override = client
+
+
+def get_cache_dir() -> Path:
+    """Return the active cache directory or test override."""
+    if _cache_dir_override is not None:
+        return _cache_dir_override
+    return REPO_ROOT / "grounding" / "cache"
+
+
+def set_cache_dir_override(cache_dir: Optional[Path]) -> None:
+    """Set or clear a test cache dir override."""
+    global _cache_dir_override
+    _cache_dir_override = cache_dir
+
+
+def get_output_file() -> Path:
+    """Return the output file for runs/grounding.json or test override."""
+    if _output_file_override is not None:
+        return _output_file_override
+    return REPO_ROOT / "runs" / "grounding.json"
+
+
+def set_output_file_override(output_file: Optional[Path]) -> None:
+    """Set or clear a test output file override."""
+    global _output_file_override
+    _output_file_override = output_file
 
 
 def check_rate_limit() -> None:
@@ -67,7 +95,7 @@ class EvidenceSearchRequest(BaseModel):
 @router.get("/evidence")
 def get_all_evidence() -> Dict[str, Any]:
     """Retrieve full runs/grounding.json artifact."""
-    grounding_file = REPO_ROOT / "runs" / "grounding.json"
+    grounding_file = get_output_file()
     if not grounding_file.is_file():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -91,10 +119,10 @@ def get_rule_evidence(rule_id: str) -> Dict[str, Any]:
             detail=f"Invalid rule_id '{rule_id}'. Must match ^R(10|[0-9])$",
         )
 
-    grounding_file = REPO_ROOT / "runs" / "grounding.json"
+    grounding_file = get_output_file()
     if not grounding_file.is_file():
         # Fallback to cache file if grounding.json has not been rebuilt yet
-        cache_file = REPO_ROOT / "grounding" / "cache" / f"{rule_id}.json"
+        cache_file = get_cache_dir() / f"{rule_id}.json"
         if cache_file.is_file():
             try:
                 return json.loads(cache_file.read_text(encoding="utf-8"))
@@ -164,7 +192,7 @@ def search_evidence(req: EvidenceSearchRequest) -> Dict[str, Any]:
         base_queries = rule_spec.get("queries", [])
         rule_spec["queries"] = [f"{base_queries[0]} {extra_terms}"] + base_queries[1:]
 
-    cache_dir = REPO_ROOT / "grounding" / "cache"
+    cache_dir = get_cache_dir()
     try:
         cache_data = fetch_rule_evidence(
             client=client,
@@ -194,7 +222,7 @@ def search_evidence(req: EvidenceSearchRequest) -> Dict[str, Any]:
     try:
         rebuild_grounding_json(
             cache_dir=cache_dir,
-            output_file=REPO_ROOT / "runs" / "grounding.json",
+            output_file=get_output_file(),
         )
     except Exception:
         pass

@@ -272,5 +272,24 @@
       },
       "timestamp": "2026-11-21T07:34:02.615564+00:00"
     }
-  ]
+  ],
+  "judge_verdict": {
+    "label": "SUPPORTED",
+    "sources_used": [
+      "R8_s5"
+    ],
+    "quote": "Errors that occur before execution begins, such as invalid parameters, an invalid API key, or rate limiting, don\u2019t cache a result.",
+    "reason": "Source R8_s5 explicitly supports the rule that rejected requests/errors occurring before execution (such as due to invalid parameters) do not cache a result, meaning the identifier/key is not consumed and retries can be processed normally.",
+    "convention": false
+  },
+  "judge_meta": {
+    "model": "gemini-3.5-flash-lite",
+    "temperature": 0.0,
+    "token_usage": {
+      "prompt_tokens": 1328,
+      "completion_tokens": 125,
+      "total_tokens": 1453
+    },
+    "timestamp": "2026-11-21T08:30:52.448075+00:00"
+  }
 }

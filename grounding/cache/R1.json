@@ -120,5 +120,24 @@
       },
       "timestamp": "2026-11-21T07:38:51.048430+00:00"
     }
-  ]
+  ],
+  "judge_verdict": {
+    "label": "SUPPORTED",
+    "sources_used": [
+      "R1_s1"
+    ],
+    "quote": "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes. Do not verify signature over re-serialized JSON.",
+    "reason": "The retrieved documentation explicitly supports the requirement to compute the HMAC-SHA256 signature using the exact raw body bytes and explicitly warns against using re-serialized JSON.",
+    "convention": false
+  },
+  "judge_meta": {
+    "model": "gemini-3.5-flash-lite",
+    "temperature": 0.0,
+    "token_usage": {
+      "prompt_tokens": 393,
+      "completion_tokens": 109,
+      "total_tokens": 502
+    },
+    "timestamp": "2026-11-21T08:40:21.423168+00:00"
+  }
 }

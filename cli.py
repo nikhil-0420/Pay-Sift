@@ -540,9 +540,11 @@ def cmd_ground(args: argparse.Namespace) -> int:
         return 0
 
     if getattr(args, "judge", False):
-        print("[ground] Model judge evaluation requested.")
-        rebuild_grounding_json()
-        print("[ground] runs/grounding.json rebuilt successfully.")
+        from grounding.judge import run_judge
+        print("[ground] Running model judge evaluation...")
+        res = run_judge(rules=target_rules)
+        print(f"[ground] Evaluated {len(res['data']['rules'])} rules using model '{res['judge_model']}'.")
+        print(f"[ground] Model calls used: {res['model_calls_used']}. Label counts: {res['label_counts']}")
         return 0
 
     rebuild_grounding_json()

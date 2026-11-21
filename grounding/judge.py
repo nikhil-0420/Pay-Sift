@@ -10,7 +10,8 @@ import re
 from typing import Any, Dict, List, Optional
 import yaml
 
-from generate.providers import get_provider, ProviderAdapter
+from generate.providers import get_provider, load_env_file, ProviderAdapter
+from grounding.validator import validate_grounding
 
 
 OVERRIDES_FILE = Path("grounding/overrides.yaml")
@@ -118,6 +119,118 @@ Respond with strict JSON matching this schema:
 """
 
 
+def extract_json_verdict(raw_text: str) -> Dict[str, Any]:
+    """Extract and parse JSON object from raw LLM output text."""
+    # Match ```json ... ``` or raw {...}
+    match = re.search(r"\{[\s\S]*\}", raw_text)
+    if not match:
+        return {"label": "NOT_FOUND", "sources_used": [], "quote": "", "reason": "Failed to parse model JSON output"}
+    try:
+        return json.loads(match.group(0))
+    except Exception as exc:
+        return {"label": "NOT_FOUND", "sources_used": [], "quote": "", "reason": f"Malformed JSON: {exc}"}
+
+
+def run_judge(
+    rules: Optional[List[str]] = None,
+    models_config_path: Path = Path("config/models.yaml"),
+    cache_dir: Path = CACHE_DIR,
+    output_file: Path = Path("runs/grounding.json"),
+    spec_hash_file: Path = Path("contract/SPEC_HASH"),
+) -> Dict[str, Any]:
+    """Execute LLM evidence judge across rules using the configured model."""
+    load_env_file()
+    if not models_config_path.is_file():
+        raise FileNotFoundError(f"Models config file not found: {models_config_path}")
+
+    with open(models_config_path, "r", encoding="utf-8") as f:
+        cfg = yaml.safe_load(f)
+
+    # Determine judge model and provider
+    judge_model_id = cfg.get("judge_model_id") or "gemini-3.5-flash-lite"
+    provider_name = "google"
+    api_key_env = "GEMINI_API_KEY"
+    base_url = None
+
+    for m in cfg.get("models", []):
+        if m.get("model_id") == judge_model_id or m.get("name") == "strong_a":
+            provider_name = m.get("provider", "google")
+            judge_model_id = m.get("model_id", judge_model_id)
+            api_key_env = m.get("api_key_env", "GEMINI_API_KEY")
+            base_url = m.get("base_url")
+            break
+
+    api_key = os.environ.get(api_key_env, "").strip()
+    if not api_key:
+        raise ValueError(f"API key {api_key_env} is not set in environment or .env.")
+
+    adapter = get_provider(provider_name)
+
+    cache_files = sorted(cache_dir.glob("R*.json"), key=lambda p: int(p.stem[1:]))
+    if rules:
+        target_rule_set = set(rules)
+        cache_files = [cf for cf in cache_files if cf.stem in target_rule_set]
+
+    label_counts: Dict[str, int] = {"SUPPORTED": 0, "PARTIAL": 0, "NOT_FOUND": 0, "CONFLICT": 0}
+    model_calls_used = 0
+
+    for cf in cache_files:
+        with open(cf, "r", encoding="utf-8") as f:
+            cdata = json.load(f)
+
+        rule_id = cdata.get("rule_id", cf.stem)
+        title = cdata.get("title", "")
+        description = cdata.get("description", "")
+        sources = cdata.get("sources", [])
+
+        prompt = build_judge_prompt(rule_id, title, description, sources)
+        res = adapter.generate(
+            prompt=prompt,
+            model_id=judge_model_id,
+            temperature=0.0,
+            max_tokens=1000,
+            api_key=api_key,
+            base_url=base_url,
+        )
+        model_calls_used += 1
+
+        raw_verdict = extract_json_verdict(res.raw_text)
+        validated_verdict = validate_judge_verdict(raw_verdict, sources)
+
+        cdata["judge_verdict"] = validated_verdict
+        cdata["judge_meta"] = {
+            "model": judge_model_id,
+            "temperature": 0.0,
+            "token_usage": res.token_usage,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+
+        # Write back to cache file
+        with open(cf, "w", encoding="utf-8") as f:
+            json.dump(cdata, f, indent=2)
+
+        lbl = validated_verdict["label"]
+        label_counts[lbl] = label_counts.get(lbl, 0) + 1
+
+    # Rebuild runs/grounding.json
+    grounding_data = rebuild_grounding_json(
+        cache_dir=cache_dir,
+        spec_hash_file=spec_hash_file,
+        output_file=output_file,
+    )
+
+    errs = validate_grounding(grounding_data)
+    if errs:
+        raise ValueError(f"Grounding validation failed after judge execution: {errs}")
+
+    return {
+        "judge_model": judge_model_id,
+        "label_counts": label_counts,
+        "model_calls_used": model_calls_used,
+        "data": grounding_data,
+    }
+
+
 def rebuild_grounding_json(
     cache_dir: Path = CACHE_DIR,
     overrides_file: Optional[Path] = OVERRIDES_FILE,
@@ -161,6 +274,8 @@ def rebuild_grounding_json(
 
         has_sources = len(sources) > 0
         rule_override = overrides.get(rule_id, {})
+        cached_verdict = cdata.get("judge_verdict")
+        cached_judge_meta = cdata.get("judge_meta")
 
         if rule_override:
             label = rule_override.get("label", default_label)
@@ -170,6 +285,14 @@ def rebuild_grounding_json(
             quote = rule_override.get("quote", "")
             sources_used = rule_override.get("sources_used", [s["id"] for s in sources[:1]])
             judge_meta = {"model": "human_override", "temperature": None}
+        elif cached_verdict:
+            label = cached_verdict.get("label", default_label)
+            human_reviewed = False
+            convention = cached_verdict.get("convention", (label == "NOT_FOUND" or not has_sources))
+            reason = cached_verdict.get("reason", "")
+            quote = cached_verdict.get("quote", "")
+            sources_used = cached_verdict.get("sources_used", [])
+            judge_meta = cached_judge_meta or {"model": None, "temperature": None}
         else:
             label = default_label
             human_reviewed = False

@@ -263,5 +263,26 @@
       },
       "timestamp": "2026-11-21T07:34:14.088620+00:00"
     }
-  ]
+  ],
+  "judge_verdict": {
+    "label": "SUPPORTED",
+    "sources_used": [
+      "R10_s1",
+      "R10_s7",
+      "R10_s8"
+    ],
+    "quote": "To guarantee true idempotency under concurrency, systems must enforce atomic database-level constraints",
+    "reason": "The retrieved sources discuss handling concurrency, database locks, busy-handlers, and the necessity of enforcing idempotency under concurrent execution, directly supporting Rule R10.",
+    "convention": false
+  },
+  "judge_meta": {
+    "model": "gemini-3.5-flash-lite",
+    "temperature": 0.0,
+    "token_usage": {
+      "prompt_tokens": 1298,
+      "completion_tokens": 119,
+      "total_tokens": 1417
+    },
+    "timestamp": "2026-11-21T08:31:06.426652+00:00"
+  }
 }

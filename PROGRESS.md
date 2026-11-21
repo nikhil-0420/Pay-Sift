@@ -443,3 +443,22 @@
   - In Stage K3, judge labels remain honestly marked `NOT_JUDGED` pending model evaluation in K3B.
   - No model-generated code was executed natively.
   - Every displayed source URL traces directly to raw responses stored in `grounding/cache/`.
+
+
+### Stage K3B Report (Evidence Judged)
+
+- **Timestamp:** 2026-11-21 14:15:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nikhil
+- **Judge Model:** `gemini-3.5-flash-lite` (Provider: Google Generative Language API)
+- **Model Calls Used:** 11 / 120 max total API calls
+- **You.com Calls Used Total:** 30 / 60
+- **Label Distribution:**
+  - `SUPPORTED`: 4 rules (R1, R8, R9, R10)
+  - `PARTIAL`: 1 rule (R6)
+  - `NOT_FOUND`: 6 rules (R0, R2, R3, R4, R5, R7)
+  - `CONFLICT`: 0 rules
+- **Zero NOT_JUDGED Rules:** All 11 rules (R0–R10) have been evaluated with code-enforced checks (verbatim snippet substring, max 25 words quote, valid source IDs).
+- **Artifacts:**
+  - `grounding/cache/R0.json` ... `R10.json`: updated with `judge_verdict` and `judge_meta`.
+  - `runs/grounding.json`: rebuilt and verified against `contract/grounding_schema.json` with 0 errors; `spec_sha` matches `contract/SPEC_HASH`.

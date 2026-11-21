@@ -271,5 +271,22 @@
       },
       "timestamp": "2026-11-21T07:33:56.904712+00:00"
     }
-  ]
+  ],
+  "judge_verdict": {
+    "label": "NOT_FOUND",
+    "sources_used": [],
+    "quote": "",
+    "reason": "None of the retrieved snippets contain information about payments and ledger agreeing via specific fields (`captured_paise`, `refunded_paise`) matching the sum of ledger entries.",
+    "convention": true
+  },
+  "judge_meta": {
+    "model": "gemini-3.5-flash-lite",
+    "temperature": 0.0,
+    "token_usage": {
+      "prompt_tokens": 1331,
+      "completion_tokens": 73,
+      "total_tokens": 1404
+    },
+    "timestamp": "2026-11-21T08:30:34.022736+00:00"
+  }
 }

@@ -264,5 +264,22 @@
       },
       "timestamp": "2026-11-21T07:33:40.051172+00:00"
     }
-  ]
+  ],
+  "judge_verdict": {
+    "label": "NOT_FOUND",
+    "sources_used": [],
+    "quote": "",
+    "reason": "None of the retrieved documentation snippets contain internal database schema details, ledger insertion logic, or specific state rejection rules regarding duplicate captures as detailed in Rule R4.",
+    "convention": true
+  },
+  "judge_meta": {
+    "model": "gemini-3.5-flash-lite",
+    "temperature": 0.0,
+    "token_usage": {
+      "prompt_tokens": 1143,
+      "completion_tokens": 69,
+      "total_tokens": 1212
+    },
+    "timestamp": "2026-11-21T08:30:15.373078+00:00"
+  }
 }

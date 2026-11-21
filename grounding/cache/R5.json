@@ -230,5 +230,22 @@
       },
       "timestamp": "2026-11-21T07:33:45.767098+00:00"
     }
-  ]
+  ],
+  "judge_verdict": {
+    "label": "NOT_FOUND",
+    "sources_used": [],
+    "quote": "",
+    "reason": "None of the retrieved snippets discuss the requirement that a `refund.processed` event requires an existing captured payment, nor do they specify returning status 'rejected' with no state change if the `payment_id` does not exist.",
+    "convention": true
+  },
+  "judge_meta": {
+    "model": "gemini-3.5-flash-lite",
+    "temperature": 0.0,
+    "token_usage": {
+      "prompt_tokens": 1013,
+      "completion_tokens": 84,
+      "total_tokens": 1097
+    },
+    "timestamp": "2026-11-21T08:30:17.565846+00:00"
+  }
 }

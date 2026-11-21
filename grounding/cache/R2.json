@@ -259,5 +259,22 @@
       },
       "timestamp": "2026-11-21T07:33:28.735485+00:00"
     }
-  ]
+  ],
+  "judge_verdict": {
+    "label": "NOT_FOUND",
+    "sources_used": [],
+    "quote": "",
+    "reason": "Failed to parse model JSON output",
+    "convention": true
+  },
+  "judge_meta": {
+    "model": "gemini-3.5-flash-lite",
+    "temperature": 0.0,
+    "token_usage": {
+      "prompt_tokens": 1366,
+      "completion_tokens": 80,
+      "total_tokens": 1446
+    },
+    "timestamp": "2026-11-21T08:29:50.956460+00:00"
+  }
 }

@@ -12,7 +12,12 @@ import unittest
 from fastapi.testclient import TestClient
 import pytest
 
-from api.evidence import router, set_client_override
+from api.evidence import (
+    router,
+    set_cache_dir_override,
+    set_client_override,
+    set_output_file_override,
+)
 from api.main import app
 from grounding.fetch import fetch_all_evidence, fetch_rule_evidence, load_queries
 from grounding.judge import (
@@ -229,36 +234,41 @@ def test_grounding_schema_validator():
     assert len(validate_grounding(bad_label_doc)) > 0
 
 
-def test_evidence_api_endpoints():
+def test_evidence_api_endpoints(tmp_path: Path):
     """Verify FastAPI evidence router endpoints with TestClient."""
     set_client_override(FakeYouComClient())
-    client = TestClient(app)
+    set_cache_dir_override(tmp_path)
+    set_output_file_override(tmp_path / "grounding.json")
+    try:
+        client = TestClient(app)
 
-    # 1. Invalid rule id returns 400
-    res_bad = client.get("/evidence/R999")
-    assert res_bad.status_code == 400
+        # 1. Invalid rule id returns 400
+        res_bad = client.get("/evidence/R999")
+        assert res_bad.status_code == 400
 
-    # 2. CORS preflight check from localhost:5173
-    cors_res = client.options(
-        "/evidence",
-        headers={
-            "Origin": "http://localhost:5173",
-            "Access-Control-Request-Method": "GET",
-        }
-    )
-    assert cors_res.status_code == 200
-    assert cors_res.headers.get("access-control-allow-origin") == "http://localhost:5173"
+        # 2. CORS preflight check from localhost:5173
+        cors_res = client.options(
+            "/evidence",
+            headers={
+                "Origin": "http://localhost:5173",
+                "Access-Control-Request-Method": "GET",
+            }
+        )
+        assert cors_res.status_code == 200
+        assert cors_res.headers.get("access-control-allow-origin") == "http://localhost:5173"
 
-    # 3. Search endpoint with extra terms > 80 chars
-    long_terms = "x" * 85
-    search_bad = client.post("/evidence/search", json={"rule_id": "R1", "extra_terms": long_terms})
-    assert search_bad.status_code == 400
+        # 3. Search endpoint with extra terms > 80 chars
+        long_terms = "x" * 85
+        search_bad = client.post("/evidence/search", json={"rule_id": "R1", "extra_terms": long_terms})
+        assert search_bad.status_code == 400
 
-    # 4. Search endpoint valid execution
-    search_ok = client.post("/evidence/search", json={"rule_id": "R1", "extra_terms": "stripe test"})
-    assert search_ok.status_code in (200, 502)
-
-    set_client_override(None)
+        # 4. Search endpoint valid execution
+        search_ok = client.post("/evidence/search", json={"rule_id": "R1", "extra_terms": "stripe test"})
+        assert search_ok.status_code in (200, 502)
+    finally:
+        set_client_override(None)
+        set_cache_dir_override(None)
+        set_output_file_override(None)
 
 
 def test_repair_prompt_sources():

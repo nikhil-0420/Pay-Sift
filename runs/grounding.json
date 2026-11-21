@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-11-21T07:38:51.084545+00:00",
+  "generated_at": "2026-11-21T08:42:36.327529+00:00",
   "spec_sha": "289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a",
   "provider": "you.com",
   "rules": {
     "R0": {
       "title": "Totality & Interface",
-      "label": "NOT_JUDGED",
-      "convention": false,
+      "label": "NOT_FOUND",
+      "convention": true,
       "human_reviewed": false,
       "sources": [
         {
@@ -102,15 +102,21 @@
       ],
       "sources_used": [],
       "quote": "",
-      "reason": "",
+      "reason": "None of the retrieved sources contain documentation regarding a handler returning a Python dict containing specific status values ('applied', 'duplicate', 'rejected') and a string 'reason' with a 5.0s timeout.",
       "judge": {
-        "model": null,
-        "temperature": null
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 1333,
+          "completion_tokens": 80,
+          "total_tokens": 1413
+        },
+        "timestamp": "2026-11-21T08:29:34.813197+00:00"
       }
     },
     "R1": {
       "title": "Signature Verification",
-      "label": "NOT_JUDGED",
+      "label": "SUPPORTED",
       "convention": false,
       "human_reviewed": false,
       "sources": [
@@ -135,18 +141,26 @@
           "provider": "you.com"
         }
       ],
-      "sources_used": [],
-      "quote": "",
-      "reason": "",
+      "sources_used": [
+        "R1_s1"
+      ],
+      "quote": "Always verify HMAC-SHA256 signatures over the exact raw body payload bytes. Do not verify signature over re-serialized JSON.",
+      "reason": "The retrieved documentation explicitly supports the requirement to compute the HMAC-SHA256 signature using the exact raw body bytes and explicitly warns against using re-serialized JSON.",
       "judge": {
-        "model": null,
-        "temperature": null
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 393,
+          "completion_tokens": 109,
+          "total_tokens": 502
+        },
+        "timestamp": "2026-11-21T08:40:21.423168+00:00"
       }
     },
     "R2": {
       "title": "Payload Validation",
-      "label": "NOT_JUDGED",
-      "convention": false,
+      "label": "NOT_FOUND",
+      "convention": true,
       "human_reviewed": false,
       "sources": [
         {
@@ -242,16 +256,22 @@
       ],
       "sources_used": [],
       "quote": "",
-      "reason": "",
+      "reason": "Failed to parse model JSON output",
       "judge": {
-        "model": null,
-        "temperature": null
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 1366,
+          "completion_tokens": 80,
+          "total_tokens": 1446
+        },
+        "timestamp": "2026-11-21T08:29:50.956460+00:00"
       }
     },
     "R3": {
       "title": "Event Idempotency",
-      "label": "NOT_JUDGED",
-      "convention": false,
+      "label": "NOT_FOUND",
+      "convention": true,
       "human_reviewed": false,
       "sources": [
         {
@@ -347,16 +367,22 @@
       ],
       "sources_used": [],
       "quote": "",
-      "reason": "",
+      "reason": "Failed to parse model JSON output",
       "judge": {
-        "model": null,
-        "temperature": null
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 1299,
+          "completion_tokens": 169,
+          "total_tokens": 1468
+        },
+        "timestamp": "2026-11-21T08:30:11.066219+00:00"
       }
     },
     "R4": {
       "title": "Payment Capture",
-      "label": "NOT_JUDGED",
-      "convention": false,
+      "label": "NOT_FOUND",
+      "convention": true,
       "human_reviewed": false,
       "sources": [
         {
@@ -452,16 +478,22 @@
       ],
       "sources_used": [],
       "quote": "",
-      "reason": "",
+      "reason": "None of the retrieved documentation snippets contain internal database schema details, ledger insertion logic, or specific state rejection rules regarding duplicate captures as detailed in Rule R4.",
       "judge": {
-        "model": null,
-        "temperature": null
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 1143,
+          "completion_tokens": 69,
+          "total_tokens": 1212
+        },
+        "timestamp": "2026-11-21T08:30:15.373078+00:00"
       }
     },
     "R5": {
       "title": "Refund Target Existence",
-      "label": "NOT_JUDGED",
-      "convention": false,
+      "label": "NOT_FOUND",
+      "convention": true,
       "human_reviewed": false,
       "sources": [
         {
@@ -547,15 +579,21 @@
       ],
       "sources_used": [],
       "quote": "",
-      "reason": "",
+      "reason": "None of the retrieved snippets discuss the requirement that a `refund.processed` event requires an existing captured payment, nor do they specify returning status 'rejected' with no state change if the `payment_id` does not exist.",
       "judge": {
-        "model": null,
-        "temperature": null
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 1013,
+          "completion_tokens": 84,
+          "total_tokens": 1097
+        },
+        "timestamp": "2026-11-21T08:30:17.565846+00:00"
       }
     },
     "R6": {
       "title": "Refund Balance Bound",
-      "label": "NOT_JUDGED",
+      "label": "PARTIAL",
       "convention": false,
       "human_reviewed": false,
       "sources": [
@@ -640,18 +678,27 @@
           "provider": "you.com"
         }
       ],
-      "sources_used": [],
-      "quote": "",
-      "reason": "",
+      "sources_used": [
+        "R6_s1",
+        "R6_s7"
+      ],
+      "quote": "you can\u2019t refund a total greater than the original charge amount",
+      "reason": "The retrieved sources support the core rule that total refunds cannot exceed the captured/original payment amount. However, the specific implementation details regarding returning status 'rejected', committing no state change, updating specific fields like 'refunded_paise', and inserting a ledger entry are not mentioned in the snippets.",
       "judge": {
-        "model": null,
-        "temperature": null
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 1254,
+          "completion_tokens": 131,
+          "total_tokens": 1385
+        },
+        "timestamp": "2026-11-21T08:30:19.769210+00:00"
       }
     },
     "R7": {
       "title": "Financial Atomicity",
-      "label": "NOT_JUDGED",
-      "convention": false,
+      "label": "NOT_FOUND",
+      "convention": true,
       "human_reviewed": false,
       "sources": [
         {
@@ -747,15 +794,21 @@
       ],
       "sources_used": [],
       "quote": "",
-      "reason": "",
+      "reason": "None of the retrieved snippets contain information about payments and ledger agreeing via specific fields (`captured_paise`, `refunded_paise`) matching the sum of ledger entries.",
       "judge": {
-        "model": null,
-        "temperature": null
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 1331,
+          "completion_tokens": 73,
+          "total_tokens": 1404
+        },
+        "timestamp": "2026-11-21T08:30:34.022736+00:00"
       }
     },
     "R8": {
       "title": "Rejection Non-Consumption",
-      "label": "NOT_JUDGED",
+      "label": "SUPPORTED",
       "convention": false,
       "human_reviewed": false,
       "sources": [
@@ -850,17 +903,25 @@
           "provider": "you.com"
         }
       ],
-      "sources_used": [],
-      "quote": "",
-      "reason": "",
+      "sources_used": [
+        "R8_s5"
+      ],
+      "quote": "Errors that occur before execution begins, such as invalid parameters, an invalid API key, or rate limiting, don\u2019t cache a result.",
+      "reason": "Source R8_s5 explicitly supports the rule that rejected requests/errors occurring before execution (such as due to invalid parameters) do not cache a result, meaning the identifier/key is not consumed and retries can be processed normally.",
       "judge": {
-        "model": null,
-        "temperature": null
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 1328,
+          "completion_tokens": 125,
+          "total_tokens": 1453
+        },
+        "timestamp": "2026-11-21T08:30:52.448075+00:00"
       }
     },
     "R9": {
       "title": "Durability Across Restarts",
-      "label": "NOT_JUDGED",
+      "label": "SUPPORTED",
       "convention": false,
       "human_reviewed": false,
       "sources": [
@@ -945,17 +1006,25 @@
           "provider": "you.com"
         }
       ],
-      "sources_used": [],
-      "quote": "",
-      "reason": "",
+      "sources_used": [
+        "R9_s5"
+      ],
+      "quote": "SQLite guarantees all transactions are ACID-compliant even if the transaction is interrupted by a program crash",
+      "reason": "Source R9_s5 supports the rule by confirming that SQLite maintains transactional integrity across program crashes and interruptions, ensuring durability.",
       "judge": {
-        "model": null,
-        "temperature": null
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 1228,
+          "completion_tokens": 93,
+          "total_tokens": 1321
+        },
+        "timestamp": "2026-11-21T08:30:59.249893+00:00"
       }
     },
     "R10": {
       "title": "Concurrency Safety",
-      "label": "NOT_JUDGED",
+      "label": "SUPPORTED",
       "convention": false,
       "human_reviewed": false,
       "sources": [
@@ -1050,12 +1119,22 @@
           "provider": "you.com"
         }
       ],
-      "sources_used": [],
-      "quote": "",
-      "reason": "",
+      "sources_used": [
+        "R10_s1",
+        "R10_s7",
+        "R10_s8"
+      ],
+      "quote": "To guarantee true idempotency under concurrency, systems must enforce atomic database-level constraints",
+      "reason": "The retrieved sources discuss handling concurrency, database locks, busy-handlers, and the necessity of enforcing idempotency under concurrent execution, directly supporting Rule R10.",
       "judge": {
-        "model": null,
-        "temperature": null
+        "model": "gemini-3.5-flash-lite",
+        "temperature": 0.0,
+        "token_usage": {
+          "prompt_tokens": 1298,
+          "completion_tokens": 119,
+          "total_tokens": 1417
+        },
+        "timestamp": "2026-11-21T08:31:06.426652+00:00"
       }
     }
   }
