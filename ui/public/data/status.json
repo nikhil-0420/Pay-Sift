@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T10:33:50.678Z",
+  "generated_at": "2026-11-21T10:52:00.143Z",
   "run_count": 177,
   "phases": [
     {
@@ -45,12 +45,12 @@
     {
       "id": "P8",
       "title": "Pilot runs, packets, report",
-      "status": "PARTIAL (blocked: Docker)"
+      "status": "PARTIAL (blocked: live model run)"
     },
     {
       "id": "P9",
       "title": "Repair loop, scenarios, API, static report",
-      "status": "PARTIAL (blocked: Docker)"
+      "status": "PARTIAL (blocked: live model run)"
     },
     {
       "id": "P10",
@@ -97,7 +97,7 @@
     {
       "id": "G8",
       "title": "selftest passes end-to-end",
-      "status": "PASSED (Docker checks skipped)"
+      "status": "PASSED (skipped checks listed)"
     }
   ],
   "blockers": [
