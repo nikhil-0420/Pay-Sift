@@ -8,7 +8,7 @@
 | P1 | Contract (spec, schema, cases, prompts, sample.json) | DONE | 2026-11-21 01:05 | 2026-11-21 01:31 | Contract spine, schema, 56 cases, prompts, run schema, sample runs, G1 packet. |
 | P2 | Oracle, reference handler, streams, runner normal, m1-m3 | DONE | 2026-11-21 01:35 | 2026-11-21 02:15 | Oracle, reference handler (100/100 passes), streams 0-99, native runner, mutants m1-m3, Gate 2 passed. |
 | P3 | Mutants m4-m6, x1-x4, kill matrix | DONE | 2026-11-21 02:18 | 2026-11-21 03:07 | Mutants m4-m6, x1-x4, kill matrix CLI, Gate 3 passed. |
-| P4 | Sandbox, AST gate, hostile tests, parity | PARTIAL (blocked: Docker) | 2026-11-21 03:13 | 2026-11-21 03:24 | Dockerfile, AST gate, sandbox harness, 7 hostile handlers. G4 evaluated: BLOCKED (Docker missing). |
+| P4 | Sandbox, AST gate, hostile tests, parity | DONE | 2026-11-21 03:13 | 2026-11-21 15:18 | Dockerfile, AST gate, sandbox harness, 7 hostile handlers contained, native vs sandbox parity verified. Gate 4 passed. |
 | P5 | Restart & concurrency, m7-m9 | DONE | 2026-11-21 03:30 | 2026-11-21 04:10 | Restart mode (R9), concurrency harness (R10), mutants m7-m9, Gate 5 and Gate 6 passed. |
 | P6 | Shrinker, explanations | DONE | 2026-11-21 04:15 | 2026-11-21 04:45 | ddmin delta debugging, predicate memoization, template explanations (R0-R10), cli shrink, Gate 7 passed. |
 | P7 | Model generation & intake | PARTIAL (no model keys) | 2026-11-21 04:50 | 2026-11-21 05:15 | Provider adapters, AST intake, spec binding, generation CLI, fake provider tests. BH-002 logged (missing API keys). |
@@ -24,7 +24,7 @@
 | G1 | Independent spec prediction & freeze | PASSED | 2026-11-21 15:10 | 2026-11-21 15:15 | PASSED with partner Nikhil. Disagreements: NONE. Spec unchanged (hash 289fa48f). SQ-001 confirmed. |
 | G2 | Reference handler passes 100/100 invariants | PASSED | 2026-11-21 01:50 | 2026-11-21 02:15 | Reference handler 100/100 pass across seeds 0-99; repeatable across runs; m1-m3 killed with intended rules. |
 | G3 | Reference clean; m1-m6 & x1-x4 fail intended rule | PASSED | 2026-11-21 02:40 | 2026-11-21 03:07 | Reference clean (0 failures across all invariants); all 10 mutants killed with intended rules; x4 sensitive only to family 8. |
-| G4 | Hostile tests contained; sandbox parity | BLOCKED / FAILED | 2026-11-21 03:20 | 2026-11-21 03:24 | Docker unavailable on host. runs/GATE4_FAILED.md generated; BH-001 logged; untrusted execution blocked. |
+| G4 | Hostile tests contained; sandbox parity | PASSED | 2026-11-21 14:30 | 2026-11-21 15:18 | All 7 hostile handlers contained. Seeds 0-19 parity matched (11/11). Ref seeds 0-99 parity matched. runs/GATE4_PASSED generated. |
 | G5 | m7 fails restart, passes normal; ref passes restart | PASSED | 2026-11-21 03:45 | 2026-11-21 03:50 | m7 passes normal mode (100/100) and fails restart mode (R9, 15 failures); reference handler passes restart mode (20/20). |
 | G6 | Ref 50/50 on A & B (3x); m8/m9 caught >=9/10 | PASSED | 2026-11-21 03:55 | 2026-11-21 04:05 | Ref clean 3/3 consecutive full runs (0/50 failures on A & B); m8 caught 10/10 runs on Scenario A; m9 caught 10/10 runs on Scenario B. |
 | G7 | Sequential failures shrink <=4 events (10/10) | PASSED | 2026-11-21 04:30 | 2026-11-21 04:45 | Sequential failure shrinking <= 4 events (10/10 reproducible) verified across all mutants (m1..m6, x1..x4 normal, m7 restart); m3 accumulation analysis documented. |

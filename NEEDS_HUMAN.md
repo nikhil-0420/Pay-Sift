@@ -38,9 +38,9 @@ ID | Phase | Severity (BLOCKER | IMPORTANT | FYI) | What is needed | What was do
 
 ### BH-001: Docker Unavailable on Host (Gate 4 Hard Blocker)
 - **Logged:** 2026-11-20T21:52:33.947575+00:00
-- **Status:** BLOCKER
-- **Impact:** Gate 4 FAILED. No model-generated code can execute tonight without Docker sandbox (Rule 3).
-- **Action:** Install Docker, run daemon, build `paysift-sandbox:1`, and run `python cli.py sandbox-test`.
+- **Status:** RESOLVED (2026-11-21)
+- **Resolution:** Docker sandbox `paysift-sandbox:1` built and verified. Gate 4 PASSED (`runs/GATE4_PASSED` generated). All 7 hostile handlers contained, native vs sandbox parity confirmed across seeds 0-19 for all 11 mutants and seeds 0-99 for reference handler.
+- **Action:** None. Gate 4 is unblocked.
 
 ### BH-002: No Usable Model Config (P7 Blocker)
 - **Logged:** 2026-11-20T23:20:00+00:00
