@@ -1,0 +1,12 @@
+stage: N3
+owner: nehaa
+status: DONE
+completed_at: 2026-11-21T09:47:00Z
+work_commit: 03ced82e4295087b59cb3fc5b8682b87de5cafaf
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Gate G1 recorded as PASSED; spec unchanged; SQ-001 confirmed
+outcome: PASSED
+spec_changed: false
+regen_required: false
+partner: Nikhil
+sq001: CONFIRMED
