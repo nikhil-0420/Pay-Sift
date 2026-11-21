@@ -1,0 +1,11 @@
+stage: N1
+owner: nehaa
+status: DONE
+completed_at: 2026-11-21T09:59:00Z
+work_commit: 6598e4b02b0f0631800e07a8ac527a13f7bc5e79
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Docker sandbox paysift-sandbox:1 built, 7/7 hostile contained, native/sandbox parity holds
+image_id: sha256:2b7a2cd0df986e37ef4239a25817e4346189a0b02a9bc664a3b6e913eac35708
+hostile_contained: 7/7
+parity_seeds_0_19: 11/11
+parity_seeds_0_99: matched
