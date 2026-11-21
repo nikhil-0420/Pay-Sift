@@ -1,0 +1,11 @@
+stage: K3B
+owner: nikhil
+status: DONE
+completed_at: 2026-11-21T08:44:00Z
+work_commit: c2b208529d32a7bd6e5015a144ae0d42203d2246
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Evaluated retrieved You.com web documentation evidence using gemini-3.5-flash-lite
+judge_model: gemini-3.5-flash-lite
+label_counts: SUPPORTED=4, PARTIAL=1, NOT_FOUND=6, CONFLICT=0
+you_calls_used_total: 30
+model_calls_used: 11
