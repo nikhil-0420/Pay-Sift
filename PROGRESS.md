@@ -736,6 +736,32 @@
   - Render free tier spins down on idle; first request after idle takes ~45–55 seconds. Frontend includes health probe with 6s timeout falling back to static snapshot until awakened.
 - **Marker:** `handoff/C3_DEPLOYED`
 
+---
+
+### Phase C5 Report - Readiness Audit and Redeploy
+
+- **Timestamp:** 2026-11-22 00:15:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nikhil
+- **Repair Verification & Presentation (/repair):**
+  - Cached repair artifact `repair/cache/3__0.json` (fixing Rule R8 on `strong_a/A/3` with Gemini 3.5 Flash Lite) rendered with explicit origin: `"CACHED REPAIR RESULT (run on operator machine)"`.
+  - Exact outcome highlighted with three key metrics:
+    - Rule Outcome: `Rule R8 Fixed` (violation eliminated on full test re-run).
+    - Invariant Regression Check: `0 Invariant Regressions` (100% preservation across I1–I5).
+    - Evidence Grounding: `Grounded (9 sources)` using You.com documentation citations.
+  - Before/after invariant table updated to render clean trial counts (`90 passed, 10 failed` -> `100 passed, 0 failed`) with status pills rather than unformatted objects.
+- **K9 Claim Audit & Pitch Readiness:**
+  - Audited all views and claims against `pilot/DECISION.md` and dataset.
+  - Eliminated duplicate R3 evidence block on the landing page so Rule R8 is consistently featured.
+  - Documented claims, source files, and review statuses in `docs/PITCH_READINESS.md`.
+  - Replaced hackathon timing with reviewer understanding guide (claims, limits, evidence).
+- **Redeployment & Live Verification:**
+  - Render web service verified responding `200 OK` on `https://paysift-api.onrender.com/health`.
+  - Frontend built with `VITE_API_BASE=https://paysift-api.onrender.com` and deployed to `https://pay-sift.vercel.app`.
+  - Verified live endpoints `/`, `/spec`, `/repair`, `/data/grounding.json`, and Render `/health` all returning `200 OK`.
+- **Markers:** `handoff/K9_PITCH_READY`, `handoff/C5_REDEPLOYED`
+
+
 
 
 

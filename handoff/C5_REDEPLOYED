@@ -1,0 +1,7 @@
+stage: C5
+owner: nikhil
+status: DONE
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+frontend_url: https://pay-sift.vercel.app
+verify: pass
+live_checks: pass
