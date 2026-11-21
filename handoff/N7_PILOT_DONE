@@ -1,0 +1,12 @@
+stage: N7
+owner: nehaa
+status: DONE
+completed_at: 2026-11-21T11:42:00Z
+work_commit: 2f0ae7a514086c93b6c3a1cbc8f5be918e19cddc
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Pilot finalized with real model finding on strong_a/A/3 (Rule R8)
+decision: FINDING
+demo_candidate: strong_a/A/3
+failing_rule: R8
+classification: a
+illustrative_only: false
