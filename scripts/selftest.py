@@ -80,7 +80,7 @@ def run_selftest(full: bool = False) -> int:
     t0 = time.monotonic()
     try:
         runs_dir = repo_root / "runs"
-        skip_files = {"scenario_verdicts.json", "kill_matrix.json", "kill_matrix.sample.json"}
+        skip_files = {"scenario_verdicts.json", "kill_matrix.json", "kill_matrix.sample.json", "grounding.json"}
         invalid_runs = []
         total_runs = 0
         for rf in runs_dir.glob("*.json"):
@@ -192,8 +192,13 @@ def run_selftest(full: bool = False) -> int:
             "tests/test_report.py",
             "tests/test_api.py",
             "tests/test_cli.py",
+            "tests/test_grounding.py",
         ]
-        cmd = [sys.executable, "-m", "pytest", "-q"] + test_files
+        venv_py = repo_root / ".venv" / "Scripts" / "python.exe"
+        if not venv_py.is_file():
+            venv_py = repo_root / ".venv" / "bin" / "python"
+        py_bin = str(venv_py) if venv_py.is_file() else sys.executable
+        cmd = [py_bin, "-m", "pytest", "-q"] + test_files
         res = subprocess.run(cmd, cwd=str(repo_root), capture_output=True, text=True)
         passed = (res.returncode == 0)
         summary_line = res.stdout.strip().splitlines()[-1] if res.stdout.strip() else res.stderr.strip()
