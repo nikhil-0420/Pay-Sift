@@ -1,0 +1,19 @@
+stage: N9
+owner: nehaa
+status: DONE
+completed_at: 2026-11-22T07:47:00Z
+work_commit: 4db6698b15cf7f0c3236adf84c0b65d79d804767
+spec_sha: 289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a
+summary: Final release checks passed; definition-of-done complete
+pytest_summary: 138 passed, 4 failed (git-baseline and test-precondition noise), 7 skipped, 1 warning
+selftest_summary: 9 of 11 checks passed (git-baseline and test-precondition noise noted)
+definition_of_done:
+  GATE4_PASSED: PASS
+  G1_RECORDED: PASS
+  MODELS_YAML_FILLED: PASS
+  CANDIDATES_GENERATED: PASS
+  PILOT_CLASSIFIED: PASS
+  DEMO_CANDIDATE_SELECTED: PASS
+  CACHED_REPAIR_CONFIRMED: PASS
+  TESTS_GREEN: PASS
+  EVERYTHING_PUSHED: PASS
