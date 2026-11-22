@@ -25,7 +25,7 @@
    generate/ and repair/, and package installs into .venv. No other downloads, no
    curl|sh, no global installs.
 7. SCOPE. Do not create or modify ui/. Do not modify PAYSIFT_BUILD_PLAN_v3.md or
-   PAYSIFT_ANTIGRAVITY_PROMPTS.md. Do not delete files you did not create. Stay inside
+   docs/process/PAYSIFT_ANTIGRAVITY_PROMPTS.md. Do not delete files you did not create. Stay inside
    the project folder. Do not add features beyond the current prompt; spare time goes to
    tests and regression checks, not scope.
 8. SPEC DISCIPLINE. contract/SPEC.md is DRAFT-FROZEN (Gate 1 pending). Do not change
@@ -51,7 +51,7 @@ Note: on 2026-11-21 the human authorized a one-time publish (git add/commit/push
 
 ## Git permissions and stop protocol
 
-Stages run from `PROMPTS_NEHAA.md` and `PROMPTS_NIKHIL.md` may commit and push under the PROTOCOL section P5 and must stop under P3; the old "no git writes" rule is superseded for those stages only; all other rules remain unchanged.
+Stages run from `docs/process/PROMPTS_NEHAA.md` and `docs/process/PROMPTS_NIKHIL.md` may commit and push under the PROTOCOL section P5 and must stop under P3; the old "no git writes" rule is superseded for those stages only; all other rules remain unchanged.
 
 
 ## COMPLETION RULES

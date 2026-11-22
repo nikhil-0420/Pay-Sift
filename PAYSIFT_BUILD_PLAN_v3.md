@@ -9,7 +9,7 @@
 
 **Build style:** depth-first. Finish one thin slice end to end, then deepen it. Never start a new layer while the previous one is unproven.
 
-**This file is the source of truth.** `contract/SPEC.md` is generated from section 5. Every prompt in `PAYSIFT_ANTIGRAVITY_PROMPTS.md` defers to this file.
+**This file is the source of truth.** `contract/SPEC.md` is generated from section 5. Every prompt in `docs/process/PAYSIFT_ANTIGRAVITY_PROMPTS.md` defers to this file.
 
 ---
 
@@ -124,7 +124,7 @@ paysift/
 
 ## 4. Execution modes and the overnight agent contract
 
-**Overnight (Antigravity):** phases P0-P10 in `PAYSIFT_ANTIGRAVITY_PROMPTS.md` build the whole backend with no human present.
+**Overnight (Antigravity):** phases P0-P10 in `docs/process/PAYSIFT_ANTIGRAVITY_PROMPTS.md` build the whole backend with no human present.
 
 Binding rules (full text in `AGENT_RULES.md`):
 - **Never asks, never waits.** Blockers go to `NEEDS_HUMAN.md`; assumptions go to `DECISIONS.md`; the agent continues.

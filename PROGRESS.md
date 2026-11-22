@@ -802,3 +802,35 @@
 
 
 
+
+
+### Phase C7 Report - Final README, Cleanup and Release (Stage K10)
+
+- **Timestamp:** 2026-11-22 13:45:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nikhil (Release Agent)
+- **Preflight & Prerequisites:**
+  - `handoff/N9_FINAL`: Pulled from `origin/main` at commit `c151564`.
+  - `handoff/N8_REPAIR_DONE`: Present (`status: DONE`, `fixed_rule: true`, `broke_other: false`, `grounding_used: true`).
+  - `handoff/K9_PITCH_READY`: Present (`status: DONE`).
+  - `handoff/C5_REDEPLOYED`: Present (`status: DONE`).
+  - `contract/SPEC_HASH`: `289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a`.
+- **Files Created / Relocated / Modified:**
+  - `README.md`: Completely rewritten from scratch accurate to data with Mermaid architecture diagram, live deployment links, local Docker setup instructions, exact candidate finding details (`strong_a/A/3`, Rule R8, 4 events minimal trace), You.com empirical grounding breakdown, Gate G1 record, spec gap list, testing commands, and project credits.
+  - `README_DEMO.md`: Updated with live hosted URLs, cold-start notes, and clean artifact taxonomy.
+  - `docs/process/`: Relocated prompt files `PAYSIFT_ANTIGRAVITY_PROMPTS.md`, `PROMPTS_NEHAA.md`, and `PROMPTS_NIKHIL.md` via `git mv`; updated all repository references across `AGENT_RULES.md`, `PAYSIFT_BUILD_PLAN_v3.md`, `handoff/README.md`, and `scripts/commit_plan.md`.
+  - `MORNING_HANDOFF.md`: Deleted from disk per Phase 7 requirements.
+  - `handoff/K10_SUBMITTED`: Completion marker.
+- **Security & Secret Scan:**
+  - Scanned all 1,225 tracked files: 0 secret leaks, 0 exposed credentials, 0 ngrok URLs.
+  - `.env` strictly untracked and gitignored.
+- **Verification Suites:**
+  - `ui/ npm run verify`: Passed (TypeScript check clean, 23/23 Vitest tests passed, 232 run files schema-validated with 0 errors, Vite production build clean).
+  - `pytest -q`: 141 tests passed, 7 skipped, 1 failed (expected `test_check_git_passes_on_uncommitted_working_tree` due to HEAD advancement and active staging).
+  - `python cli.py selftest`: Core verification passed (spec SHA consistency, run schema validation across 206 runs, 13/13 mutants killed, shrinking minimization on m1/m2, 6/6 break-it scenario verdicts, 186 static HTML reports generated, You.com grounding schema validation all PASS).
+- **Live Deployment Endpoints:**
+  - Frontend: `https://pay-sift.vercel.app`
+  - Backend API: `https://paysift-api.onrender.com`
+- **Release Version:**
+  - Tag: `v1.0`
+- **Marker:** `handoff/K10_SUBMITTED`
