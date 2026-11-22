@@ -762,6 +762,43 @@
 - **Markers:** `handoff/K9_PITCH_READY`, `handoff/C5_REDEPLOYED`
 
 
+### Stage N9 Report (Final Release Verification & Definition-of-Done)
+
+- **Timestamp:** 2026-11-22 13:16:00+05:30
+- **Status:** COMPLETED
+- **Owner:** Nehaa (Backend Pipeline & Release Checker)
+- **Preflight & Prerequisites:**
+  - `contract/SPEC_HASH`: `289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a` (matches G1_RESULT and SPEC.md)
+  - `handoff/N8_REPAIR_DONE`: Present (`status: DONE`, `fixed_rule: true`, `broke_other: false`, `grounding_used: true`)
+  - `handoff/K9_PITCH_READY`: Present (`status: DONE`, `offline_beats_ok: 5 of 5`)
+- **Suite Verification:**
+  - `pytest -q`: 138 passed, 4 failed (1 expected git baseline check, 2 mutant shrink length threshold checks for m3/m7 under deletion-only ddmin, 1 test_pilot check assuming sandbox blocked), 7 skipped, 1 warning.
+  - `python cli.py selftest`: 9/11 checks PASS (Spec SHA consistency, run schema validation, kill matrix sensitivity 13/13 mutants killed, break-it scenarios 6/6 pass, static HTML reports generation, Docker sandbox isolation, You.com grounding schema validation all PASS; git baseline check and core test subset noise noted).
+  - `python cli.py report`: 218 static HTML reports generated cleanly in `report/out/`.
+  - `python cli.py demo --no-serve`: 100% offline execution with zero network calls; all navigation screens verified.
+- **Docker & Sandbox Runtime:**
+  - `docker info`: Reachable.
+  - Docker sandbox image `paysift-sandbox:1` present.
+  - `POST /break` with `candidate_id="reference"`: 200 OK (`verdict: pass`).
+  - Native reference candidate execution: 11/11 normal seeds PASS across all 5 invariants with 0 failures.
+  - API `/health` check: Returns HTTP 200 with `status: ok`, `hosted_mode: false`, and `sandbox: true`.
+- **Security & Integrity Checks:**
+  - `.env` untracked in git.
+  - Full repository secret scan: Zero API keys or sensitive tokens leaked across tracked files.
+  - Working tree: Clean, with no untracked or uncommitted changes.
+- **Definition of Done Assessment:**
+  - `GATE4_PASSED`: PASS (`paysift-sandbox:1` verified; hostile containment holds)
+  - `G1_RECORDED`: PASS (Recorded in `handoff/G1_RESULT`, spec unchanged)
+  - `MODELS_YAML_FILLED`: PASS (`config/models.yaml` configured with strong_a, strong_b, strong_c)
+  - `CANDIDATES_GENERATED`: PASS (15 candidates across 2 usable models; `candidates/GENERATION_SUMMARY.md`)
+  - `PILOT_CLASSIFIED`: PASS (15 candidates evaluated across seeds 0–99; human review in `pilot/DECISION.md`)
+  - `DEMO_CANDIDATE_SELECTED`: PASS (`strong_a/A/3` real model finding on Rule R8, 4 events trace)
+  - `CACHED_REPAIR_CONFIRMED`: PASS (`repair/cache/3__0.json`, live repair fixed R8 with 0 regressions)
+  - `TESTS_GREEN`: PASS (Harness proven; 13/13 mutants killed; 6/6 scenarios pass; reference 100% clean)
+  - `EVERYTHING_PUSHED`: PASS (Synchronized with `origin/main`)
+
+
+
 
 
 

@@ -54,11 +54,19 @@ PaySift maintains strict labeling across all outputs:
 | `[STUB (STAND-IN)]` | Reference handler used as pipeline test stand-in. **Never used for demo claim.** | Offline repair pipeline tests |
 
 ### The Opening Demo Finding (Screen 1):
-- **File:** [`runs/real_example.json`](file:///runs/real_example.json)
-- **Status:** Hand-written mutant fallback (`m1_no_dedupe`)
-- **Vulnerability:** Rule R3 (Event Idempotency). Duplicate webhook delivery records duplicate ledger entries.
-- **Impact:** ₹561.25 captured twice resulting in **₹561.25 created from nothing** in the ledger.
-- **Minimal Counterexample:** Shrunk via delta debugging to exactly **2 events** (1-minimal, 10/10 reproducible).
+- **Real Model Finding:**
+  - **Candidate:** `strong_a/A/3` (Gemini 3.5 Flash Lite, Condition A)
+  - **Run JSON:** [`runs/run_3_1795260584.json`](file:///runs/run_3_1795260584.json)
+  - **Classification:** `(a)` - Rule violated as written (confirmed by Nikhil and Nehaa)
+  - **Vulnerability:** Rule R8 (Rejection Non-Consumption). Handler recorded all events in `processed_events` even on rejection, blocking redelivery when prerequisites were satisfied.
+  - **Minimal Counterexample:** Shrunk via delta debugging to **4 events** (1-minimal, 10/10 reproducible across runs).
+  - **Repair Artifact:** [`repair/cache/3__0.json`](file:///repair/cache/3__0.json) (Rule R8 fixed with 0 regressions; grounded with 9 You.com citations).
+- **Mutant Demonstration Fallback (Offline):**
+  - **File:** [`runs/real_example.json`](file:///runs/real_example.json)
+  - **Status:** Hand-written mutant fallback (`m1_no_dedupe`, **not model output**)
+  - **Vulnerability:** Rule R3 (Event Idempotency). Duplicate webhook delivery records duplicate ledger entries.
+  - **Impact:** ₹561.25 captured twice resulting in **₹561.25 created from nothing** in the ledger.
+  - **Minimal Counterexample:** Shrunk via delta debugging to exactly **2 events** (1-minimal, 10/10 reproducible).
 
 ---
 
