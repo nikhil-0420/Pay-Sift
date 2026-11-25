@@ -1,256 +1,309 @@
-# PaySift: Invariant Fuzzing & Shrinking for AI-Written Payment Handlers
+# 🧾 PaySift
 
-> **Built for BEYOND 9TO5 (EtriqAI), Track 2**  
-> *Automated discovery of financial state-machine bugs in LLM-generated code through invariant fuzzing, counterexample shrinking, empirical documentation grounding, and regression-free repair.*
+### Invariant Testing & Counter example Shrinking for AI-Written Payment Webhook Handlers — Sandboxed, Evidence-Grounded, Honest About Its Limits
 
----
+[![Live Site](https://img.shields.io/badge/Live-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://pay-sift.vercel.app)
+[![API](https://img.shields.io/badge/API-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://paysift-api.onrender.com/health)
+[![Repo](https://img.shields.io/badge/Repo-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/nikhil-0420/Pay-Sift)
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Docker](https://img.shields.io/badge/Docker-Sandbox-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![You.com](https://img.shields.io/badge/You.com-Search%20API-6C47FF?style=for-the-badge)](https://you.com/platform)
 
-## Live Deployments
+[**Live Site**](https://pay-sift.vercel.app) · [**API Health**](https://paysift-api.onrender.com/health) · [**API Docs**](https://paysift-api.onrender.com/docs) · [**Repo**](https://github.com/nikhil-0420/Pay-Sift)
 
-- **Production Frontend (Vercel):** [https://pay-sift.vercel.app](https://pay-sift.vercel.app)
-- **Production Backend API (Render):** [https://paysift-api.onrender.com](https://paysift-api.onrender.com)
-  - Interactive API Docs: [https://paysift-api.onrender.com/docs](https://paysift-api.onrender.com/docs)
-  - Health & Status: [https://paysift-api.onrender.com/health](https://paysift-api.onrender.com/health)
-
-> [!NOTE]
-> **Free-Tier Cold Starts (~50s):** The hosted Render backend runs on a free tier that spins down after 15 minutes of inactivity. When cold, the first request may take 45–55 seconds to warm up. The frontend automatically probes health and falls back to a complete, bundled static snapshot with a truthful notice (`"Backend waking or unavailable, showing static snapshot"`) so that the site is 100% accessible at all times.
-
----
-
-## 1. Why PaySift Exists
-
-AI code generators write payment webhook handlers that look immaculate. They format JSON cleanly, type-hint Python correctly, handle HTTP status codes, and pass superficial unit tests. 
-
-**Yet they routinely break money.**
-
-Under real-world payment edge cases—out-of-order deliveries, network retries, crash restarts, duplicate webhook deliveries, and concurrent refund races—LLM-generated handlers fail critical financial invariants:
-- **Double Captures:** Applying duplicate captures or charging customers twice on redelivered webhooks.
-- **Over-Refunds:** Allowing cumulative refund totals to exceed captured amounts.
-- **Idempotency Poisoning:** Recording a rejected webhook's `event_id` into deduplication tables, so when the client fixes the prerequisite and redelivers, the legitimate transaction is rejected as a duplicate.
-- **Lost Records:** Updating balances without writing immutable ledger entries, or crashing mid-transaction without transactional atomicity.
-
-PaySift exists to subject AI-written financial code to rigorous mathematical invariants, shrink violations to minimal reproducible event traces, ground the root causes in real provider documentation via You.com, and automatically verify repairs across the entire test suite.
+> ⚠️ **Honest framing, up front:** PaySift is a research and portfolio prototype, not a benchmark and not a product. The harness is validated against bugs we wrote ourselves. The one model finding it reports is a single candidate, under a single prompt condition, against a single rule. Evidence from You.com is mostly partial or absent, and we say so on every screen. Nothing here is a leaderboard, and nothing is a claim that any model is good or bad at payments.
 
 ---
 
-## 2. System Architecture
+## 📌 Overview
+
+AI code generators write payment webhook handlers that look right: clean JSON, typed Python, sensible status codes, tests that pass. The failures only show up when deliveries get awkward: retries, out-of-order events, duplicates, restarts, concurrent refunds.
+
+PaySift is a harness that makes those failures visible and small:
+
+- A written **contract** (rules R0 to R10) defines what a correct handler must do
+- A deterministic **ledger oracle** checks five invariants (I1 to I5) after every delivery
+- Candidate handlers (a reference, hand-written mutants and model-generated code) run in a **Docker sandbox** with no network
+- When an invariant fails, a **shrinker** reduces the event stream to the smallest recorded sequence that still breaks the ledger
+- A **You.com evidence layer** retrieves public documentation for each rule and labels how well it supports the rule (and says so plainly when it does not)
+- A **repair loop** can ask a model to fix the failing handler, and a fix only counts if the full suite passes again
+
+I1 to I4 are the financial invariants (signature, idempotency, conservation, bounds). I5 is the interface invariant. They are always shown separately.
+
+---
+
+## 🖥️ What's in the app
+
+- **Findings** — a run explorer: every recorded run with source, model, condition, failures, minimal trace length and classification. Alphabetical by default, never ranked
+- **Kill matrix** — the reference handler and every mutant against every invariant, with the intended invariant outlined
+- **Break it** — a library of payment scenarios replayed against the reference and the mutants
+- **Pilot** — model candidate outcomes, Condition A kept separate from the illustrative Condition B
+- **Repair** — the repair loop: failure, prompt, fix, full-suite re-run, verdict
+- **Spec** — rules R0 to R10, each with its evidence panel, plus a "Spec gaps" tab of open questions
+- **Method** — the evidence pipeline from contract to counterexample
+
+| Part | Where it runs | What it can do |
+|---|---|---|
+| **Frontend** | Vercel (static) | Everything above, from bundled data |
+| **Hosted API** | Render, read-only | Recorded runs, kill matrix, cached evidence, live You.com search (rate-limited) |
+| **Local backend** | Your machine, with Docker | Live sandbox runs and live model repair, using your own keys |
+
+The hosted API never executes candidate code and never calls a model. See [Run it locally](#-run-it-locally-with-docker).
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+| --- | --- |
+| 🧪 **Deterministic oracle** | A SQLite ledger oracle evaluates five invariants after each delivery. Results are reproducible across seeds |
+| 🔒 **Sandboxed execution** | Untrusted handler code runs in a Docker container with no network and resource limits. Seven hostile handlers are in the test suite to prove containment |
+| ✂️ **Counterexample shrinking** | Failing streams are reduced to a minimal event sequence that still fails, so a human can read it |
+| 📚 **Evidence per rule** | Each rule gets a You.com retrieval, an LLM-judged label (supported, partial, not found, conflict) and verbatim quotes checked as exact substrings of the retrieved snippet |
+| 🧑‍⚖️ **Human overrides, visible** | Where a person changed an LLM label, the UI shows it as human-reviewed. Everything else is shown as LLM-judged and unreviewed |
+| 🛠️ **Grounded repair** | A repair request carries the failing code, the minimal trace and the cited sources, and is accepted only after a full-suite re-run |
+| 🏷️ **Provenance on everything** | Hand-written mutants are always labelled as such. A mutant is never presented as model output |
+| 🌐 **Honest hosting** | The hosted site falls back to a bundled static snapshot when the free-tier API is asleep, and says so in a banner |
+| 🧭 **Connect local backend** | The hosted UI can attach to your own local backend to unlock live runs and repair |
+
+---
+
+## 🏗️ Tech Stack
+
+**Harness**
+- Python 3.12 · SQLite ledger oracle · seeded event-stream generation · delta-debugging style shrinker
+- Docker sandbox (`runner/`) — no network, memory/CPU/process limits, hostile-handler tests
+
+**Evidence layer**
+- You.com Search API — retrieval and cache (`grounding/`)
+- An LLM judge for support labels, with human overrides (`grounding/overrides.yaml`)
+
+**Backend**
+- FastAPI · Uvicorn — read-only hosted mode and full local mode
+
+**Frontend**
+- React + TypeScript + Vite · Vitest — self-hosted fonts, no CDN, no remote images
+
+**Hosting**
+- Vercel (static frontend) · Render (read-only API)
+
+---
+
+## 📐 Architecture
 
 ```mermaid
 flowchart TD
-  subgraph Specification & Oracle
-    Contract["Contract Rules (R0–R10)<br/>contract/SPEC.md"] --> SpecHash["Spec Hash<br/>contract/SPEC_HASH"]
-    Oracle["Ledger Oracle (Invariants I1–I5)<br/>oracle/invariants.py"]
-  end
-
-  subgraph Grounding Layer
-    YouCom["You.com Search & Grounding API"] --> Grounding["Documentation Grounding<br/>runs/grounding.json"]
-  end
-
-  subgraph Candidate Execution
-    Candidates["Candidate Handlers<br/>(Reference, Mutants, Model Code)"] --> Sandbox["Docker gVisor Sandbox<br/>(Network None, Memory/CPU Capped)"]
-    Sandbox --> Oracle
-  end
-
-  subgraph Fuzzing & Shrinking
-    Attacker["Seeded Event Streams<br/>(Normal, Restarts, Concurrency)"] --> Sandbox
-    Oracle -- Invariant Failure --> Shrinker["Delta-Debugging Shrinker<br/>(Minimal Trace Generation)"]
-  end
-
-  subgraph Repair Loop
-    Shrinker -- Minimal Trace --> Repair["Model Repair Loop<br/>(Cites You.com Evidence)"]
-    Grounding --> Repair
-    Repair --> FullSuite["Full Suite Re-run<br/>(0 Invariant Regressions)"]
-    FullSuite --> Sandbox
-  end
-
-  subgraph Hosted Delivery
-    API["FastAPI REST Service<br/>(Render Hosted Read-Only)"]
-    UI["React Forensic Ledger UI<br/>(Vercel Production)"]
-    API <--> UI
-  end
+    A["Contract R0 to R10<br/>contract/SPEC.md + SPEC_HASH"] --> B["Ledger oracle<br/>invariants I1 to I5"]
+    C["Candidates<br/>reference, mutants, model code"] --> D["Docker sandbox<br/>no network, resource limits"]
+    E["Seeded event streams"] --> D
+    D --> B
+    B -->|invariant failure| F["Shrinker<br/>minimal failing trace"]
+    G["You.com search"] --> H["Evidence per rule<br/>label + verbatim quotes<br/>runs/grounding.json"]
+    F --> I["Repair loop<br/>failing code + trace + cited sources"]
+    H --> I
+    I -->|full suite re-run| D
+    J["FastAPI<br/>hosted: read-only / local: live"] --> K["React UI<br/>Vercel"]
+    B --> J
+    F --> J
+    H --> J
+    K -.->|optional: Connect local backend| L["Your local API + Docker"]
 ```
 
 ---
 
-## 3. What the Harness Proves
+## 📊 What's actually been verified
 
-The PaySift test harness is proven and mathematically verified against both positive and negative baselines:
+**The harness, on hand-written bugs (validation, not a model result):**
+- The **reference handler** records no failures against I1 to I5 in the kill matrix
+- The kill matrix reports **13 of 13 mutants killed**: nine hand-written (M1 to M9) and four extra (X1 to X4). None of them is model output
+- For M7 to M9 (restart and concurrency defects) the matrix shows intended-invariant markers rather than per-invariant failure counts
+- The kill matrix is **partly circular and self-attested**: we wrote the mutants and the checks, so it validates that the oracle can see these bugs, not that it can see all bugs
 
-- **Reference Implementation Clean:** The trusted reference implementation (`ref/handler_ref.py`) achieves **100/100 passes** across all invariants (I1–I5) and concurrency scenarios, satisfying Oracle Gate G2.
-- **13 of 13 Mutants Killed:** The harness correctly detects and kills all 13 targeted mutants (`m1` through `m9`, plus `x1` through `x4`), each written to exhibit a specific defect (e.g., negative amounts, missing refund bounds, autocommit race windows, non-ASCII crashes).
-- **Honesty Disclosure:** The 13 mutants are **hand-written, developer-crafted bugs**, not model outputs. The kill matrix is intentionally circular and self-attested to validate the detection sensitivity of the oracle before evaluating LLMs.
+**The sandbox:**
+- Seven hostile handlers (`tests/hostile/`) are contained, with no leftover containers
+- The reference handler and the mutants produce the same results in the sandbox as in direct execution across the parity seed ranges we ran
 
----
+**The specification review (Gate 1):**
+- Before candidate generation, the contract was reviewed by two independent predictors, **Koushik** and **Rithvik**, who each filled the answer sheet for ten fresh cases without opening the answer key
+- Outcome: **passed, with no disagreements and no spec change**. The spec hash stayed `289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a`
+- The spec is still labelled `DRAFT-FROZEN`, and ten open spec questions are kept in [`docs/SPEC_GAP_LIST.md`](docs/SPEC_GAP_LIST.md)
 
-## 4. The Real Model Finding & Limits
-
-In pilot evaluations across LLMs prompted under strict contract conditions, PaySift discovered a genuine, non-trivial financial state-machine defect:
-
-- **Candidate:** `strong_a/A/3` (`candidates/strong_a/A/3.py`)
-- **Model:** `gemini-3.5-flash-lite`
-- **Condition:** **Condition A** (Full contract prompt with Rules R0–R10 printed verbatim; not an illustrative Condition B bug).
-- **Failing Rule:** **Rule R8: Rejection Non-Consumption**
-  > *"A 'rejected' event produces no state change and does NOT consume its event_id. If the same event_id is redelivered later with valid parameters or prerequisites satisfied, it must be processed and applied normally."*
-- **Mechanism:** The candidate handler recorded incoming event IDs into an auxiliary `processed_events` table even upon rejection. When a refund arrived before its corresponding capture, it was rejected; when the capture arrived later and the refund was retried, the candidate rejected it as a `"duplicate"`, permanently stranding the customer's refund.
-- **Trace Length:** Exactly **4 events** in the minimal failing sequence (minimized from longer fuzzing streams and 10/10 reproducible across seed runs).
-
-### Scope & Benchmark Limits
-- Exactly **15 candidates** were evaluated across **2 usable models**:
-  - Gemini 3.5 Flash Lite (`strong_a`): 10 candidates (5 Condition A, 5 Condition B).
-  - Qwen 2.5 27B on Groq (`strong_b`): 5 candidates (3 Condition A, 2 Condition B).
-  - OpenRouter Ling 3.2 Flash (`strong_c`): 0 candidates (upstream free-tier rate limits).
-- PaySift **does not present a model ranking or leaderboard**. Sample sizes are designed for diagnostic proof-of-concept, not comparative benchmark claims.
+**Automated tests:** `pytest -q`, `python cli.py selftest` and `npm run verify` (typecheck, Vitest, contract check, build) are the checks we run before every release.
 
 ---
 
-## 5. Empirical Documentation Grounding (You.com)
+## 🔎 The real model finding
 
-To bridge the gap between abstract contract rules and real-world payment gateway specifications, PaySift integrates the **You.com Search API**:
+| | |
+|---|---|
+| **Candidate** | `strong_a/A/3` (`candidates/strong_a/A/3.py`) |
+| **Model** | `gemini-3.5-flash-lite` |
+| **Condition** | **A** — full contract prompt, rules R0 to R10 printed verbatim (not the illustrative Condition B) |
+| **Rule broken** | **R8, Rejection Non-Consumption** (invariant `I2_idempotency`) |
+| **Classification** | (a), rule violated as written. Confirmed by human review of the diagnostic packet |
+| **Minimal trace** | 4 events, reproduced 10 out of 10 times across runs |
 
-- **Grounding Distribution:** **1 supported, 5 partial, 5 not found** across Rules R0–R10.
-- **Verbatim Substring Rule:** Every quoted excerpt in `runs/grounding.json` is verified by automated schema checks as an exact verbatim substring of the retrieved snippet ($\le 25$ words).
-- **Human Review Overrides:**
-  - **Rule R8 (PARTIAL):** Provider documentation mentions idempotency key non-consumption on rejection, but discusses API request headers rather than webhook event payloads.
-  - **Rule R9 (PARTIAL):** Documentation confirms SQLite database durability across host crashes, but does not specify transaction replay state machines.
-  - **Rule R10 (PARTIAL):** Concurrent webhook delivery protection is documented in engineering literature rather than official gateway developer docs.
-- **Specification Gaps:** Rules with no public provider documentation (R0, R2, R4, R5, R7) are explicitly classified as **PaySift Conventions** in [`docs/SPEC_GAP_LIST.md`](docs/SPEC_GAP_LIST.md). The contract remains `DRAFT-FROZEN`.
+> *R8:* "A 'rejected' event produces no state change and does NOT consume its event_id. If the same event_id is redelivered later with valid parameters or prerequisites satisfied, it must be processed and applied normally."
 
----
+**Mechanism.** The handler wrote every incoming event id into an auxiliary `processed_events` table, including events it rejected. When the prerequisite capture arrived later and the refund was redelivered, the handler treated the refund as a duplicate instead of applying it.
 
-## 6. Grounded Repair Result
+**Scope, stated plainly:**
+- 15 candidates were generated across 2 usable models (Gemini 3.5 Flash Lite and a Qwen model on Groq). A third provider produced none because of free-tier rate limits
+- This finding is one candidate under one condition. It says nothing about how often these models fail, and PaySift does not rank models
+- Other recorded failures exist in the Pilot page (for example `strong_b/A/2` shows I1 signature failures with a zero-event minimal trace). Only `strong_a/A/3` went through human classification and was chosen as the featured finding
 
-PaySift feeds the failing candidate's code, the minimal failing trace, and the cited You.com documentation into a model repair loop:
-
-- **Artifact:** [`repair/cache/3__0.json`](repair/cache/3__0.json)
-- **Target:** Candidate `strong_a/A/3` on Rule R8.
-- **Outcome:** **`fixed_rule: true`** — The repaired code correctly refrains from recording rejected event IDs in `processed_events`, successfully resolving the minimal counterexample trace.
-- **Zero Invariant Regressions:** **`broke_other: false`** — When subjected to the full 100-trial invariant suite (I1–I5), the repaired code achieved **0 regressions**:
-  - `I1_signature`: 100/100 passed (Fixed)
-  - `I2_idempotency`: 100/100 passed (Fixed)
-  - `I3_conservation`: 100/100 passed (Preserved)
-  - `I4_bounds`: 100/100 passed (Preserved)
-  - `I5_interface`: 100/100 passed (Preserved)
-- **Grounding Citations:** The model was supplied with 9 empirical You.com documentation sources for Rule R8 (`R8_s1` through `R8_s9`).
+Full details: [`pilot/DECISION.md`](pilot/DECISION.md).
 
 ---
 
-## 7. Specification Review (Gate G1)
+## 📚 Evidence grounding (You.com)
 
-Before candidate generation, the formal contract (`contract/SPEC.md`) underwent independent human review at Gate G1:
-- **Reviewers:** **Koushik** and **Rithvik** acted as independent predictors.
-- **Method:** Both reviewers completed prediction answer sheets for fresh edge cases without access to the oracle key.
-- **Outcome:** Gate G1 **PASSED**, confirming semantic consistency. The specification remained unchanged, preserving the canonical `SPEC_HASH` (`289fa48f542ffcf36eb6f27ba4fd513c97312f8c987396b8a2e98e1cdaea230a`).
+Each rule is searched against public provider documentation, and an LLM judge labels how well the retrieved sources support it. Every quote shown must be an exact substring of the retrieved snippet and stay within the word limit.
+
+| Label | Rules | How it was set |
+|---|---|---|
+| **Supported** | R1 | LLM-judged, unreviewed |
+| **Partial** | R3, R6 | LLM-judged, unreviewed |
+| **Partial** | R8, R9, R10 | Changed from supported to partial by a human override |
+| **Not found** | R0, R2, R4, R5, R7 | LLM-judged; no support found, shown as "PaySift convention" |
+
+**Human override reasons (as recorded in `grounding/overrides.yaml`):**
+- **R8:** the quote is about API idempotency keys, not webhook event ids, so it supports the concept only
+- **R9:** the source only says SQLite survives crashes and does not cover idempotency across restarts
+- **R10:** the only source is a blog post, not official provider documentation
+
+"Supported by sources" never means "the spec is verified". It means the retrieved documentation is consistent with the rule as written.
 
 ---
 
-## 8. Run Locally with Docker (Live Runs & Repair)
+## 🛠️ Grounded repair
 
-The hosted production site is **strictly read-only**:
-1. **Safety:** Live candidate execution runs untrusted, model-generated Python code and requires a container sandbox with `--network none` and strict resource caps.
-2. **API Key Security:** Live model repairs require your own LLM API keys.
+The repair loop sends a model the failing candidate, the minimal trace and the cited sources, then re-runs the **full** invariant suite on the proposed fix. A repair that fixes the target rule but breaks another invariant is recorded as a failure.
 
-To run interactive attacks, live Docker-sandboxed breaks, and local repairs on your own machine:
+<!-- REPAIR_RESULT: replace the line below with the exact values from repair/cache and handoff/N8_REPAIR_DONE before publishing -->
+- **Status for `strong_a/A/3` (R8):** see the Repair page of the live site and [`repair/cache/`](repair/cache/). The README does not restate numbers that the cached artifact already records
+
+---
+
+## 🚀 Run it locally with Docker
+
+The hosted site is **read-only**. Live runs execute untrusted, model-written Python and need a container sandbox, and live repair needs your own model keys, so neither can safely run on the public API.
 
 ### Prerequisites
-- **Python:** 3.12+
-- **Node.js:** 18+ (LTS recommended)
-- **Docker Desktop:** Running with WSL2 backend on Windows, or Docker engine on Linux/macOS.
+- Python 3.12
+- Node.js 18+
+- Docker Desktop (WSL2 backend on Windows) or Docker Engine on Linux/macOS
+- Your own model keys (see `.env.example`) for repair; a You.com key for evidence search
 
-### 1. Automated Setup
-Clone the repository and run the setup script:
-
-**Windows (PowerShell):**
+### 1. Automated setup
 ```powershell
+git clone https://github.com/nikhil-0420/Pay-Sift.git
+cd Pay-Sift
 .\scripts\setup_local.ps1
 ```
-
-**Linux / macOS (Bash):**
+Linux / macOS:
 ```bash
+git clone https://github.com/nikhil-0420/Pay-Sift.git
+cd Pay-Sift
 ./scripts/setup_local.sh
 ```
+The script checks Docker, builds the sandbox image, creates a virtual environment, installs dependencies, copies `.env.example` to `.env` if it is missing, and runs the self-test.
 
-### 2. Configure Environment
-Copy `.env.example` to `.env` and configure your API keys for live repair and search:
-```bash
-cp .env.example .env
-```
-Set your `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, or `GROQ_API_KEY`, and `YDC_API_KEY`.
+### 2. Add your keys
+Open `.env` and fill in the variables listed in `.env.example`. Never commit this file.
 
-### 3. Start Local Services
-In Terminal 1 (Backend Daemon):
+### 3. Start the API and the UI
 ```bash
+# terminal 1
 python cli.py serve
 ```
-*Runs on `http://localhost:8000` with live sandbox execution enabled (`HOSTED_MODE=0`).*
-
-In Terminal 2 (Frontend UI):
 ```bash
+# terminal 2
 cd ui
 npm install
 npm run dev
 ```
-*Runs on `http://localhost:5173`.*
+The API listens on `http://127.0.0.1:8000` and the UI on `http://localhost:5173`.
 
-### 4. Connect Hosted UI to Local Backend
-You can also connect the hosted frontend at [https://pay-sift.vercel.app](https://pay-sift.vercel.app) to your local backend:
-1. Open the **Break it** or **Repair** page on the hosted site.
-2. Under the **Connect Local Backend** panel, enter `http://localhost:8000` and click **Connect**.
-3. Once probed, live Docker execution and repair buttons become unlocked.
+### 4. Or connect the hosted UI to your local backend
+On the **Break it** or **Repair** page of the live site, use **Connect local backend**, enter `http://127.0.0.1:8000` and connect. Live runs and repair unlock when the backend reports a working sandbox.
 
-*(Note: Some browsers enforce Mixed-Content or Private Network Access restrictions when an HTTPS page calls HTTP `localhost`. If your browser blocks local requests, run the UI locally at `http://localhost:5173`.)*
+Some browsers block an https page from calling `http://localhost` (Safari, and some Chrome and Edge configurations). If that happens, run the UI locally with `npm run dev` instead.
 
----
-
-## 9. Testing & Verification
-
-PaySift includes full self-test suites across Python and TypeScript:
-
+### Tests
 ```bash
-# 1. Run full backend pytest suite
 pytest -q
-
-# 2. Run automated self-test (Gate G8 assertions)
 python cli.py selftest
-
-# 3. Run interactive offline demonstration
 python cli.py demo
-
-# 4. Verify frontend types, Vitest suite, and contract validation
-cd ui
-npm run verify
+cd ui && npm run verify
 ```
 
 ---
 
-## 10. Repository Structure
+## 📂 Project Structure
 
 ```text
-PaySift/
-├── api/                  # FastAPI REST service (health, runs, kill-matrix, break, repair)
-├── candidates/           # LLM-generated payment webhook handlers (Conditions A & B)
-├── contract/             # Formal specification (SPEC.md, SPEC_HASH, schema.sql, run_schema.json)
-├── docs/                 # Documentation (DEPLOY.md, PITCH_READINESS.md, SPEC_GAP_LIST.md)
-│   └── process/          # Historical stage prompts (PAYSIFT_ANTIGRAVITY_PROMPTS.md, etc.)
-├── grounding/            # You.com retrieval, caching, judge prompts, and overrides
-├── handoff/              # Inter-stage handoff markers and coordination logs
-├── mutants/              # Hand-written defect mutants (M1–M9, X1–X4) for kill matrix
-├── oracle/               # Multi-connection SQLite ledger oracle & invariant evaluators
-├── pilot/                # Pilot evaluation reports, packets, and human decision records
-├── ref/                  # Reference payment handler (handler_ref.py)
-├── repair/               # LLM repair loop, prompt engineering, and cached repair artifacts
-├── runner/               # Docker sandbox executor and hostile security test harnesses
-├── runs/                 # Normalized run execution JSONs and kill matrix records
-├── scripts/              # Local setup scripts and CLI automation utilities
-└── ui/                   # React + TypeScript forensic ledger interface (Vite, Vitest)
+Pay-Sift/
+├── api/                    # FastAPI service: runs, kill matrix, evidence, break, repair (hosted read-only mode + local mode)
+├── candidates/             # Model-generated handlers and generation summary
+├── config/                 # models.yaml (model ids; no keys)
+├── contract/               # SPEC.md, SPEC_HASH, schema, run schema, Gate 1 packet
+├── docs/                   # DEPLOY.md, API_CONTRACT.md, SPEC_GAP_LIST.md, EVIDENCE_REVIEW.md, PITCH_READINESS.md
+│   └── process/            # The stage prompts used to build the project
+├── grounding/              # You.com retrieval, cache, judge and human overrides
+├── handoff/                # Stage markers used for coordination between builders
+├── mutants/                # Hand-written (M1 to M9) and extra (X1 to X4) buggy handlers
+├── oracle/                 # Ledger oracle and invariant checks
+├── pilot/                  # Pilot report, review sheet, diagnostic packets, DECISION.md
+├── repair/                 # Repair loop, prompt builder and cached repair results
+├── runner/                 # Docker sandbox runner and Dockerfile
+├── runs/                   # Recorded run JSON and grounding.json
+├── scripts/                # Local setup scripts
+├── tests/                  # Python tests, including tests/hostile
+├── ui/                     # React + TypeScript frontend (Vite, Vitest)
+├── cli.py                  # serve, selftest, demo, generate, pilot, repair
+├── render.yaml             # Render service definition (hosted read-only API)
+└── requirements.txt
 ```
 
 ---
 
-## 11. Team & Credits
+## 🔬 Methodology Highlights
 
-- **Nikhil:** You.com documentation grounding layer, frontend integration, cloud deployment (Render & Vercel), readiness audits.
-- **Nehaa:** Docker sandbox isolation, candidate generation pipeline, pilot test runner, model repair loops.
-- **Koushik:** Independent specification predictor for Gate G1 consistency review.
-- **Rithvik:** Independent specification predictor for Gate G1 consistency review.
+1. **Counterexamples, not opinions** — a failure is a short, replayable event sequence and a ledger that disagrees with the contract
+2. **The validator is validated first** — the oracle is tested on known-bad handlers before any model code is judged
+3. **Financial and interface invariants stay separate** — I1 to I4 and I5 are reported apart so a crash cannot hide a money bug
+4. **Evidence is labelled, never inflated** — every rule shows what the sources do and do not say, and rules with no support are marked as PaySift conventions
+5. **Humans decide what counts** — failures are classified by people, and label overrides are shown as human-reviewed
+6. **Repairs must pass the whole suite** — fixing one rule while breaking another is a failed repair
+7. **No ranking** — outcomes are listed alphabetically and never turned into a leaderboard
 
-*PaySift was built for **BEYOND 9TO5 (EtriqAI), Track 2**.*
+---
+
+## 🔮 Known Limitations
+
+- The mutants and the oracle were written by the same team, so the kill matrix is partly circular and self-attested
+- One real finding, one candidate, one condition, one rule. The sample is a diagnostic exercise, not a comparison of models
+- Only two providers produced usable candidates; a third was blocked by free-tier rate limits
+- Most evidence labels are LLM-judged and unreviewed. Only R8, R9 and R10 have human overrides, and no rule has full provider-documentation support except R1
+- Ten open spec questions remain, and the contract is frozen rather than finalised
+- The hosted API runs on a free tier that sleeps when idle, so the first request can take about a minute. The site falls back to a static snapshot and says so
+- Live sandbox runs and live repair are available only locally, with your own Docker and keys
+- Some recorded failures (for example a zero-event minimal trace on `strong_b/A/2`) have not been human-classified
+
+---
+
+## 👥 Team
+
+Built for the **BEYOND 9TO5** buildathon (EtriqAI Developers, Bengaluru, 21 November 2026), Track 2 (You.com), and completed afterwards.
+
+| Member | Area |
+|---|---|
+| **Nikhil** ([GitHub](https://github.com/nikhil-0420)) | You.com evidence layer, frontend, hosting (Render and Vercel), readiness audits, README |
+| **Nehaa** | Docker sandbox, API contract, model configuration, candidate generation, pilot, repair loop |
+
+---
+
+**⭐ If you found this project interesting, consider giving it a star.**
